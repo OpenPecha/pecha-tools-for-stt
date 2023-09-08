@@ -16,7 +16,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
-  const currentTimeRef = useRef(String || null);
+  const currentTimeRef = useRef<String | null>(null);
 
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
