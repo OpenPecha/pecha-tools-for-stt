@@ -3,8 +3,8 @@ services:
     name: stt-tool
     env: node
     plan: starter
-    buildCommand: npm ci && npm run build
-    startCommand: npm start
+    buildCommand: npm ci --production=false && npm run build && npm prune --production
+    startCommand: npm run start
     autoDeploy: false
     envVars:
       - key: NODE_VERSION
