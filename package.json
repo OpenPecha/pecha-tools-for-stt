@@ -27,6 +27,7 @@
   "main": "next.config.js",
   "devDependencies": {
     "@types/node": "^20.5.9",
+    "daisyui": "^3.7.3",
     "prisma": "^5.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
