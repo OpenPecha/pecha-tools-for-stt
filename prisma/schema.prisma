@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Group {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  users User[]
+  tasks Task[]
+}
+
+enum Role {
+  TRANSCRIBER
+  REVIEWER
+  FINAL_REVIEWER
+}
+
+enum State {
+  imported
+  transcribing
+  trashed
+  submitted
+  accepted
+  finalised
+}
+
+model Task {
+  id                    Int       @id @default(autoincrement())
+  group_id              Int
+  group                 Group     @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  state                 State     @default(imported)
+  inference_transcript  String?   @db.VarChar(255)
+  transcript            String?   @db.VarChar(255)
+  reviewed_transcript   String?   @db.VarChar(255)
+  final_transcript      String?   @db.VarChar(255)
+  file_name             String    @db.VarChar(255)
+  url                   String?   @db.Text
+  transcriber_id        Int?
+  transcriber           User?     @relation("TranscriberTasks", fields: [transcriber_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviewer_id           Int?
+  reviewer              User?     @relation("ReviewerTasks", fields: [reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  final_reviewer_id     Int?
+  final_reviewer        User?     @relation("FinalReviewerTasks", fields: [final_reviewer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_at            DateTime? @default(now())
+  submitted_at          DateTime?
+  reviewed_at           DateTime?
+  finalised_reviewed_at DateTime?
+  duration              String?
+}
+
+model User {
+  id                  Int     @id @default(autoincrement())
+  name                String  @unique @db.VarChar(255)
+  email               String? @db.VarChar(255)
+  group_id            Int
+  role                Role    @default(TRANSCRIBER)
+  transcriber_task    Task[]  @relation("TranscriberTasks")
+  reviewer_task       Task[]  @relation("ReviewerTasks")
+  final_reviewer_task Task[]  @relation("FinalReviewerTasks")
+  group               Group   @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
