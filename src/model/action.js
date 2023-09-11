@@ -6,38 +6,35 @@ import prisma from "@/service/db";
 const ASSIGN_TASKS = 5;
 //get user detail if exist
 export const getUserDetails = async (username) => {
-  try {
-    const userData = await prisma.User.findUnique({
-      where: {
-        name: username,
-      },
-    });
-    if (userData === null) {
-      throw new Error("please log in to it with ?session={username}.");
-    }
-    return userData;
-  } catch (error) {
-    console.log("error", error);
-    throw new Error("No user found! Please try another with correct username.");
+  const userData = await prisma.User.findUnique({
+    where: {
+      name: username,
+    },
+  });
+  if (userData === null) {
+    console.log("userData ---", userData);
+    return null;
   }
+  return userData;
 };
 
 // get task based on username
 export const getUserTask = async (username) => {
+  let userTasks;
   const userData = await getUserDetails(username);
-  const { id: userId, group_id: groupId, role } = userData;
-  console.log("userId", userId, "groupId", groupId, "role", role);
-  const userTasks = await getAssignedTasks(groupId, userId, role);
-  // console.log("user already assigned task", userTasks);
-  if (userTasks.length == 0) {
-    // assign some tasks
-    const assingedTasks = await assignTasks(groupId, userId, role);
-    // console.log("assignedTask", assingedTasks);
-    return assingedTasks;
-  } else {
-    console.log("userTasks", userTasks.length);
-    return userTasks;
+  if (userData === null) {
+    return {
+      error: "No user found! Please try another with correct username.",
+    };
   }
+  const { id: userId, group_id: groupId, role } = userData;
+  userTasks = await getAssignedTasks(groupId, userId, role);
+  if (userTasks.length == 0) {
+    // assign some tasks for user when got no task to work on
+    userTasks = await assignTasks(groupId, userId, role);
+  }
+  console.log("userTasks", userTasks.length);
+  return { userTasks, userData };
 };
 
 //geting user's asigned tasks

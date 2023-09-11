@@ -5,7 +5,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
-import { Task, User } from "@prisma/client";
 
 const AudioTranscript = ({ tasks, userDetail }) => {
   const [taskList, setTaskList] = useState(tasks);
@@ -16,7 +15,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
-  const currentTimeRef = useRef<String | null>(null);
+  const currentTimeRef = useRef(null);
 
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
