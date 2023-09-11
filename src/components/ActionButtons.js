@@ -14,7 +14,7 @@ const ActionButtons = ({
       <div className="fixed bottom-0 flex gap-1 border shadow-sm p-2">
         <button
           type="button"
-          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium text-sm p-6 sm:p-9"
+          className="focus:outline-none text-white bg-[#4fd364] font-medium text-md p-6 sm:p-9"
           onClick={() => updateTaskAndIndex("submit", transcript, tasks[index])}
         >
           <div className="flex flex-col items-center">
@@ -25,7 +25,7 @@ const ActionButtons = ({
         {role !== "TRANSCRIBER" && (
           <button
             type="button"
-            className="focus:outline-none text-white bg-red-700 hover:bg-red-800 font-medium text-sm p-6 sm:p-9"
+            className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
             onClick={() =>
               updateTaskAndIndex("reject", transcript, tasks[index])
             }
@@ -38,7 +38,7 @@ const ActionButtons = ({
         )}
         <button
           type="button"
-          className="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 font-medium text-sm p-6 sm:p-9"
+          className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"
           onClick={() => updateTaskAndIndex("trash", transcript, tasks[index])}
         >
           <div className="flex flex-col items-center">
@@ -48,7 +48,7 @@ const ActionButtons = ({
         </button>
         <button
           type="button"
-          className="focus:outline-none text-white bg-gray-400 hover:bg-gray-500 font-medium text-sm p-6 sm:p-9"
+          className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"
           onClick={() => updateTaskAndIndex("save", transcript, tasks[index])}
         >
           <div className="flex flex-col items-center">

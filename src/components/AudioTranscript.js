@@ -2,7 +2,6 @@
 
 import { assignTasks, updateTask } from "@/model/action";
 import React, { useState, useRef, useEffect } from "react";
-import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
 
@@ -10,12 +9,13 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
-  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+  const inputRef = useRef(null);
   const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
@@ -55,22 +55,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
       isMounted = false;
     };
   }, [taskList]);
-
-  const handlePlayPause = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  const handlePlayRate = (speed) => {
-    audioRef.current.playbackRate = speed;
-    console.log("Pitched preserved", audioRef.current.preservesPitch);
-  };
-
-  const speedRate = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
   const updateTaskAndIndex = async (action, transcript, task) => {
     try {
@@ -112,6 +96,41 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     }
   };
 
+  useEffect(() => {
+    // Add event listener for keyboard shortcuts
+    window.addEventListener("keydown", handleKeyPress);
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
+  const handleKeyPress = (e) => {
+    console.log(e.keyCode, e.key, isInputFocused);
+    // if input filed is focused, don't allow shortcuts
+    if (inputRef.current === document.activeElement) {
+      return;
+    }
+    // Play/Pause: command + enter , option + enter, ctrl + enter
+    if (e.keyCode === 13 && (e.metaKey || e.ctrlKey || e.altKey)) {
+      handlePlayPause();
+    }
+    // Loop: L key
+    else if (e.keyCode === 76) {
+      toggleAutoplay();
+    }
+    // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
+    else if (e.keyCode === 65) {
+      updateTaskAndIndex("submit", transcript, tasks[index]);
+    } else if (e.keyCode === 88) {
+      updateTaskAndIndex("reject", transcript, tasks[index]);
+    } else if (e.keyCode === 83) {
+      updateTaskAndIndex("save", transcript, tasks[index]);
+    } else if (e.keyCode === 84) {
+      updateTaskAndIndex("trash", transcript, tasks[index]);
+    }
+  };
+
   return (
     <>
       {isLoading ? (
@@ -139,6 +158,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
             <div className="flex flex-col gap-5 justify-center items-center">
               <AudioPlayer tasks={taskList} index={index} audioRef={audioRef} />
               <textarea
+                ref={inputRef}
                 value={transcript || ""}
                 onChange={(e) => setTranscript(e.target.value)}
                 className="rounded-md p-4 border border-slate-400 w-full"
