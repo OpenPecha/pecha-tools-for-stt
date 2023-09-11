@@ -13,6 +13,7 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
     setIsAutoplayEnabled(!isAutoplayEnabled);
     if (isAutoplayEnabled) {
       audioRef.current.pause();
+      setIsPlaying(false);
     }
   };
 
