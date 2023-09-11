@@ -135,36 +135,17 @@ const AudioTranscript = ({ tasks, userDetail }) => {
             </div>
           )}
 
-          <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-5 mt-20 mb-40">
+          <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-8 mt-20 mb-40">
             <div className="flex flex-col gap-5 justify-center items-center">
               <AudioPlayer tasks={taskList} index={index} audioRef={audioRef} />
               <textarea
                 value={transcript || ""}
                 onChange={(e) => setTranscript(e.target.value)}
-                className="rounded-md p-4 border border-slate-400 w-11/12"
+                className="rounded-md p-4 border border-slate-400 w-full"
                 placeholder="Type here..."
                 rows={7}
                 id="transcript"
               ></textarea>
-              <div className="flex flex-wrap gap-6 justify-center">
-                <button
-                  className="bg-white text-gray-800 py-2.5 px-5 border border-gray-400 rounded-lg shadow"
-                  onClick={() => handlePlayPause()}
-                >
-                  {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
-                </button>
-                {speedRate.map((speed) => {
-                  return (
-                    <button
-                      key={speed}
-                      onClick={() => handlePlayRate(speed)}
-                      className="text-white bg-[#583fcf] hover:bg-purple-600 font-semibold rounded-lg text-sm px-5 py-2.5 outline-none"
-                    >
-                      {speed === 1 ? "Normal" : speed + " speed"}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
           </div>
           <ActionButtons
