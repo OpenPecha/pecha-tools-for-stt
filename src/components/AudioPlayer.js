@@ -129,7 +129,6 @@ export const AudioPlayer = ({
           <span className="text-xs">SPEED</span>
           <span>{playbackRate}X</span>
         </button>
-        <div className="text-lg font-semibold">{String(isLoopEnabled)}</div>
       </div>
     </>
   );

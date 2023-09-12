@@ -1,12 +1,12 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { editUser } from "@/model/user";
+import Select from "@/components/Select";
 
 const EditUserModal = ({ groups, selectedRow }) => {
   const [groupId, setGroupId] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
   const ref = useRef(null);
 
   useEffect(() => {
@@ -23,18 +23,26 @@ const EditUserModal = ({ groups, selectedRow }) => {
     };
   }, [selectedRow]);
 
+  const handleGroupChange = async (event) => {
+    setGroupId(event.target.value);
+  };
+
+  const handleRoleChange = async (event) => {
+    setRole(event.target.value);
+  };
+
   const roles = [
     {
+      id: "TRANSCRIBER",
       name: "Transcriber",
-      title: "TRANSCRIBER",
     },
     {
       name: "Reviewer",
-      title: "REVIEWER",
+      id: "REVIEWER",
     },
     {
       name: "Final Reviewer",
-      title: "FINAL_REVIEWER",
+      id: "FINAL_REVIEWER",
     },
   ];
 
@@ -109,50 +117,20 @@ const EditUserModal = ({ groups, selectedRow }) => {
                   defaultValue={selectedRow?.email}
                 />
               </div>
-              <div className="form-control w-full">
-                <label className="label" htmlFor="group_id">
-                  <span className="label-text text-base font-semibold">
-                    Groups
-                  </span>
-                </label>
-                <select
-                  id="group_id"
-                  name="group_id"
-                  className="select select-bordered overflow-y-scroll"
-                  required
-                  value={groupId}
-                  onChange={(e) => setGroupId(e.target.value)}
-                >
-                  <option value="">Select group</option>
-                  {groups.map((group) => (
-                    <option key={group.id} value={group.id}>
-                      {group.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-control w-full">
-                <label className="label" htmlFor="role">
-                  <span className="label-text text-base font-semibold">
-                    Roles
-                  </span>
-                </label>
-                <select
-                  id="role"
-                  name="role"
-                  className="select select-bordered"
-                  required
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <option value="">Select role</option>
-                  {roles.map((role) => (
-                    <option key={role.title} value={role.title}>
-                      {role.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                title="group_id"
+                label="Groups"
+                options={groups}
+                selectedOption={groupId}
+                handleOptionChange={handleGroupChange}
+              />
+              <Select
+                title="role"
+                label="Roles"
+                options={roles}
+                selectedOption={role}
+                handleOptionChange={handleRoleChange}
+              />
             </div>
             <button
               type="submit"

@@ -6,11 +6,17 @@ import Select from "@/components/Select";
 
 const AddUserModal = ({ groups }) => {
   const ref = useRef(null);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [groupId, setGroupId] = useState("");
+  const [role, setRole] = useState("");
 
-  const handleOptionChange = async (event) => {
-    setSelectedOption({ [event.target.name]: event.target.value });
+  const handleGroupChange = async (event) => {
+    setGroupId(event.target.value);
   };
+
+  const handleRoleChange = async (event) => {
+    setRole(event.target.value);
+  };
+
   const roles = [
     {
       id: "TRANSCRIBER",
@@ -78,15 +84,15 @@ const AddUserModal = ({ groups }) => {
               title="group_id"
               label="Groups"
               options={groups}
-              selectedOption={selectedOption}
-              handleOptionChange={handleOptionChange}
+              selectedOption={groupId}
+              handleOptionChange={handleGroupChange}
             />
             <Select
               title="role"
               label="Roles"
               options={roles}
-              selectedOption={selectedOption}
-              handleOptionChange={handleOptionChange}
+              selectedOption={role}
+              handleOptionChange={handleRoleChange}
             />
           </div>
           <button
