@@ -5,13 +5,11 @@ import { ImLoop } from "react-icons/im";
 export const AudioPlayer = ({ tasks, index, audioRef }) => {
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isAutoplayEnabled, setIsAutoplayEnabled] = useState(false);
-
-  console.log("audioRef", isAutoplayEnabled);
+  const [isLoopEnabled, setIsLoopEnabled] = useState(false); // [false, true
 
   const toggleAutoplay = () => {
-    setIsAutoplayEnabled(!isAutoplayEnabled);
-    if (isAutoplayEnabled) {
+    setIsLoopEnabled(!isLoopEnabled);
+    if (isLoopEnabled) {
       audioRef.current.pause();
       setIsPlaying(false);
     }
@@ -50,29 +48,38 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
       <audio
         ref={audioRef}
         controls
-        loop={isAutoplayEnabled}
+        loop={isLoopEnabled}
         className="w-full"
         key={tasks[index]?.id}
       >
         <source src={tasks[index]?.url} type="audio/mp3" />
       </audio>
       <div className="flex gap-10 my-2">
-        <button
-          className="btn btn-outline px-5 py-2.5"
-          onClick={() => handlePlayPause()}
+        <div
+          className="tooltip tooltip-bottom"
+          data-tip={`${
+            isPlaying ? "Pause" : "Play"
+          } (command + enter, option + enter, ctrl + enter)`}
         >
-          {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
-        </button>
-        <button
-          className={
-            isAutoplayEnabled
-              ? "btn px-5 py-2.5 bg-yellow-400 hover:bg-yellow-400"
-              : "btn btn-outline px-5 py-2.5"
-          }
-          onClick={() => toggleAutoplay()}
-        >
-          <ImLoop />
-        </button>
+          <button
+            className="btn btn-outline px-5 py-2.5"
+            onClick={() => handlePlayPause()}
+          >
+            {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
+          </button>
+        </div>
+        <div className="tooltip tooltip-bottom" data-tip="Loop (l)">
+          <button
+            className={
+              isLoopEnabled
+                ? "btn px-5 py-2.5 bg-yellow-400 hover:bg-yellow-400"
+                : "btn btn-outline px-5 py-2.5"
+            }
+            onClick={() => toggleAutoplay()}
+          >
+            <ImLoop />
+          </button>
+        </div>
         <button
           className="flex item-center btn btn-ghost text-lg p-2 font-semibold"
           onClick={changePlaybackRate}
