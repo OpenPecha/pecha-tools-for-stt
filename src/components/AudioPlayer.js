@@ -2,13 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { ImLoop } from "react-icons/im";
 
-export const AudioPlayer = ({ tasks, index, audioRef }) => {
+export const AudioPlayer = ({
+  tasks,
+  index,
+  audioRef,
+  inputRef,
+  transcript,
+  updateTaskAndIndex,
+}) => {
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoopEnabled, setIsLoopEnabled] = useState(false); // [false, true
 
-  const toggleAutoplay = () => {
-    setIsLoopEnabled(!isLoopEnabled);
+  const toogleLoop = () => {
+    setIsLoopEnabled((prev) => !prev);
     if (isLoopEnabled) {
       audioRef.current.pause();
       setIsPlaying(false);
@@ -43,6 +50,41 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
     console.log(audioRef.current.playbackRate);
   };
 
+  useEffect(() => {
+    // Add event listener for keyboard shortcuts
+    window.addEventListener("keydown", handleKeyPress);
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
+  const handleKeyPress = (e) => {
+    console.log(e.keyCode, e.key);
+    // if input filed is focused, don't allow shortcuts
+    if (inputRef.current === document.activeElement) {
+      return;
+    }
+    // Play/Pause: command + enter , option + enter, ctrl + enter
+    if (e.keyCode === 13 && (e.metaKey || e.ctrlKey || e.altKey)) {
+      handlePlayPause();
+    }
+    // Loop: L key
+    else if (e.keyCode === 76) {
+      toogleLoop();
+    }
+    // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
+    else if (e.keyCode === 65) {
+      updateTaskAndIndex("submit", transcript, tasks[index]);
+    } else if (e.keyCode === 88) {
+      updateTaskAndIndex("reject", transcript, tasks[index]);
+    } else if (e.keyCode === 83) {
+      updateTaskAndIndex("save", transcript, tasks[index]);
+    } else if (e.keyCode === 84) {
+      updateTaskAndIndex("trash", transcript, tasks[index]);
+    }
+  };
+
   return (
     <>
       <audio
@@ -75,7 +117,7 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
                 ? "btn px-5 py-2.5 bg-yellow-400 hover:bg-yellow-400"
                 : "btn btn-outline px-5 py-2.5"
             }
-            onClick={() => toggleAutoplay()}
+            onClick={() => toogleLoop()}
           >
             <ImLoop />
           </button>
@@ -87,6 +129,7 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
           <span className="text-xs">SPEED</span>
           <span>{playbackRate}X</span>
         </button>
+        <div className="text-lg font-semibold">{String(isLoopEnabled)}</div>
       </div>
     </>
   );

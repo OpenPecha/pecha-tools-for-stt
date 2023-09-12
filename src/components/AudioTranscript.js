@@ -15,7 +15,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
-  const [isInputFocused, setIsInputFocused] = useState(false);
 
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
@@ -96,41 +95,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     }
   };
 
-  useEffect(() => {
-    // Add event listener for keyboard shortcuts
-    window.addEventListener("keydown", handleKeyPress);
-    // Remove the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
-
-  const handleKeyPress = (e) => {
-    console.log(e.keyCode, e.key, isInputFocused);
-    // if input filed is focused, don't allow shortcuts
-    if (inputRef.current === document.activeElement) {
-      return;
-    }
-    // Play/Pause: command + enter , option + enter, ctrl + enter
-    if (e.keyCode === 13 && (e.metaKey || e.ctrlKey || e.altKey)) {
-      handlePlayPause();
-    }
-    // Loop: L key
-    else if (e.keyCode === 76) {
-      toggleAutoplay();
-    }
-    // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
-    else if (e.keyCode === 65) {
-      updateTaskAndIndex("submit", transcript, tasks[index]);
-    } else if (e.keyCode === 88) {
-      updateTaskAndIndex("reject", transcript, tasks[index]);
-    } else if (e.keyCode === 83) {
-      updateTaskAndIndex("save", transcript, tasks[index]);
-    } else if (e.keyCode === 84) {
-      updateTaskAndIndex("trash", transcript, tasks[index]);
-    }
-  };
-
   return (
     <>
       {isLoading ? (
@@ -156,7 +120,14 @@ const AudioTranscript = ({ tasks, userDetail }) => {
 
           <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-8 mt-20 mb-40">
             <div className="flex flex-col gap-5 justify-center items-center">
-              <AudioPlayer tasks={taskList} index={index} audioRef={audioRef} />
+              <AudioPlayer
+                tasks={taskList}
+                index={index}
+                audioRef={audioRef}
+                inputRef={inputRef}
+                transcript={transcript}
+                updateTaskAndIndex={updateTaskAndIndex}
+              />
               <textarea
                 ref={inputRef}
                 value={transcript || ""}
