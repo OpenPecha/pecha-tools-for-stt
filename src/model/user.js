@@ -10,6 +10,7 @@ export const getAllUser = async () => {
         transcriber_task: true,
         reviewer_task: true,
         final_reviewer_task: true,
+        group: true,
       },
     });
     return users;

@@ -47,10 +47,13 @@ const UserDashboard = ({ users, groups }) => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Id
+                  User Id
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Group Id
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Group Name
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Name
@@ -76,6 +79,7 @@ const UserDashboard = ({ users, groups }) => {
                     {user.id}
                   </th>
                   <td className="px-6 py-4">{user.group_id}</td>
+                  <td className="px-6 py-4">{user.group?.name}</td>
                   <td className="px-6 py-4">{user.name}</td>
                   <td className="px-6 py-4">{user.email}</td>
                   <td className="px-6 py-4">{user.role}</td>
