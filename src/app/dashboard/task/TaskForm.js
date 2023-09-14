@@ -3,6 +3,7 @@ import { createTasksFromCSV } from "@/model/task";
 import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import Select from "@/components/Select";
+import toast from "react-hot-toast";
 
 const TaskForm = ({ groups }) => {
   const ref = useRef(null);
@@ -14,7 +15,6 @@ const TaskForm = ({ groups }) => {
   };
 
   const handleFileChange = (event) => {
-    console.log(event.target.files[0]);
     //  Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
       header: true,
@@ -66,7 +66,17 @@ const TaskForm = ({ groups }) => {
               formData.get("group_id"),
               formData.get("file_name")
             );
-            await createTasksFromCSV(selectedFile, formData);
+            const tasksCreated = await createTasksFromCSV(
+              selectedFile,
+              formData
+            );
+            // if tasksCreated is not empty, then toast success message
+            // else toast error message
+            if (tasksCreated?.length > 0) {
+              toast.success("Tasks created successfully");
+            } else {
+              toast.error("Error creating tasks");
+            }
           }}
         >
           Upload

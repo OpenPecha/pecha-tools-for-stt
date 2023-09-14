@@ -36,9 +36,13 @@ export async function createTasksFromCSV(fileData, formData) {
       // Return the created task
       return task;
     })
-  );
+  ).catch((error) => {
+    console.error("Error creating tasks:", error);
+    return [];
+  });
   revalidatePath("/dashboard/task");
-  console.log("Tasks created successfully", tasksCreated);
+  console.log("Tasks created", tasksCreated);
+  return tasksCreated;
 }
 
 // export async function createTasksFromCSV(formData) {
