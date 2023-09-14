@@ -4,12 +4,27 @@ import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import { calculateAudioMinutes, splitIntoSyllables } from "./user";
 
-export const getAllTask = async () => {
+// get all tasks basd on the search params
+export const getAllTask = async (limit, skip) => {
   try {
-    const tasks = await prisma.task.findMany({});
+    const tasks = await prisma.task.findMany({
+      skip: skip,
+      take: limit,
+    });
     return tasks;
   } catch (error) {
     console.error("Error getting all the tasks:", error);
+  }
+};
+
+//get the total count of tasks
+export const getTotalTaskCount = async () => {
+  try {
+    const totalTask = await prisma.task.count({});
+    return totalTask;
+  } catch (error) {
+    console.error("Error fetching the count of lists:", error);
+    throw error;
   }
 };
 

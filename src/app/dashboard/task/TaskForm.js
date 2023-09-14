@@ -30,7 +30,7 @@ const TaskForm = ({ groups }) => {
     <>
       <form
         ref={ref}
-        className="flex flex-col md:flex-row justify-center items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10"
+        className="flex flex-col md:flex-row justify-center items-center md:items-end pt-10 space-y-5 space-x-0 md:space-y-0 md:space-x-10"
       >
         <Select
           title="group_id"
