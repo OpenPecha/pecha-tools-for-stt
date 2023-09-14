@@ -11,9 +11,9 @@ const UserDashboard = ({ users, groups }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleRemoveUser = async (user) => {
-    const noTranscriberTask = user.transcriber_task?.length;
-    const noReviewerTask = user.reviewer_task?.length;
-    const noFinalReviewerTask = user.final_reviewer_task?.length;
+    const noTranscriberTask = user._count.transcriber_task;
+    const noReviewerTask = user._count.reviewer_task;
+    const noFinalReviewerTask = user._count.final_reviewer_task;
     if (
       noTranscriberTask !== 0 ||
       noReviewerTask !== 0 ||
