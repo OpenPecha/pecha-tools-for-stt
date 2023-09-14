@@ -137,6 +137,12 @@ const AudioTranscript = ({ tasks, userDetail }) => {
                 rows={7}
                 id="transcript"
               ></textarea>
+              <div className="ml-auto text-xs">
+                <span>
+                  <strong className="uppercase">File:</strong>
+                  {(taskList[index]?.url).split("/").pop()}
+                </span>
+              </div>
             </div>
           </div>
           <ActionButtons
