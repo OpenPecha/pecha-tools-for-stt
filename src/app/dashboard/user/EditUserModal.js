@@ -4,18 +4,35 @@ import { editUser } from "@/model/user";
 import Select from "@/components/Select";
 
 const EditUserModal = ({ groups, selectedRow }) => {
+  const ref = useRef(null);
   const [groupId, setGroupId] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const ref = useRef(null);
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+    setUsername(inputValue);
+    // Use a regex to check for valid username format (no spaces or slashes)
+    if (/^[A-Za-z0-9_-]*$/.test(inputValue)) {
+      setError("");
+    } else {
+      setError(
+        "Invalid username format (no spaces or slashes allowed or special characters)"
+      );
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
     const userGroupId = selectedRow?.group_id;
     const userRole = selectedRow?.role;
+    const name = selectedRow?.name;
     if (selectedRow !== null) {
       setGroupId(userGroupId);
       setRole(userRole);
+      setUsername(name);
       setIsLoading(false);
     }
     return () => {
@@ -88,18 +105,24 @@ const EditUserModal = ({ groups, selectedRow }) => {
               <div>
                 <label className="label" htmlFor="name">
                   <span className="label-text text-base font-semibold ">
-                    Name
+                    Username
                   </span>
                 </label>
                 <input
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="name"
+                  placeholder="username"
                   required
                   className="input input-bordered w-full"
-                  defaultValue={selectedRow?.name}
+                  value={username}
+                  onChange={handleInputChange}
                 />
+                {error && (
+                  <label className="label">
+                    <span className="label-text-alt text-red-500">{error}</span>
+                  </label>
+                )}
               </div>
               <div>
                 <label className="label" htmlFor="email">
@@ -119,14 +142,14 @@ const EditUserModal = ({ groups, selectedRow }) => {
               </div>
               <Select
                 title="group_id"
-                label="Groups"
+                label="Group"
                 options={groups}
                 selectedOption={groupId}
                 handleOptionChange={handleGroupChange}
               />
               <Select
                 title="role"
-                label="Roles"
+                label="Role"
                 options={roles}
                 selectedOption={role}
                 handleOptionChange={handleRoleChange}
@@ -134,6 +157,7 @@ const EditUserModal = ({ groups, selectedRow }) => {
             </div>
             <button
               type="submit"
+              disabled={error}
               formAction={async (formData) => {
                 ref.current?.reset();
                 console.log(

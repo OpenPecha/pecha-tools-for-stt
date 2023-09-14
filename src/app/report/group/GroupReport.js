@@ -13,7 +13,7 @@ const GroupReport = ({ groups }) => {
         options={groups}
         setList={setUsers}
         title="group_id"
-        label="Groups"
+        label="Group"
         generateReport={generateUserReportByGroup}
       />
       <div className="flex justify-center items-center mt-10">

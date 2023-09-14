@@ -25,7 +25,7 @@ const UserReport = ({ id, users }) => {
         options={users}
         setList={setUserTaskRecord}
         title="user_id"
-        label="Users"
+        label="User"
         generateReport={getUserSpecificTasks}
       />
       <div className="flex justify-center items-center mt-10">

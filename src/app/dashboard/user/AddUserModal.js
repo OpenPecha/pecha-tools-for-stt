@@ -8,6 +8,21 @@ const AddUserModal = ({ groups }) => {
   const ref = useRef(null);
   const [groupId, setGroupId] = useState("");
   const [role, setRole] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+    setUsername(inputValue);
+    // Use a regex to check for valid username format (no spaces or slashes)
+    if (/^[A-Za-z0-9_-]*$/.test(inputValue)) {
+      setError("");
+    } else {
+      setError(
+        "Invalid username format (no spaces or slashes allowed or special characters)"
+      );
+    }
+  };
 
   const handleGroupChange = async (event) => {
     setGroupId(event.target.value);
@@ -53,17 +68,24 @@ const AddUserModal = ({ groups }) => {
             <div>
               <label className="label" htmlFor="name">
                 <span className="label-text text-base font-semibold ">
-                  Name
+                  Username
                 </span>
               </label>
               <input
                 id="name"
                 type="text"
                 name="name"
-                placeholder="name"
+                placeholder="username"
                 required
                 className="input input-bordered w-full"
+                value={username}
+                onChange={handleInputChange}
               />
+              {error && (
+                <label className="label">
+                  <span className="label-text-alt text-red-500">{error}</span>
+                </label>
+              )}
             </div>
             <div>
               <label className="label" htmlFor="email">
@@ -82,14 +104,14 @@ const AddUserModal = ({ groups }) => {
             </div>
             <Select
               title="group_id"
-              label="Groups"
+              label="Group"
               options={groups}
               selectedOption={groupId}
               handleOptionChange={handleGroupChange}
             />
             <Select
               title="role"
-              label="Roles"
+              label="Role"
               options={roles}
               selectedOption={role}
               handleOptionChange={handleRoleChange}
@@ -97,6 +119,7 @@ const AddUserModal = ({ groups }) => {
           </div>
           <button
             type="submit"
+            disabled={error}
             formAction={async (formData) => {
               ref.current?.reset();
               console.log(

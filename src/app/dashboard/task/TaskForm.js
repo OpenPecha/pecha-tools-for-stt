@@ -34,7 +34,7 @@ const TaskForm = ({ groups }) => {
       >
         <Select
           title="group_id"
-          label="Groups"
+          label="Group"
           options={groups}
           selectedOption={selectedOption}
           handleOptionChange={handleOptionChange}
