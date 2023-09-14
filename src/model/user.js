@@ -7,9 +7,6 @@ export const getAllUser = async () => {
   try {
     const users = await prisma.user.findMany({
       include: {
-        transcriber_task: true,
-        reviewer_task: true,
-        final_reviewer_task: true,
         group: true,
       },
     });
