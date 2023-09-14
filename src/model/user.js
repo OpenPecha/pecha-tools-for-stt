@@ -29,6 +29,17 @@ export const createUser = async (formData) => {
   const groupId = formData.get("group_id");
   const role = formData.get("role");
   try {
+    // check if username already exists
+    const user = await prisma.user.findUnique({
+      where: {
+        name,
+      },
+    });
+    if (user) {
+      return {
+        error: "User already exists",
+      };
+    }
     const newUser = await prisma.user.create({
       data: {
         name,

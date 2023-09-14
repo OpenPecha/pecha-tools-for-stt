@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import { createUser } from "@/model/user";
 import Select from "@/components/Select";
+import toast from "react-hot-toast";
 
 const AddUserModal = ({ groups }) => {
   const ref = useRef(null);
@@ -130,6 +131,11 @@ const AddUserModal = ({ groups }) => {
                 formData.get("role")
               );
               const newUsesr = await createUser(formData);
+              if (newUsesr?.error) {
+                toast.error(newUsesr.error);
+              } else {
+                toast.success("User created successfully");
+              }
               window.add_modal.close();
             }}
             className="btn btn-accent w-full sm:w-1/5 my-4 py-1 px-6 capitalize"

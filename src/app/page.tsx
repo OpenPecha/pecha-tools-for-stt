@@ -26,9 +26,14 @@ export default async function Home({ searchParams }: { searchParams: any }) {
             please log in to it with correct username - ?session=username
             <span className="block">or</span>
           </div>
-          <Link href="/dashboard" type="button" className="btn btn-accent">
-            Dashboard
-          </Link>
+          <div className="flex flex-col gap-6 sm:flex-row">
+            <Link href="/dashboard" type="button" className="btn btn-accent">
+              Dashboard
+            </Link>
+            <Link href="/report/group" type="button" className="btn btn-accent">
+              Report
+            </Link>
+          </div>
         </>
       ) : errMsg ? (
         <div className="mt-10 text-xl font-semibold my-4 text-center">

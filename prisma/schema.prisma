@@ -57,13 +57,13 @@ model Task {
 }
 
 model User {
-  id                  Int     @id @default(autoincrement())
-  name                String  @unique @db.VarChar(255)
-  email               String? @db.VarChar(255)
+  id                  Int    @id @default(autoincrement())
+  name                String @unique @db.VarChar(255)
+  email               String @unique @db.VarChar(255)
   group_id            Int
-  role                Role    @default(TRANSCRIBER)
-  transcriber_task    Task[]  @relation("TranscriberTasks")
-  reviewer_task       Task[]  @relation("ReviewerTasks")
-  final_reviewer_task Task[]  @relation("FinalReviewerTasks")
-  group               Group   @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  role                Role   @default(TRANSCRIBER)
+  transcriber_task    Task[] @relation("TranscriberTasks")
+  reviewer_task       Task[] @relation("ReviewerTasks")
+  final_reviewer_task Task[] @relation("FinalReviewerTasks")
+  group               Group  @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
