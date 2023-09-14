@@ -70,8 +70,8 @@ const GroupDashboard = ({ groupList }) => {
                     {row.id}
                   </th>
                   <td className="px-6 py-4">{row.name}</td>
-                  <td className="px-6 py-4">{row.users?.length || 0}</td>
-                  <td className="px-6 py-4">{row.tasks?.length || 0}</td>
+                  <td className="px-6 py-4">{row._count.users || 0}</td>
+                  <td className="px-6 py-4">{row._count.tasks || 0}</td>
                   <td className="flex items-center px-6 py-4 space-x-3">
                     <a
                       href="#"

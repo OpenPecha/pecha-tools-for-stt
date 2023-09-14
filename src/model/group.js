@@ -7,8 +7,9 @@ export const getAllGroup = async () => {
   try {
     const allGroup = await prisma.group.findMany({
       include: {
-        users: true,
-        tasks: true,
+        _count: {
+          select: { tasks: true, users: true },
+        },
       },
     });
     return allGroup;
