@@ -72,7 +72,7 @@ const TaskForm = ({ groups }) => {
             );
             // if tasksCreated is not empty, then toast success message
             // else toast error message
-            if (tasksCreated?.length > 0) {
+            if (tasksCreated?.count > 0) {
               toast.success("Tasks created successfully");
             } else {
               toast.error("Error creating tasks");
