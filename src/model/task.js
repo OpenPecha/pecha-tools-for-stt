@@ -134,9 +134,6 @@ export const getUserSpecificTasks = async (id, dates) => {
     }
     console.log("userTaskList", userTaskList);
     for (const task of userTaskList) {
-      const mins = calculateAudioMinutes(task);
-      task.audio_duration = mins;
-
       if (
         task.state === "submitted" ||
         task.state === "accepted" ||

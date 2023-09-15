@@ -54,6 +54,7 @@ model Task {
   reviewed_at           DateTime?
   finalised_reviewed_at DateTime?
   duration              String?
+  audio_duration        Float     @default(0)
 }
 
 model User {
