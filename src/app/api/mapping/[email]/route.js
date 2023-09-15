@@ -12,7 +12,7 @@ export async function GET(request, { params }) {
     }
     else {
 
-        var user = await prisma.User.findUnique({
+        var user = await prisma.User.findFirst({
             where: {
                 email: params.email,
             },
