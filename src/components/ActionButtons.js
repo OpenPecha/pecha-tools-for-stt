@@ -28,22 +28,23 @@ const ActionButtons = ({
             </div>
           </button>
         </div>
-        {role !== "TRANSCRIBER" && (
-          <div className="tooltip tooltip-top" data-tip="Reject(x)">
-            <button
-              type="button"
-              className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
-              onClick={() =>
-                updateTaskAndIndex("reject", transcript, tasks[index])
-              }
-            >
-              <div className="flex flex-col items-center">
-                <BsXLg />
-                <p>Reject</p>
-              </div>
-            </button>
-          </div>
-        )}
+        {role !== "TRANSCRIBER" ||
+          (role != "REVIEWER" && (
+            <div className="tooltip tooltip-top" data-tip="Reject(x)">
+              <button
+                type="button"
+                className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
+                onClick={() =>
+                  updateTaskAndIndex("reject", transcript, tasks[index])
+                }
+              >
+                <div className="flex flex-col items-center">
+                  <BsXLg />
+                  <p>Reject</p>
+                </div>
+              </button>
+            </div>
+          ))}
         <div className="tooltip tooltip-top" data-tip="Save(s)">
           <button
             type="button"
