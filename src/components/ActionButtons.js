@@ -44,6 +44,18 @@ const ActionButtons = ({
             </button>
           </div>
         )}
+        <div className="tooltip tooltip-top" data-tip="Save(s)">
+          <button
+            type="button"
+            className="focus:outline-none text-white bg-yellow-500 font-medium text-md p-6 sm:p-9"
+            onClick={() => updateTaskAndIndex("save", transcript, tasks[index])}
+          >
+            <div className="flex flex-col items-center">
+              <BsArrowReturnLeft />
+              <p>Save</p>
+            </div>
+          </button>
+        </div>
         <div className="tooltip tooltip-top" data-tip="Trash(t)">
           <button
             type="button"
@@ -55,18 +67,6 @@ const ActionButtons = ({
             <div className="flex flex-col items-center">
               <BsTrash />
               <p>Trash</p>
-            </div>
-          </button>
-        </div>
-        <div className="tooltip tooltip-top" data-tip="Save(s)">
-          <button
-            type="button"
-            className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"
-            onClick={() => updateTaskAndIndex("save", transcript, tasks[index])}
-          >
-            <div className="flex flex-col items-center">
-              <BsArrowReturnLeft />
-              <p>Save</p>
             </div>
           </button>
         </div>
