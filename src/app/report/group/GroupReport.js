@@ -37,7 +37,7 @@ const GroupReport = ({ groups }) => {
                   </td>
                   <td>{user.noSubmitted}</td>
                   <td>{user.noReviewed}</td>
-                  <td>{user.reviewedMins}</td>
+                  <td>{user.reviewedMins.toFixed(2)}</td>
                   <td>{user.syllableCount}</td>
                 </tr>
               ))}
