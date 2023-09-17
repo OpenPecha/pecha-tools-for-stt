@@ -11,8 +11,8 @@ const GroupDashboard = ({ groupList }) => {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const handleRemoveGroup = async (row) => {
-    const noUser = row.users?.length;
-    const noTask = row.tasks?.length;
+    const noUser = row._count.users;
+    const noTask = row._count.tasks;
     if (noUser !== 0 || noTask !== 0) {
       window.alert(
         `Group ${row.name} has ${noUser} users and ${noTask} tasks!`
@@ -24,8 +24,7 @@ const GroupDashboard = ({ groupList }) => {
   };
 
   const handleEditGroup = async (row) => {
-    const oneGroup = await groupList.find((group) => group.id === row.id);
-    setSelectedRow(oneGroup);
+    setSelectedRow(row);
     window.edit_modal.showModal();
   };
 

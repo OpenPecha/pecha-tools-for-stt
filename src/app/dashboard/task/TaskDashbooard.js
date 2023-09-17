@@ -19,15 +19,14 @@ const TaskDashbooard = async ({ searchParams, groups }) => {
 
   const end = skip + limit;
   const allTasks = await getAllTask(limit, skip);
-  const totalTasks = await getTotalTaskCount();
-  const pageCount = Math.ceil(totalTasks / limit);
-  console.log("totalTasks", totalTasks);
+  const totalTasksCount = await getTotalTaskCount();
+  const pageCount = Math.ceil(totalTasksCount / limit);
 
   return (
     <>
       <TaskForm groups={groups} />
       <div className="flex flex-col justify-center items-center mt-10">
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[70vh]">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
@@ -77,7 +76,7 @@ const TaskDashbooard = async ({ searchParams, groups }) => {
         <PaginationControls
           page={page}
           per_page={per_page}
-          hasNextPage={end <= totalTasks}
+          hasNextPage={end < totalTasksCount}
           hasPrevPage={skip > 0}
           pageCount={pageCount}
         />

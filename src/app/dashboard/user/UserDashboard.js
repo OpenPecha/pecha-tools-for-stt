@@ -27,8 +27,7 @@ const UserDashboard = ({ users, groups }) => {
   };
 
   const handleEditUser = async (userRow) => {
-    const oneUser = await users.find((user) => user.id === userRow.id);
-    setSelectedRow(oneUser);
+    setSelectedRow(userRow);
     window.edit_modal.showModal();
   };
 

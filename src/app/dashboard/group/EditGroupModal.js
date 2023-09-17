@@ -4,9 +4,7 @@ import { editGroup } from "@/model/group";
 
 const EditGroupModal = ({ selectedRow }) => {
   const ref = useRef(null);
-
-  console.log("one group", selectedRow);
-
+  
   return (
     <>
       <dialog id="edit_modal" className="modal ">
@@ -68,7 +66,7 @@ const EditGroupModal = ({ selectedRow }) => {
                 disabled
                 required
                 className="input input-bordered w-full"
-                defaultValue={selectedRow?.users.length}
+                defaultValue={selectedRow?._count.users}
               />
             </div>
             <div>
@@ -83,7 +81,7 @@ const EditGroupModal = ({ selectedRow }) => {
                 name="tasks"
                 required
                 disabled
-                defaultValue={selectedRow?.tasks.length}
+                defaultValue={selectedRow?._count.tasks}
                 className="input input-bordered w-full"
               />
             </div>

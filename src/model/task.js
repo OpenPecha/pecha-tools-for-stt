@@ -106,14 +106,49 @@ export async function createTasksFromCSV(fileData, formData) {
 //     });
 // }
 
-export const getUserSpecificTasks = async (id, dates) => {
-  console.log("id", id, dates);
+export const getUserSpecificTasksCount = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
+  console.log("fromDate", fromDate, "toDate", toDate);
+  try {
+    if (fromDate && toDate) {
+      console.log("when both are present", fromDate, toDate);
+      const userTaskCount = await prisma.task.count({
+        where: {
+          transcriber_id: parseInt(id),
+          state: { in: ["submitted", "accepted", "finalised"] },
+          submitted_at: {
+            gte: new Date(fromDate).toISOString(),
+            lte: new Date(toDate).toISOString(),
+          },
+        },
+      });
+      return userTaskCount;
+    } else {
+      console.log("when only one is present", fromDate, toDate);
+      const userTaskCount = await prisma.task.count({
+        where: {
+          transcriber_id: parseInt(id),
+          state: { in: ["submitted", "accepted", "finalised"] },
+        },
+      });
+      return userTaskCount;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getUserSpecificTasks = async (id, limit, skip, dates) => {
+  console.log("id", id, "limit", limit, "skip", skip, "dates", dates);
+  const { from: fromDate, to: toDate } = dates;
+  console.log("fromDate", fromDate, "toDate", toDate);
   let userTaskList;
   try {
     if (fromDate && toDate) {
       console.log("when both are present", fromDate, toDate);
       userTaskList = await prisma.task.findMany({
+        skip: skip,
+        take: limit,
         where: {
           transcriber_id: parseInt(id),
           state: { in: ["submitted", "accepted", "finalised"] },
@@ -126,13 +161,15 @@ export const getUserSpecificTasks = async (id, dates) => {
     } else {
       console.log("when only one is present", fromDate, toDate);
       userTaskList = await prisma.task.findMany({
+        skip: skip,
+        take: limit,
         where: {
           transcriber_id: parseInt(id),
           state: { in: ["submitted", "accepted", "finalised"] },
         },
       });
     }
-    console.log("userTaskList", userTaskList);
+    console.log("userTaskList", userTaskList, userTaskList.length);
     for (const task of userTaskList) {
       if (
         task.state === "submitted" ||

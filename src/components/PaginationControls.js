@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const PaginationControls = ({
   page,
@@ -11,7 +11,6 @@ const PaginationControls = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  console.log("pathname", pathname);
 
   return (
     <div className="join pt-10">

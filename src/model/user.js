@@ -105,8 +105,6 @@ export const getUsersByGroup = async (groupId) => {
       },
       include: {
         transcriber_task: true,
-        reviewer_task: true,
-        final_reviewer_task: true,
       },
     });
     return users;
@@ -257,3 +255,49 @@ export const calculateAudioMinutes = (task) => {
 
   return null; // Return null for cases with errors
 };
+
+// // might be able to use this function to get the user statistics insteadof generateUserStatistics
+// export const userStatistics = async (userId) => {
+//   const userData = await prisma.task.findMany({
+//     where: {
+//       OR: [
+//         { transcriber_id: parseInt(userId) },
+//         { reviewer_id: parseInt(userId) },
+//         { final_reviewer_id: parseInt(userId) },
+//       ],
+//     },
+//     include: {
+//       transcriber: true,
+//     },
+//   });
+//   console.log("userData 2", userData.length);
+//   const userTaskSummary = userData.reduce(
+//     (acc, task) => {
+//       if (
+//         task.state === "submitted" ||
+//         task.state === "accepted" ||
+//         task.state === "finalised"
+//       ) {
+//         acc.noSubmitted++;
+//       }
+//       if (task.state === "accepted" || task.state === "finalised") {
+//         acc.noReviewed++;
+//         const mins = calculateAudioMinutes(task);
+//         acc.reviewedMins = acc.reviewedMins + parseFloat(mins);
+//         const syllableCount = splitIntoSyllables(
+//           task.reviewed_transcript
+//         ).length;
+//         acc.syllableCount = acc.syllableCount + syllableCount;
+//       }
+//       return acc;
+//     },
+//     { noSubmitted: 0, noReviewed: 0, reviewedMins: 0, syllableCount: 0 }
+//   );
+//   console.log("userTaskSummary", userTaskSummary);
+//   const userStatistics = {
+//     ...userTaskSummary,
+//     id: userData[0]?.transcriber?.id,
+//     name: userData[0]?.transcriber?.name,
+//   };
+//   console.log("userStatistics", userStatistics);
+// };
