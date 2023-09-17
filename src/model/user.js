@@ -183,7 +183,7 @@ const generateUserStatistics = (userObj, filteredTasks) => {
       userObj.noReviewed++;
 
       const mins = calculateAudioMinutes(task);
-      userObj.reviewedMins = userObj.reviewedMins + parseFloat(mins);
+      userObj.reviewedMins = userObj.reviewedMins + parseFloat(mins) / 60;
 
       //go through each task and find the reviewed transcript and calculate the syllable count
       const { reviewed_transcript } = task;

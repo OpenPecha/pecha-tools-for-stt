@@ -2,7 +2,7 @@ const mappingObj =
 {
     "tashitsering@esukhia.org": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=tashitsering@esukhia.org", department: "ocr" },
     "tenkus47@gmail.com" : { url: "https://work.pecha.tools/stt_cs_gb_review/?session=spsither@gmail.com", department: "stt" },
-
+    "shugtso@monlam.ai" : { url: "https://work.pecha.tools/glyph_annotation_ga/?session=shugtso@monlam.ai", department: "ocr" },
     
     "sangmotenz79@gmail.com" : { url: "https://work.pecha.tools/glyph_annotation_ga/?session=sangmotenz79@gmail.com", department: "ocr" },
     "choezom2015@gmail.com" : { url: "https://work.pecha.tools/glyph_annotation_ga/?session=choezom2015@gmail.com", department: "ocr" },
