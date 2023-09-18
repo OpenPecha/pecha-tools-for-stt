@@ -2,6 +2,7 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
+import { getUserSpecificTasksCount } from "./task";
 
 export const getAllUser = async () => {
   try {
@@ -153,6 +154,12 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
       syllableCount: 0,
     };
 
+    const taskSubmittedCount = await getUserSpecificTasksCount(id, {
+      from: fromDate,
+      to: toDate,
+    });
+    userObj.noSubmitted = taskSubmittedCount;
+
     if (fromDate && toDate) {
       filteredTasks = filterTasksByDateRange(
         user.transcriber_task,
@@ -172,16 +179,8 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
 // Generate user task statistics
 const generateUserStatistics = (userObj, filteredTasks) => {
   for (const task of filteredTasks) {
-    if (
-      task.state === "submitted" ||
-      task.state === "accepted" ||
-      task.state === "finalised"
-    ) {
-      userObj.noSubmitted++;
-    }
     if (task.state === "accepted" || task.state === "finalised") {
       userObj.noReviewed++;
-
       userObj.reviewedSecs = userObj.reviewedSecs + task.audio_duration;
 
       //go through each task and find the reviewed transcript and calculate the syllable count
@@ -214,6 +213,7 @@ const filterTasksByDateRange = (tasks, fromDate, toDate) => {
     const reviewedAtTimestamp = reviewedAt?.getTime();
     const fromDateTimestamp = isoFromDate?.getTime();
     const toDateTimestamp = isoToDate?.getTime();
+
     return (
       fromDateTimestamp <= reviewedAtTimestamp &&
       reviewedAtTimestamp <= toDateTimestamp
