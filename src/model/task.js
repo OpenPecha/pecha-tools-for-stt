@@ -190,3 +190,53 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
     throw new Error(error);
   }
 };
+
+export const getCompletedTaskCount = async (id, role) => {
+  try {
+    switch (role) {
+      case "TRANSCRIBER":
+        try {
+          const completedTaskCount = await prisma.task.count({
+            where: {
+              transcriber_id: parseInt(id),
+              state: { in: ["submitted", "accepted", "finalised"] },
+            },
+          });
+          return completedTaskCount;
+          break;
+        } catch (error) {
+          throw new Error(error);
+        }
+      case "REVIEWER":
+        try {
+          const completedTaskCount = await prisma.task.count({
+            where: {
+              reviewer_id: parseInt(id),
+              state: { in: ["accepted", "finalised"] },
+            },
+          });
+          return completedTaskCount;
+          break;
+        } catch (error) {
+          throw new Error(error);
+        }
+      case "FINAL_REVIEWER":
+        try {
+          const completedTaskCount = await prisma.task.count({
+            where: {
+              final_reviewer_id: parseInt(id),
+              state: { in: ["finalised"] },
+            },
+          });
+          return completedTaskCount;
+          break;
+        } catch (error) {
+          throw new Error(error);
+        }
+      default:
+        break;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
