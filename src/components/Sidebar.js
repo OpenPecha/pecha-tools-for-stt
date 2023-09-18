@@ -42,7 +42,7 @@ const Sidebar = ({
               <div className="text-lg">Pecha STT Tool</div>
             </header>
             <section className="p-5 border-b border-b-[#384451]">
-              <h3 class="uppercase font-bold mb-2">Project Info</h3>
+              <h3 className="uppercase font-bold mb-2">Project Info</h3>
               <div className="flex text-right justify-between capitalize">
                 <label className="capitalize text-sm font-bold mb-2">
                   User
