@@ -13,7 +13,8 @@ const GroupReportTable = ({ usersStatistic }) => {
               <th>Task Submitted</th>
               <th>Task Reviewed</th>
               <th>Reviewed minutes</th>
-              <th>Reviewed syllabus count</th>
+              <th>Reviewed syllable count</th>
+              <th>Rs.</th>
             </tr>
           </thead>
           <tbody>
@@ -24,8 +25,9 @@ const GroupReportTable = ({ usersStatistic }) => {
                 </td>
                 <td>{user.noSubmitted}</td>
                 <td>{user.noReviewed}</td>
-                <td>{user.reviewedMins.toFixed(2)}</td>
+                <td>{(user.reviewedSecs / 60).toFixed(2)}</td>
                 <td>{user.syllableCount}</td>
+                <td>{((user.reviewedSecs / 60) * 5 + user.syllableCount * 0.4).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

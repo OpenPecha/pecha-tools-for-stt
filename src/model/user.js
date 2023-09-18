@@ -149,7 +149,7 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
       name,
       noSubmitted: 0,
       noReviewed: 0,
-      reviewedMins: 0,
+      reviewedSecs: 0,
       syllableCount: 0,
     };
 
@@ -182,8 +182,7 @@ const generateUserStatistics = (userObj, filteredTasks) => {
     if (task.state === "accepted" || task.state === "finalised") {
       userObj.noReviewed++;
 
-      const mins = calculateAudioMinutes(task);
-      userObj.reviewedMins = userObj.reviewedMins + parseFloat(mins) / 60;
+      userObj.reviewedSecs = userObj.reviewedSecs + task.audio_duration;
 
       //go through each task and find the reviewed transcript and calculate the syllable count
       const { reviewed_transcript } = task;
@@ -210,14 +209,14 @@ const filterTasksByDateRange = (tasks, fromDate, toDate) => {
   const isoToDate = new Date(toDate);
 
   const filteredTasks = tasks.filter((task) => {
-    const submittedAt = task.submitted_at;
+    const reviewedAt = task.reviewed_at;
     // Convert the dates to timestamps for comparison
-    const submittedAtTimestamp = submittedAt?.getTime();
+    const reviewedAtTimestamp = reviewedAt?.getTime();
     const fromDateTimestamp = isoFromDate?.getTime();
     const toDateTimestamp = isoToDate?.getTime();
     return (
-      fromDateTimestamp <= submittedAtTimestamp &&
-      submittedAtTimestamp <= toDateTimestamp
+      fromDateTimestamp <= reviewedAtTimestamp &&
+      reviewedAtTimestamp <= toDateTimestamp
     );
   });
   // console.log("filteredTasks", filteredTasks);
