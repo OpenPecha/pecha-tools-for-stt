@@ -30,17 +30,33 @@ export const createUser = async (formData) => {
   const groupId = formData.get("group_id");
   const role = formData.get("role");
   try {
-    // check if username already exists
-    const user = await prisma.user.findUnique({
+    // check if username  and email already exists
+    const userByName = await prisma.user.findUnique({
       where: {
-        name,
+        name: name,
       },
     });
-    if (user) {
+
+    const userByEmail = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (userByName && userByEmail) {
       return {
-        error: "User already exists",
+        error: "User already exists with the same username and email",
+      };
+    } else if (userByName) {
+      return {
+        error: "User already exists with the same username",
+      };
+    } else if (userByEmail) {
+      return {
+        error: "User already exists with the same email",
       };
     }
+    // If no matching user was found, you can proceed with user creating new user
     const newUser = await prisma.user.create({
       data: {
         name,
@@ -78,6 +94,39 @@ export const editUser = async (id, formData) => {
   const groupId = formData.get("group_id");
   const role = formData.get("role");
   try {
+    // check if username  and email already exists
+    const userId = parseInt(id); // Ensure id is converted to an integer
+    const userByName = await prisma.user.findUnique({
+      where: {
+        name: name,
+        NOT: {
+          id: userId,
+        },
+      },
+    });
+
+    const userByEmail = await prisma.user.findUnique({
+      where: {
+        email: email,
+        NOT: {
+          id: userId,
+        },
+      },
+    });
+
+    if (userByName && userByEmail) {
+      return {
+        error: "User already exists with the same username and email",
+      };
+    } else if (userByName) {
+      return {
+        error: "User already exists with the same username",
+      };
+    } else if (userByEmail) {
+      return {
+        error: "User already exists with the same email",
+      };
+    }
     const group = await prisma.user.update({
       where: {
         id,

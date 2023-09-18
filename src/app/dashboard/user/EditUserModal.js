@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { editUser } from "@/model/user";
 import Select from "@/components/Select";
+import toast from "react-hot-toast";
 
 const EditUserModal = ({ groups, selectedRow }) => {
   const ref = useRef(null);
@@ -168,6 +169,11 @@ const EditUserModal = ({ groups, selectedRow }) => {
                   formData.get("role")
                 );
                 const newUsesr = await editUser(selectedRow?.id, formData);
+                if (newUsesr?.error) {    
+                  toast.error(newUsesr.error);
+                } else {
+                  toast.success("Edit user successfully");
+                }
                 window.edit_modal.close();
               }}
               className="btn btn-accent w-full sm:w-1/5 my-4 py-1 px-6 capitalize"
