@@ -35,7 +35,7 @@ const Sidebar = ({
           </div>
           {children}
         </div>
-        <div className="drawer-side ">
+        <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <div className="flex flex-col w-60 min-h-full h-full bg-[#54606e] text-white">
             <header className="bg-[#384451] p-4">
@@ -43,38 +43,38 @@ const Sidebar = ({
             </header>
             <section className="p-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">Project Info</h3>
-              <div className="flex text-right justify-between capitalize">
-                <label className="capitalize text-sm font-bold mb-2">
+              <div className="flex text-right justify-between">
+                <label className="text-sm font-bold mb-2">
                   User
                 </label>
-                <span className="capitalize text-right">{userDetail.name}</span>
+                <span className="text-right">{userDetail.name}</span>
               </div>
-              <div className="flex text-right justify-between capitalize">
-              <label className="capitalize text-sm font-bold mb-2">
-                Group
-              </label>
-              <span className="capitalize text-right">{userDetail.group.name}</span>
-            </div>
-              <div className="flex text-right justify-between capitalize">
-                <label className="capitalize text-sm font-bold mb-2">
+              <div className="flex text-right justify-between">
+                <label className="text-sm font-bold mb-2">
+                  Group
+                </label>
+                <span className=" text-right">{userDetail.group.name}</span>
+              </div>
+              <div className="flex text-right justify-between">
+                <label className="text-sm font-bold mb-2">
                   Task ID
                 </label>
-                <span className="capitalize text-right">
+                <span className=" text-right">
                   {taskList[index]?.id}
                 </span>
               </div>
             </section>
             <section className="p-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">TARGET PROGRESS</h3>
-              <div className="flex text-right justify-between capitalize">
-                <label className="capitalize text-sm font-bold mb-2">
+              <div className="flex text-right justify-between">
+                <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
                     ? "Submitted"
                     : role === "REVIEWER"
-                    ? "Reviewed"
-                    : "Final Reviewed"}
+                      ? "Reviewed"
+                      : "Final Reviewed"}
                 </label>
-                <span className="capitalize text-right">{completedTask}</span>
+                <span className=" text-right">{completedTask}</span>
               </div>
             </section>
           </div>
