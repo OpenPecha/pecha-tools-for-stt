@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
-
-const TranscriberReportTable = ({ usersStatistic }) => {
+import { calculatePay } from "@/lib/calculatePay"
+const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -27,7 +27,7 @@ const TranscriberReportTable = ({ usersStatistic }) => {
                 <td>{user.noReviewed}</td>
                 <td>{(user.reviewedSecs / 60).toFixed(2)}</td>
                 <td>{user.syllableCount}</td>
-                <td>{((user.reviewedSecs / 60) * 5 + user.syllableCount * 0.4).toFixed(2)}</td>
+                <td>{calculatePay(selectGroup, user.reviewedSecs, user.syllableCount, user.noReviewed)}</td>
               </tr>
             ))}
           </tbody>
