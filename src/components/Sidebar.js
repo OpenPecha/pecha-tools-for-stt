@@ -50,6 +50,12 @@ const Sidebar = ({
                 <span className="capitalize text-right">{userDetail.name}</span>
               </div>
               <div className="flex text-right justify-between capitalize">
+              <label className="capitalize text-sm font-bold mb-2">
+                Group
+              </label>
+              <span className="capitalize text-right">{userDetail.group.name}</span>
+            </div>
+              <div className="flex text-right justify-between capitalize">
                 <label className="capitalize text-sm font-bold mb-2">
                   Task ID
                 </label>

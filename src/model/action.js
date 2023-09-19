@@ -10,6 +10,9 @@ export const getUserDetails = async (username) => {
     where: {
       name: username,
     },
+    include: {
+      group: true,
+    },
   });
   if (userData === null) {
     console.log("userData ---", userData);
