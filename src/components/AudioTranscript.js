@@ -144,23 +144,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
                 )}
               </div>
             )}
-            <div className="absolute right-0 p-2">
-              <label className="btn btn-square btn-ghost">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className="inline-block w-6 h-6 stroke-current"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
-                </svg>
-              </label>
-            </div>
             <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-8 mt-20 mb-40">
               <div className="flex flex-col gap-5 justify-center items-center">
                 <AudioPlayer
