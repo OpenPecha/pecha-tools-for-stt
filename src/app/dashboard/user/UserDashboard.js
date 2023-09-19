@@ -97,12 +97,6 @@ const UserDashboard = ({ users, groups }) => {
                     >
                       Remove
                     </a>
-                    <a
-                      href={`https://stt.pecha.tools/?session=${user.name}`}
-                      className="font-medium text-green-600 dark:text-green-500 hover:underline"
-                    >
-                      Work
-                    </a>
                   </td>
                 </tr>
               ))}
