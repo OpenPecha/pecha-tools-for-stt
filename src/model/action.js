@@ -389,7 +389,6 @@ export const updateTask = async (
                 ? null
                 : transcript,
             reviewed_at: new Date().toISOString(),
-            duration: duration,
           },
         });
         if (updatedFile) {
@@ -419,7 +418,6 @@ export const updateTask = async (
                 ? null
                 : transcript,
             finalised_reviewed_at: new Date().toISOString(),
-            duration: duration,
           },
         });
         if (updatedFile) {

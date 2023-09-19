@@ -2,7 +2,11 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
-import { getUserSpecificTasksCount } from "./task";
+import {
+  getCompletedTaskCount,
+  getReviewerTaskCount,
+  getUserSpecificTasksCount,
+} from "./task";
 
 export const getAllUser = async () => {
   try {
@@ -238,7 +242,6 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
     const userStatistics = generateUserStatistics(userObj, filteredTasks);
     userList.push(userStatistics);
   }
-
   console.log("Generated User Task Statistics Report:", userList);
   return userList;
 };
@@ -290,36 +293,61 @@ const filterTasksByDateRange = (tasks, fromDate, toDate) => {
   return filteredTasks;
 };
 
-export const calculateAudioMinutes = (task) => {
-  const { file_name } = task;
-
-  if (typeof file_name !== "string") {
-    console.log("Invalid file_name. Expected a string.");
-    return null; // or handle the error as needed
+export const reviewerOfGroup = async (groupId) => {
+  try {
+    const reviewers = await prisma.user.findMany({
+      where: {
+        group_id: parseInt(groupId),
+        role: "REVIEWER",
+      },
+    });
+    return reviewers;
+  } catch (error) {
+    console.error("Error getting reviewers of group:", error);
+    throw new Error(error);
   }
+};
 
-  // Regular expression pattern to match "start_to_end"
-  const regexPattern = /(\d+)_to_(\d+)/;
-
-  const match = file_name.match(regexPattern);
-
-  if (match) {
-    const [, startTimeStr, endTimeStr] = match; // Use named variables
-    const startTime = parseInt(startTimeStr);
-    const endTime = parseInt(endTimeStr);
-
-    if (!isNaN(startTime) && !isNaN(endTime)) {
-      const timeInSeconds = (endTime - startTime) / 1000;
-      const formattedTime = timeInSeconds.toFixed(2) + "s";
-      return formattedTime;
-    } else {
-      console.log("Invalid time values.");
-    }
-  } else {
-    console.log("Input string does not match the expected format.");
+// for all the reviewers of a group retun the task statistics - task reviewed, task accepted, task finalised
+export const generateReviewerReportbyGroup = async (groupId, dates) => {
+  console.log(
+    "generateReviewerReportbyGroup group is selecte ",
+    groupId,
+    dates
+  );
+  try {
+    const reviewers = await reviewerOfGroup(groupId);
+    const usersReport = generateReviewerTaskReport(reviewers, dates);
+    return usersReport;
+  } catch (error) {
+    console.error("Error getting users by group:", error);
+    throw new Error(error);
   }
+};
 
-  return null; // Return null for cases with errors
+export const generateReviewerTaskReport = async (reviewers, dates) => {
+  const reviewerList = [];
+
+  for (const reviewer of reviewers) {
+    const { id, name } = reviewer;
+
+    const reviewerObj = {
+      id,
+      name,
+      noReviewed: 0,
+      noAccepted: 0,
+      noFinalised: 0,
+    };
+    const updatedReviwerObj = await getReviewerTaskCount(
+      id,
+      dates,
+      reviewerObj
+    );
+    console.log("updatedReviwerObj", updatedReviwerObj);
+    reviewerList.push(updatedReviwerObj);
+  }
+  console.log("Generated Reviewer Task Statistics Report:", reviewerList);
+  return reviewerList;
 };
 
 // // might be able to use this function to get the user statistics insteadof generateUserStatistics
@@ -348,8 +376,6 @@ export const calculateAudioMinutes = (task) => {
 //       }
 //       if (task.state === "accepted" || task.state === "finalised") {
 //         acc.noReviewed++;
-//         const mins = calculateAudioMinutes(task);
-//         acc.reviewedMins = acc.reviewedMins + parseFloat(mins);
 //         const syllableCount = splitIntoSyllables(
 //           task.reviewed_transcript
 //         ).length;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-const GroupReportTable = ({ usersStatistic }) => {
+const TranscriberReportTable = ({ usersStatistic }) => {
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -37,4 +37,4 @@ const GroupReportTable = ({ usersStatistic }) => {
   );
 };
 
-export default GroupReportTable;
+export default TranscriberReportTable;

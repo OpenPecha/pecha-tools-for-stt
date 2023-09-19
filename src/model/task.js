@@ -240,3 +240,66 @@ export const getCompletedTaskCount = async (id, role) => {
     throw new Error(error);
   }
 };
+
+export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
+  const { from: fromDate, to: toDate } = dates;
+  console.log("getReviewerTaskCount fromDate", fromDate, "toDate", toDate, reviewerObj);
+  try {
+    if (fromDate && toDate) {
+      console.log("when both are present", fromDate, toDate);
+      reviewerObj.noReviewed = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: { in: ["accepted", "finalised"] },
+          reviewed_at: {
+            gte: new Date(fromDate).toISOString(),
+            lte: new Date(toDate).toISOString(),
+          },
+        },
+      });
+      reviewerObj.noAccepted = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: "accepted",
+          reviewed_at: {
+            gte: new Date(fromDate).toISOString(),
+            lte: new Date(toDate).toISOString(),
+          },
+        },
+      });
+      reviewerObj.noFinalised = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: "finalised",
+          reviewed_at: {
+            gte: new Date(fromDate).toISOString(),
+            lte: new Date(toDate).toISOString(),
+          },
+        },
+      });
+    } else {
+      console.log("when only one is present", fromDate, toDate);
+      reviewerObj.noReviewed = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: { in: ["accepted", "finalised"] },
+        },
+      });
+      reviewerObj.noAccepted = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: "accepted",
+        },
+      });
+      reviewerObj.noFinalised = await prisma.task.count({
+        where: {
+          reviewer_id: parseInt(id),
+          state: "finalised",
+        },
+      });
+    }
+    return reviewerObj;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

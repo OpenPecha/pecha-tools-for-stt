@@ -1,12 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { generateUserReportByGroup } from "@/model/user";
-import GroupReportTable from "./GroupReportTable";
+import {
+  generateUserReportByGroup,
+  generateReviewerReportbyGroup,
+} from "@/model/user";
+import TranscriberReportTable from "./TranscriberReportTable";
+import ReviewerReportTable from "./ReviewerReportTable";
 import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
 
 const GroupReport = ({ groups }) => {
   const [usersStatistic, setUsersStatistic] = useState([]);
+  const [reviewersStatistic, setReviewersStatistic] = useState([]);
   const [selectGroup, setSelectGroup] = useState("");
   const [dates, setDates] = useState({ from: "", to: "" });
 
@@ -20,6 +25,14 @@ const GroupReport = ({ groups }) => {
         );
         setUsersStatistic(usersOfGroup);
       }
+      async function getReviewerReportByGroup() {
+        const reviewersOfGroup = await generateReviewerReportbyGroup(
+          selectGroup,
+          dates
+        );
+        setReviewersStatistic(reviewersOfGroup);
+      }
+      getReviewerReportByGroup();
       getUserReportByGroup();
     }
   }, [selectGroup, dates]);
@@ -55,8 +68,9 @@ const GroupReport = ({ groups }) => {
           />
         </div>
       </form>
-      <div className="flex justify-center items-center mt-10">
-        <GroupReportTable usersStatistic={usersStatistic} />
+      <div className="flex flex-col gap-10 justify-center items-center mt-10">
+        <TranscriberReportTable usersStatistic={usersStatistic} />
+        <ReviewerReportTable reviewersStatistic={reviewersStatistic}  />
       </div>
     </>
   );
