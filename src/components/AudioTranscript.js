@@ -6,6 +6,7 @@ import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
 import { getCompletedTaskCount } from "@/model/task";
 import Sidebar from "@/components/Sidebar";
+import toast from "react-hot-toast";
 
 const AudioTranscript = ({ tasks, userDetail }) => {
   const [taskList, setTaskList] = useState(tasks);
@@ -68,7 +69,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     try {
       const { id } = task;
 
-      const response = await updateTask(
+      const updatedTask = await updateTask(
         action,
         id,
         transcript,
@@ -76,7 +77,11 @@ const AudioTranscript = ({ tasks, userDetail }) => {
         role,
         currentTimeRef.current
       );
-      console.log("response", response);
+      if (updatedTask?.error) {
+        toast.error(updatedTask.error);
+      } else {
+        toast.success(updatedTask.success);
+      }
       if (action === "submit") {
         const count = completedTaskCount();
         setCompletedTask(count);

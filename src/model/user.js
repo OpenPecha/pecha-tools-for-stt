@@ -66,7 +66,16 @@ export const createUser = async (formData) => {
       },
     });
     revalidatePath("/dashboard/user");
-    return newUser;
+    // if new user is created, send msg to client side that user is created
+    if (newUser) {
+      return {
+        success: "User created successfully",
+      };
+    } else {
+      return {
+        error: "Error creating user",
+      };
+    }
   } catch (error) {
     console.log("Error adding a user", error);
     throw new Error(error);
@@ -127,7 +136,7 @@ export const editUser = async (id, formData) => {
         error: "User already exists with the same email",
       };
     }
-    const group = await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: {
         id,
       },
@@ -139,7 +148,16 @@ export const editUser = async (id, formData) => {
       },
     });
     revalidatePath("/dashboard/user");
-    return group;
+    // if user data is edited , send msg to client side that user is created
+    if (updatedUser) {
+      return {
+        success: "User edited successfully",
+      };
+    } else {
+      return {
+        error: "Error editing user",
+      };
+    }
   } catch (error) {
     console.log("Error updating a user details", error);
     throw new Error(error);

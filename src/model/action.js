@@ -359,7 +359,15 @@ export const updateTask = async (
             duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
@@ -381,7 +389,15 @@ export const updateTask = async (
             duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
@@ -403,10 +419,45 @@ export const updateTask = async (
             duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
+      break;
+    default:
+      break;
+  }
+};
+
+export const taskToastMsg = async (action) => {
+  switch (action) {
+    case "submit":
+      return {
+        success: "Task is submitted successfully",
+      };
+      break;
+    case "save":
+      return {
+        success: "Task is saved successfully",
+      };
+      break;
+    case "trash":
+      return {
+        success: "Task is trashed successfully",
+      };
+      break;
+    case "reject":
+      return {
+        success: "Task is rejected successfully",
+      };
       break;
     default:
       break;

@@ -169,10 +169,10 @@ const EditUserModal = ({ groups, selectedRow }) => {
                   formData.get("role")
                 );
                 const newUsesr = await editUser(selectedRow?.id, formData);
-                if (newUsesr?.error) {    
+                if (newUsesr?.error) {
                   toast.error(newUsesr.error);
                 } else {
-                  toast.success("Edit user successfully");
+                  toast.success(newUsesr.success);
                 }
                 window.edit_modal.close();
               }}
