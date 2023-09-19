@@ -1,6 +1,6 @@
 const mappingObj =
 {
-    "tashitsering@esukhia.org": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=tashitsering@esukhia.org", department: "ocr" },
+    "tashitsering@esukhia.org": { url: "https://ocr.pecha.tools/?base=Corr1-20230809&session=tashitsering@esukhia.org", department: "ocr" },
     "tenkus47@gmail.com" : { url: "https://work.pecha.tools/stt_cs_gb_review/?session=spsither@gmail.com", department: "stt" },
     "shugtso@monlam.ai" : { url: "https://work.pecha.tools/glyph_annotation_ga/?session=shugtso@monlam.ai", department: "ocr" },
     
