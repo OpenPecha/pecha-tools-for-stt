@@ -39,6 +39,7 @@ export async function createTasksFromCSV(fileData, formData) {
       const inference_transcript = row.inference_transcript;
       const fileName = row.file_name;
       const url = row.url;
+      const audio_duration = row.audio_duration;
 
       // Return task data as an object
       return {
@@ -46,6 +47,7 @@ export async function createTasksFromCSV(fileData, formData) {
         inference_transcript: inference_transcript,
         file_name: fileName,
         url: url,
+        audio_duration: audio_duration
       };
     })
   );
