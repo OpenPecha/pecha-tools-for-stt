@@ -134,7 +134,7 @@ const AddUserModal = ({ groups }) => {
               if (newUsesr?.error) {
                 toast.error(newUsesr.error);
               } else {
-                toast.success("User created successfully");
+                toast.success(newUsesr.success);
               }
               window.add_modal.close();
             }}

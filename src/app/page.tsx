@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getUserDetails, getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
-
+import RightSidebar from "@/components/RightSidebar"
 export default async function Home({ searchParams }: { searchParams: any }) {
   const { session } = searchParams;
   let userTasks;
@@ -42,6 +42,9 @@ export default async function Home({ searchParams }: { searchParams: any }) {
       ) : (
         <AudioTranscript tasks={userTasks} userDetail={userDetail} />
       )}
+      <RightSidebar>
+        <iframe className="h-full" src="https://docs.google.com/spreadsheets/d/1Sn9IO9Gxj0swe7CdZPAsKx3ccBiDAtNHTvBDoMn7iqA/edit?usp=sharing"></iframe>
+      </RightSidebar>
     </div>
   );
 }

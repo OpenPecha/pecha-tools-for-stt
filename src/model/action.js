@@ -10,6 +10,9 @@ export const getUserDetails = async (username) => {
     where: {
       name: username,
     },
+    include: {
+      group: true,
+    },
   });
   if (userData === null) {
     console.log("userData ---", userData);
@@ -359,7 +362,15 @@ export const updateTask = async (
             duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
@@ -378,10 +389,17 @@ export const updateTask = async (
                 ? null
                 : transcript,
             reviewed_at: new Date().toISOString(),
-            duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
@@ -400,13 +418,47 @@ export const updateTask = async (
                 ? null
                 : transcript,
             finalised_reviewed_at: new Date().toISOString(),
-            duration: duration,
           },
         });
-        return updatedFile;
+        if (updatedFile) {
+          const msg = await taskToastMsg(action);
+          console.log("msg", msg);
+          return msg;
+        } else {
+          return {
+            error: "Error updating task",
+          };
+        }
       } catch (error) {
         console.log("Error updating files", error);
       }
+      break;
+    default:
+      break;
+  }
+};
+
+export const taskToastMsg = async (action) => {
+  switch (action) {
+    case "submit":
+      return {
+        success: "Task is submitted successfully",
+      };
+      break;
+    case "save":
+      return {
+        success: "Task is saved successfully",
+      };
+      break;
+    case "trash":
+      return {
+        success: "Task is trashed successfully",
+      };
+      break;
+    case "reject":
+      return {
+        success: "Task is rejected successfully",
+      };
       break;
     default:
       break;

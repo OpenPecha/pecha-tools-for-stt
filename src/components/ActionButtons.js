@@ -14,7 +14,7 @@ const ActionButtons = ({
   return (
     <>
       <div className="fixed bottom-0 flex gap-1 border shadow-sm p-2">
-        <div className="tooltip tooltip-top" data-tip="Submit(a)">
+        <div className="tooltip tooltip-top" data-tip="Submit(Alt + a)">
           <button
             type="button"
             className="focus:outline-none text-white bg-[#4fd364] font-medium text-md p-6 sm:p-9"
@@ -28,24 +28,23 @@ const ActionButtons = ({
             </div>
           </button>
         </div>
-        {role !== "TRANSCRIBER" ||
-          (role != "REVIEWER" && (
-            <div className="tooltip tooltip-top" data-tip="Reject(x)">
-              <button
-                type="button"
-                className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
-                onClick={() =>
-                  updateTaskAndIndex("reject", transcript, tasks[index])
-                }
-              >
-                <div className="flex flex-col items-center">
-                  <BsXLg />
-                  <p>Reject</p>
-                </div>
-              </button>
-            </div>
-          ))}
-        <div className="tooltip tooltip-top" data-tip="Save(s)">
+        {role !== "TRANSCRIBER" && role !== "REVIEWER" && (
+          <div className="tooltip tooltip-top" data-tip="Reject(Alt + x)">
+            <button
+              type="button"
+              className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
+              onClick={() =>
+                updateTaskAndIndex("reject", transcript, tasks[index])
+              }
+            >
+              <div className="flex flex-col items-center">
+                <BsXLg />
+                <p>Reject</p>
+              </div>
+            </button>
+          </div>
+        )}
+        <div className="tooltip tooltip-top" data-tip="Save(Alt + s)">
           <button
             type="button"
             className="focus:outline-none text-white bg-yellow-500 font-medium text-md p-6 sm:p-9"
@@ -57,7 +56,7 @@ const ActionButtons = ({
             </div>
           </button>
         </div>
-        <div className="tooltip tooltip-top" data-tip="Trash(t)">
+        <div className="tooltip tooltip-top" data-tip="Trash(Alt + t)">
           <button
             type="button"
             className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"

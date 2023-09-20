@@ -60,27 +60,22 @@ export const AudioPlayer = ({
   }, []);
 
   const handleKeyPress = (e) => {
-    console.log(e.keyCode, e.key);
-    // if input filed is focused, don't allow shortcuts
-    if (inputRef.current === document.activeElement) {
-      return;
-    }
     // Play/Pause: command + enter , option + enter, ctrl + enter
     if (e.keyCode === 13 && (e.metaKey || e.ctrlKey || e.altKey)) {
       handlePlayPause();
     }
-    // Loop: L key
-    else if (e.keyCode === 76) {
+    // Loop: Alt/option + L key
+    else if (e.altKey && e.keyCode === 76) {
       toogleLoop();
     }
-    // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
-    else if (e.keyCode === 65) {
+    // Alt/Option + a = submit, Alt/Option + x reject , Alt/Option + s = save, Alt/Option + t = trash
+    else if (e.altKey && e.keyCode === 65) {
       updateTaskAndIndex("submit", transcript, tasks[index]);
-    } else if (e.keyCode === 88) {
+    } else if (e.altKey && e.keyCode === 88) {
       updateTaskAndIndex("reject", transcript, tasks[index]);
-    } else if (e.keyCode === 83) {
+    } else if (e.altKey && e.keyCode === 83) {
       updateTaskAndIndex("save", transcript, tasks[index]);
-    } else if (e.keyCode === 84) {
+    } else if (e.altKey && e.keyCode === 84) {
       updateTaskAndIndex("trash", transcript, tasks[index]);
     }
   };
@@ -110,7 +105,7 @@ export const AudioPlayer = ({
             {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
           </button>
         </div>
-        <div className="tooltip tooltip-bottom" data-tip="Loop (l)">
+        <div className="tooltip tooltip-bottom" data-tip="Loop (Alt + l)">
           <button
             className={
               isLoopEnabled
