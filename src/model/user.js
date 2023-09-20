@@ -2,7 +2,11 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
-import { getReviewerTaskCount, getUserSpecificTasksCount } from "./task";
+import {
+  getReviewerTaskCount,
+  getTranscriberTaskList,
+  getUserSpecificTasksCount,
+} from "./task";
 
 export const getAllUser = async () => {
   try {
@@ -189,31 +193,23 @@ export const generateUserReportByGroup = async (groupId, dates) => {
     groupId,
     dates
   );
-  const { from: fromDate, to: toDate } = dates;
   try {
     const users = await getUsersByGroup(groupId);
-    const usersReport = generateUserTaskReport(users, fromDate, toDate);
-    return usersReport;
+    const usersStatistic = await generateUsersTaskReport(users, dates);
+    console.log("usersStatistic :::", usersStatistic);
+    return usersStatistic;
   } catch (error) {
     console.error("Error getting users by group:", error);
     throw new Error(error);
   }
 };
 
-/**
- * Generates a report of user task statistics.
- * @param {Array} users - An array of user objects.
- * @returns {Array} - An array of user objects with task statistics.
- */
-export const generateUserTaskReport = async (users, fromDate, toDate) => {
-  const userList = [];
-  let filteredTasks = [];
+export const generateUsersTaskReport = async (users, dates) => {
+  const transcriberList = [];
 
   for (const user of users) {
-    const { id, name, transcriber_task } = user;
-    filteredTasks = transcriber_task;
-
-    const userObj = {
+    const { id, name } = user;
+    const transcriberObj = {
       id,
       name,
       noSubmitted: 0,
@@ -222,40 +218,36 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
       syllableCount: 0,
     };
 
-    const taskSubmittedCount = await getUserSpecificTasksCount(id, {
-      from: fromDate,
-      to: toDate,
-    });
-    userObj.noSubmitted = taskSubmittedCount;
+    const taskSubmittedCount = await getUserSpecificTasksCount(id, dates);
+    transcriberObj.noSubmitted = taskSubmittedCount;
 
-    if (fromDate && toDate) {
-      filteredTasks = filterTasksByDateRange(
-        user.transcriber_task,
-        fromDate,
-        toDate
-      );
-    }
+    const userTasks = await getTranscriberTaskList(id, dates);
 
-    const userStatistics = generateUserStatistics(userObj, filteredTasks);
-    userList.push(userStatistics);
+    const updatedTranscriberObj = await UserTaskReport(
+      transcriberObj,
+      userTasks
+    );
+    transcriberList.push(updatedTranscriberObj);
   }
-  return userList;
+  return transcriberList;
 };
 
-// Generate user task statistics
-const generateUserStatistics = (userObj, filteredTasks) => {
-  for (const task of filteredTasks) {
-    if (task.state === "accepted" || task.state === "finalised") {
-      userObj.noReviewed++;
-      userObj.reviewedSecs = userObj.reviewedSecs + task.audio_duration;
-
-      //go through each task and find the reviewed transcript and calculate the syllable count
-      const { reviewed_transcript } = task;
-      const syllableCount = splitIntoSyllables(reviewed_transcript).length;
-      userObj.syllableCount = userObj.syllableCount + syllableCount;
-    }
-  }
-  return userObj;
+export const UserTaskReport = (transcriberObj, userTasks) => {
+  const userTaskSummary = userTasks.reduce(
+    (acc, task) => {
+      if (task.state === "accepted" || task.state === "finalised") {
+        acc.noReviewed++;
+        acc.reviewedSecs = acc.reviewedSecs + task.audio_duration;
+        const syllableCount = splitIntoSyllables(
+          task.reviewed_transcript
+        ).length;
+        acc.syllableCount = acc.syllableCount + syllableCount;
+      }
+      return acc;
+    },
+    { ...transcriberObj, noReviewed: 0, reviewedSecs: 0, syllableCount: 0 }
+  );
+  return userTaskSummary;
 };
 
 export const splitIntoSyllables = (transcript) => {
@@ -264,26 +256,6 @@ export const splitIntoSyllables = (transcript) => {
   // Filter out empty syllables
   const filteredSplit = syllables.filter((s) => s !== "");
   return filteredSplit;
-};
-
-// Filter tasks within a date range
-const filterTasksByDateRange = (tasks, fromDate, toDate) => {
-  const isoFromDate = new Date(fromDate);
-  const isoToDate = new Date(toDate);
-
-  const filteredTasks = tasks.filter((task) => {
-    const reviewedAt = task.reviewed_at;
-    // Convert the dates to timestamps for comparison
-    const reviewedAtTimestamp = reviewedAt?.getTime();
-    const fromDateTimestamp = isoFromDate?.getTime();
-    const toDateTimestamp = isoToDate?.getTime();
-
-    return (
-      fromDateTimestamp <= reviewedAtTimestamp &&
-      reviewedAtTimestamp <= toDateTimestamp
-    );
-  });
-  return filteredTasks;
 };
 
 export const reviewerOfGroup = async (groupId) => {
@@ -341,47 +313,3 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
   console.log("Generated Reviewer Task Statistics Report:", reviewerList);
   return reviewerList;
 };
-
-// // might be able to use this function to get the user statistics insteadof generateUserStatistics
-// export const userStatistics = async (userId) => {
-//   const userData = await prisma.task.findMany({
-//     where: {
-//       OR: [
-//         { transcriber_id: parseInt(userId) },
-//         { reviewer_id: parseInt(userId) },
-//         { final_reviewer_id: parseInt(userId) },
-//       ],
-//     },
-//     include: {
-//       transcriber: true,
-//     },
-//   });
-//   console.log("userData 2", userData.length);
-//   const userTaskSummary = userData.reduce(
-//     (acc, task) => {
-//       if (
-//         task.state === "submitted" ||
-//         task.state === "accepted" ||
-//         task.state === "finalised"
-//       ) {
-//         acc.noSubmitted++;
-//       }
-//       if (task.state === "accepted" || task.state === "finalised") {
-//         acc.noReviewed++;
-//         const syllableCount = splitIntoSyllables(
-//           task.reviewed_transcript
-//         ).length;
-//         acc.syllableCount = acc.syllableCount + syllableCount;
-//       }
-//       return acc;
-//     },
-//     { noSubmitted: 0, noReviewed: 0, reviewedMins: 0, syllableCount: 0 }
-//   );
-//   console.log("userTaskSummary", userTaskSummary);
-//   const userStatistics = {
-//     ...userTaskSummary,
-//     id: userData[0]?.transcriber?.id,
-//     name: userData[0]?.transcriber?.name,
-//   };
-//   console.log("userStatistics", userStatistics);
-// };

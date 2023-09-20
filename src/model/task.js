@@ -130,7 +130,7 @@ export const getUserSpecificTasksCount = async (id, dates) => {
       return userTaskCount;
     } else {
       console.log(
-        "getUserSpecificTasksCount when only one date is present",
+        "getUserSpecificTasksCount when only one or no date is present",
         fromDate,
         toDate
       );
@@ -238,7 +238,7 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
       }
     } else {
       console.log(
-        "getUserSpecificTasks when only one date is present",
+        "getUserSpecificTasks when only one or no date is present",
         fromDate,
         toDate
       );
@@ -389,7 +389,7 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
       });
     } else {
       console.log(
-        "getReviewerTaskCount when only one date is present",
+        "getReviewerTaskCount when one or no date is present",
         fromDate,
         toDate
       );
@@ -413,6 +413,53 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
       });
     }
     return reviewerObj;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getTranscriberTaskList = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  try {
+    if (fromDate && toDate) {
+      console.log(
+        "getTranscriberTaskList with both date are present",
+        fromDate,
+        toDate
+      );
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          transcriber_id: id,
+          reviewed_at: {
+            gte: new Date(fromDate),
+            lte: new Date(toDate),
+          },
+        },
+        select: {
+          audio_duration: true,
+          reviewed_transcript: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    } else {
+      console.log(
+        "getTranscriberTaskList when one or no date is present",
+        fromDate,
+        toDate
+      );
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          transcriber_id: id,
+        },
+        select: {
+          audio_duration: true,
+          reviewed_transcript: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    }
   } catch (error) {
     throw new Error(error);
   }
