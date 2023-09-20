@@ -56,14 +56,6 @@ const UserReport = ({ searchParams, id, users }) => {
 
   const totalTasksCount = totalTasks;
   const pageCount = Math.ceil(totalTasksCount / limit);
-  console.log(
-    "end",
-    end,
-    "totalTasksCount",
-    totalTasksCount,
-    "pageCount",
-    pageCount
-  );
 
   return (
     <>

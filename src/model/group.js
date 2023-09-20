@@ -15,11 +15,11 @@ export const getAllGroup = async () => {
     return allGroup;
   } catch (error) {
     console.error("Error getting all group:", error);
+    throw new Error(error);
   }
 };
 
 export const createGroup = async (formData) => {
-  console.log("creategroup called", formData);
   const groupName = formData.get("name");
   try {
     const newGroup = await prisma.group.create({
@@ -51,7 +51,6 @@ export const deleteGroup = async (id) => {
 };
 
 export const editGroup = async (id, formData) => {
-  console.log("editGroup called");
   const groupName = formData.get("name");
   try {
     const group = await prisma.group.update({

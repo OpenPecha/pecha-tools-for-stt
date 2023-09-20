@@ -19,7 +19,6 @@ const GroupDashboard = ({ groupList }) => {
       );
     } else {
       const deletedGroup = await deleteGroup(row.id);
-      console.log("deletedGroup", deletedGroup);
     }
   };
 

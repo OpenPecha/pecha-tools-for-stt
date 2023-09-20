@@ -17,7 +17,6 @@ const GroupReport = ({ groups }) => {
 
   useEffect(() => {
     if (selectGroup) {
-      console.log("selectGroup", selectGroup);
       async function getUserReportByGroup() {
         const usersOfGroup = await generateUserReportByGroup(
           selectGroup,
@@ -69,8 +68,11 @@ const GroupReport = ({ groups }) => {
         </div>
       </form>
       <div className="flex flex-col gap-10 justify-center items-center mt-10">
-        <TranscriberReportTable usersStatistic={usersStatistic} selectGroup={selectGroup} />
-        <ReviewerReportTable reviewersStatistic={reviewersStatistic}  />
+        <TranscriberReportTable
+          usersStatistic={usersStatistic}
+          selectGroup={selectGroup}
+        />
+        <ReviewerReportTable reviewersStatistic={reviewersStatistic} />
       </div>
     </>
   );

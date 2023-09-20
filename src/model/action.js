@@ -15,7 +15,6 @@ export const getUserDetails = async (username) => {
     },
   });
   if (userData === null) {
-    console.log("userData ---", userData);
     return null;
   }
   return userData;
@@ -36,14 +35,11 @@ export const getUserTask = async (username) => {
     // assign some tasks for user when got no task to work on
     userTasks = await assignTasks(groupId, userId, role);
   }
-  console.log("userTasks", userTasks.length);
   return { userTasks, userData };
 };
 
-//geting user's asigned tasks
+//getting user's asigned tasks
 export const getAssignedTasks = async (groupId, userId, role) => {
-  console.log("inside getAssignedTask with role as:", role);
-  // return tasks based on  user role
   try {
     switch (role) {
       case "TRANSCRIBER":
@@ -152,7 +148,6 @@ export const assignTasks = async (groupId, userId, role) => {
             },
             take: ASSIGN_TASKS,
           });
-          // console.log("unassignedTasks are", unassignedTasks);
 
           if (unassignedTasks.length === 0) {
             return (assignedTasks = unassignedTasks);
@@ -166,14 +161,12 @@ export const assignTasks = async (groupId, userId, role) => {
                 state: "transcribing",
               },
             });
-            console.log("assignedTaskCount", assignedTaskCount);
 
             //updatedManyTask { count: 3 }
             if (assignedTaskCount?.count === 0) {
               throw new Error("No task found for TRANSCRIBER!.");
             }
             assignedTasks = await getAssignedTasks(groupId, userId, role);
-            // console.log("assignedTasks", assignedTasks);
             return assignedTasks;
           }
         } catch (error) {
@@ -200,7 +193,6 @@ export const assignTasks = async (groupId, userId, role) => {
             },
             take: ASSIGN_TASKS,
           });
-          // console.log("unassignedTasks are", unassignedTasks);
 
           if (unassignedTasks.length === 0) {
             return (assignedTasks = unassignedTasks);
@@ -213,14 +205,12 @@ export const assignTasks = async (groupId, userId, role) => {
                 reviewer_id: userId,
               },
             });
-            console.log("assignedTaskCount", assignedTaskCount);
 
             //updatedManyTask { count: 3 }
             if (assignedTaskCount?.count === 0) {
               throw new Error("No task found for TRANSCRIBER!.");
             }
             assignedTasks = await getAssignedTasks(groupId, userId, role);
-            console.log("assignedTasks", assignedTasks);
             return assignedTasks;
           }
         } catch (error) {
@@ -248,7 +238,6 @@ export const assignTasks = async (groupId, userId, role) => {
             },
             take: ASSIGN_TASKS,
           });
-          console.log("unassignedTasks are", unassignedTasks);
 
           if (unassignedTasks.length === 0) {
             return (assignedTasks = unassignedTasks);
@@ -261,14 +250,12 @@ export const assignTasks = async (groupId, userId, role) => {
                 final_reviewer_id: userId,
               },
             });
-            console.log("assignedTaskCount", assignedTaskCount);
 
             //updatedManyTask { count: 3 }
             if (assignedTaskCount?.count === 0) {
               throw new Error("No task found for TRANSCRIBER!.");
             }
             assignedTasks = await getAssignedTasks(groupId, userId, role);
-            console.log("assignedTasks", assignedTasks);
             return assignedTasks;
           }
         } catch (error) {
@@ -289,7 +276,6 @@ export const assignTasks = async (groupId, userId, role) => {
 
 // to change the state of task based on user action (state machine)
 export const changeTaskState = (task, role, action) => {
-  console.log("changeTaskState", role, action);
   switch (role) {
     case "TRANSCRIBER":
       return action === "assign" || action === "save"
@@ -345,9 +331,8 @@ export const updateTask = async (
     let endTime = Date.now();
     let timeDiff = endTime - startTime;
     duration = formatTime(timeDiff);
-    console.log("duration", duration, typeof duration);
+    console.log("duration", duration);
   }
-  console.log("changeState", changeState);
   switch (role) {
     case "TRANSCRIBER":
       try {
@@ -364,7 +349,6 @@ export const updateTask = async (
         });
         if (updatedFile) {
           const msg = await taskToastMsg(action);
-          console.log("msg", msg);
           return msg;
         } else {
           return {
@@ -372,7 +356,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating files", error);
+        console.log("Error updating TRANSCRIBER task", error);
       }
       break;
     case "REVIEWER":
@@ -393,7 +377,6 @@ export const updateTask = async (
         });
         if (updatedFile) {
           const msg = await taskToastMsg(action);
-          console.log("msg", msg);
           return msg;
         } else {
           return {
@@ -401,7 +384,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating files", error);
+        console.log("Error updating REVIEWER task", error);
       }
       break;
     case "FINAL_REVIEWER":
@@ -422,7 +405,6 @@ export const updateTask = async (
         });
         if (updatedFile) {
           const msg = await taskToastMsg(action);
-          console.log("msg", msg);
           return msg;
         } else {
           return {
@@ -430,7 +412,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating files", error);
+        console.log("Error updating FINAL_REVIEWER task", error);
       }
       break;
     default:

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUserDetails, getUserTask } from "../model/action";
+import { getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
 import RightSidebar from "@/components/RightSidebar";
 export default async function Home({ searchParams }: { searchParams: any }) {
@@ -7,7 +7,6 @@ export default async function Home({ searchParams }: { searchParams: any }) {
   let userTasks;
   let userDetail;
   let errMsg;
-  console.log("searchParams", searchParams, "param", session);
   if (session && session !== "") {
     const result = await getUserTask(session);
     if (result?.error) {

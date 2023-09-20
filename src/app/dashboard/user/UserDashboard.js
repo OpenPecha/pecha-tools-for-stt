@@ -22,7 +22,6 @@ const UserDashboard = ({ users, groups }) => {
       window.alert(`User ${user.name} has some uncomplete tasks!`);
     } else {
       const deletedUser = await deleteUser(user.id);
-      console.log("deletedUser", deletedUser);
     }
   };
 

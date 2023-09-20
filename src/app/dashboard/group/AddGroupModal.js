@@ -41,7 +41,6 @@ const AddGroupModal = () => {
             type="submit"
             formAction={async (formData) => {
               ref.current?.reset();
-              console.log("formData", formData, formData.get("name"));
               const newGroup = await createGroup(formData);
               window.add_modal.close();
             }}

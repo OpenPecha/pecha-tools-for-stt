@@ -28,8 +28,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     completedTaskCount();
     // Assign a value to currentTimeRef.current
     currentTimeRef.current = new Date().toISOString();
-    console.log("Current Time:", currentTimeRef.current);
-    console.log("user details", userDetail, "array of task", taskList);
     if (taskList?.length) {
       setAnyTask(true);
       setIsLoading(false);
@@ -53,7 +51,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     } else {
       setAnyTask(false);
       setIsLoading(false);
-      console.log("No task", taskList);
     }
     return () => {
       isMounted = false;
@@ -104,7 +101,6 @@ const AudioTranscript = ({ tasks, userDetail }) => {
           index
         );
         const moreTask = await assignTasks(groupId, userId, role);
-        console.log("more tasks", moreTask);
         setIsLoading(true);
         setIndex(0);
         setTaskList(moreTask);

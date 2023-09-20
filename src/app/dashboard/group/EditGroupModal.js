@@ -4,7 +4,7 @@ import { editGroup } from "@/model/group";
 
 const EditGroupModal = ({ selectedRow }) => {
   const ref = useRef(null);
-  
+
   return (
     <>
       <dialog id="edit_modal" className="modal ">
@@ -90,7 +90,6 @@ const EditGroupModal = ({ selectedRow }) => {
             type="submit"
             formAction={async (formData) => {
               ref.current?.reset();
-              console.log("formData", selectedRow?.id, formData.get("name"));
               const edited_Group = await editGroup(selectedRow?.id, formData);
               window.edit_modal.close();
             }}

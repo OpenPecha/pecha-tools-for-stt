@@ -3,7 +3,6 @@
 import React from "react";
 
 const DashboardBtn = ({ label, icon, onClick }) => {
-  console.log("label", label);
   return (
     <button
       type="button"

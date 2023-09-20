@@ -2,11 +2,7 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
-import {
-  getCompletedTaskCount,
-  getReviewerTaskCount,
-  getUserSpecificTasksCount,
-} from "./task";
+import { getReviewerTaskCount, getUserSpecificTasksCount } from "./task";
 
 export const getAllUser = async () => {
   try {
@@ -25,6 +21,7 @@ export const getAllUser = async () => {
     return users;
   } catch (error) {
     console.error("Error getting all the user:", error);
+    throw new Error(error);
   }
 };
 
@@ -188,7 +185,7 @@ export const getUsersByGroup = async (groupId) => {
 
 export const generateUserReportByGroup = async (groupId, dates) => {
   console.log(
-    "when a group is selected and getUsersByGroup called",
+    "generateUserReportByGroup called with group id and dates",
     groupId,
     dates
   );
@@ -242,7 +239,6 @@ export const generateUserTaskReport = async (users, fromDate, toDate) => {
     const userStatistics = generateUserStatistics(userObj, filteredTasks);
     userList.push(userStatistics);
   }
-  console.log("Generated User Task Statistics Report:", userList);
   return userList;
 };
 
@@ -256,7 +252,6 @@ const generateUserStatistics = (userObj, filteredTasks) => {
       //go through each task and find the reviewed transcript and calculate the syllable count
       const { reviewed_transcript } = task;
       const syllableCount = splitIntoSyllables(reviewed_transcript).length;
-      console.log("syllableCount", syllableCount);
       userObj.syllableCount = userObj.syllableCount + syllableCount;
     }
   }
@@ -273,7 +268,6 @@ export const splitIntoSyllables = (transcript) => {
 
 // Filter tasks within a date range
 const filterTasksByDateRange = (tasks, fromDate, toDate) => {
-  console.log("filterTasksByDateRange called", fromDate, toDate);
   const isoFromDate = new Date(fromDate);
   const isoToDate = new Date(toDate);
 
@@ -289,7 +283,6 @@ const filterTasksByDateRange = (tasks, fromDate, toDate) => {
       reviewedAtTimestamp <= toDateTimestamp
     );
   });
-  // console.log("filteredTasks", filteredTasks);
   return filteredTasks;
 };
 
@@ -311,7 +304,7 @@ export const reviewerOfGroup = async (groupId) => {
 // for all the reviewers of a group retun the task statistics - task reviewed, task accepted, task finalised
 export const generateReviewerReportbyGroup = async (groupId, dates) => {
   console.log(
-    "generateReviewerReportbyGroup group is selecte ",
+    "generateReviewerReportbyGroup called with group id and dates",
     groupId,
     dates
   );
@@ -343,7 +336,6 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
       dates,
       reviewerObj
     );
-    console.log("updatedReviwerObj", updatedReviwerObj);
     reviewerList.push(updatedReviwerObj);
   }
   console.log("Generated Reviewer Task Statistics Report:", reviewerList);

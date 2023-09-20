@@ -62,7 +62,6 @@ const TaskForm = ({ groups }) => {
             ref.current?.reset();
             console.log(
               "formData",
-              formData,
               formData.get("group_id"),
               formData.get("file_name")
             );

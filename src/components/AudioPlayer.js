@@ -47,7 +47,6 @@ export const AudioPlayer = ({
         : 1.25;
     audioRef.current.playbackRate = newRate;
     setPlaybackRate(newRate);
-    console.log(audioRef.current.playbackRate);
   };
 
   useEffect(() => {
