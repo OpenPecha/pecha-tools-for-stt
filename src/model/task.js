@@ -69,23 +69,64 @@ export async function createTasksFromCSV(fileData, formData) {
 
 export const getUserSpecificTasksCount = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    select: {
+      role: true,
+    },
+  });
+  const userRole = user.role;
+  let userTaskCount;
   try {
     if (fromDate && toDate) {
       console.log(
         "getUserSpecificTasksCount when both date are present",
         fromDate,
-        toDate
+        toDate,
+        userRole
       );
-      const userTaskCount = await prisma.task.count({
-        where: {
-          transcriber_id: parseInt(id),
-          state: { in: ["submitted", "accepted", "finalised"] },
-          submitted_at: {
-            gte: new Date(fromDate).toISOString(),
-            lte: new Date(toDate).toISOString(),
-          },
-        },
-      });
+      switch (userRole) {
+        case "TRANSCRIBER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              transcriber_id: parseInt(id),
+              state: { in: ["submitted", "accepted", "finalised"] },
+              submitted_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        case "REVIEWER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              reviewer_id: parseInt(id),
+              state: { in: ["accepted", "finalised"] },
+              reviewed_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        case "FINAL_REVIEWER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              final_reviewer_id: parseInt(id),
+              state: { in: ["finalised"] },
+              reviewed_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        default:
+          break;
+      }
       return userTaskCount;
     } else {
       console.log(
@@ -93,12 +134,35 @@ export const getUserSpecificTasksCount = async (id, dates) => {
         fromDate,
         toDate
       );
-      const userTaskCount = await prisma.task.count({
-        where: {
-          transcriber_id: parseInt(id),
-          state: { in: ["submitted", "accepted", "finalised"] },
-        },
-      });
+      switch (userRole) {
+        case "TRANSCRIBER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              transcriber_id: parseInt(id),
+              state: { in: ["submitted", "accepted", "finalised"] },
+            },
+          });
+          break;
+        case "REVIEWER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              reviewer_id: parseInt(id),
+              state: { in: ["accepted", "finalised"] },
+            },
+          });
+          break;
+        case "FINAL_REVIEWER":
+          userTaskCount = await prisma.task.count({
+            where: {
+              final_reviewer_id: parseInt(id),
+              state: { in: ["finalised"] },
+            },
+          });
+          break;
+        default:
+          break;
+      }
+      console.log("userTaskCount", userTaskCount);
       return userTaskCount;
     }
   } catch (error) {
@@ -108,40 +172,110 @@ export const getUserSpecificTasksCount = async (id, dates) => {
 
 export const getUserSpecificTasks = async (id, limit, skip, dates) => {
   const { from: fromDate, to: toDate } = dates;
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    select: {
+      role: true,
+    },
+  });
+  const userRole = user.role;
   let userTaskList;
   try {
     if (fromDate && toDate) {
       console.log(
         "getUserSpecificTasks when both date are present",
         fromDate,
-        toDate
+        toDate,
+        userRole
       );
-      userTaskList = await prisma.task.findMany({
-        skip: skip,
-        take: limit,
-        where: {
-          transcriber_id: parseInt(id),
-          state: { in: ["submitted", "accepted", "finalised"] },
-          submitted_at: {
-            gte: new Date(fromDate).toISOString(),
-            lte: new Date(toDate).toISOString(),
-          },
-        },
-      });
+      switch (userRole) {
+        case "TRANSCRIBER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              transcriber_id: parseInt(id),
+              state: { in: ["submitted", "accepted", "finalised"] },
+              submitted_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        case "REVIEWER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              reviewer_id: parseInt(id),
+              state: { in: ["accepted", "finalised"] },
+              reviewed_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        case "FINAL_REVIEWER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              final_reviewer_id: parseInt(id),
+              state: { in: ["finalised"] },
+              reviewed_at: {
+                gte: new Date(fromDate).toISOString(),
+                lte: new Date(toDate).toISOString(),
+              },
+            },
+          });
+          break;
+        default:
+          break;
+      }
     } else {
       console.log(
         "getUserSpecificTasks when only one date is present",
         fromDate,
         toDate
       );
-      userTaskList = await prisma.task.findMany({
-        skip: skip,
-        take: limit,
-        where: {
-          transcriber_id: parseInt(id),
-          state: { in: ["submitted", "accepted", "finalised"] },
-        },
-      });
+      switch (userRole) {
+        case "TRANSCRIBER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              transcriber_id: parseInt(id),
+              state: { in: ["submitted", "accepted", "finalised"] },
+            },
+          });
+          break;
+        case "REVIEWER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              reviewer_id: parseInt(id),
+              state: { in: ["accepted", "finalised"] },
+            },
+          });
+          break;
+        case "FINAL_REVIEWER":
+          userTaskList = await prisma.task.findMany({
+            skip: skip,
+            take: limit,
+            where: {
+              final_reviewer_id: parseInt(id),
+              state: { in: ["finalised"] },
+            },
+          });
+          break;
+        default:
+          break;
+      }
     }
     for (const task of userTaskList) {
       if (

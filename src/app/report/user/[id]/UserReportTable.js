@@ -1,7 +1,6 @@
 import React from "react";
 
 const UserReportTable = ({ userTaskRecord }) => {
-    
   function formattedDate(date) {
     return date.toLocaleString("en-US", {
       month: "2-digit",
@@ -16,12 +15,11 @@ const UserReportTable = ({ userTaskRecord }) => {
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
-        <table className="table  ">
+        <table className="table table-auto table-pin-rows">
           {/* head */}
           <thead className="text-gray-700 bg-gray-50">
             <tr>
-              <th>Submitted transcipt</th>
-              <th>Reviewed transcipt</th>
+              <th className="pr-60">Transcript</th>
               <th>Is correct?</th>
               <th>Audio</th>
               <th>Submitted at</th>
@@ -35,10 +33,18 @@ const UserReportTable = ({ userTaskRecord }) => {
           <tbody>
             {userTaskRecord.map((task) => (
               <tr key={task.id}>
-                <td>{task.transcript}</td>
-                <td>{task.reviewed_transcript}</td>
                 <td>
-                  {task.transcript === task.reviewed_transcrip
+                  <div className="grid gap-2 mb-2">
+                    <strong>Submitted:</strong>
+                    {task.transcript}
+                  </div>
+                  <div className="grid gap-2 mb-2">
+                    <strong>Reviewed:</strong>
+                    {task.reviewed_transcript}
+                  </div>
+                </td>
+                <td>
+                  {task.transcript === task.reviewed_transcript
                     ? "true"
                     : "false"}
                 </td>

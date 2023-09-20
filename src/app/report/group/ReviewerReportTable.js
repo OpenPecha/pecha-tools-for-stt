@@ -18,7 +18,11 @@ const ReviewerReportTable = ({ reviewersStatistic }) => {
           <tbody>
             {reviewersStatistic.map((reviewer) => (
               <tr key={reviewer.id}>
-                <td>{reviewer.name}</td>
+                <td>
+                  <Link href={`/report/user/${reviewer.id}`}>
+                    {reviewer.name}
+                  </Link>
+                </td>
                 <td>{reviewer.noReviewed}</td>
                 <td>{reviewer.noAccepted}</td>
                 <td>{reviewer.noFinalised}</td>
