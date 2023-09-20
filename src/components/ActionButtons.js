@@ -28,7 +28,7 @@ const ActionButtons = ({
             </div>
           </button>
         </div>
-        {role !== "TRANSCRIBER" && role !== "REVIEWER" && (
+        {role !== "TRANSCRIBER" && (
           <div className="tooltip tooltip-top" data-tip="Reject(Alt + x)">
             <button
               type="button"
