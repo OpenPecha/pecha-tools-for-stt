@@ -47,7 +47,7 @@ export async function createTasksFromCSV(fileData, formData) {
         inference_transcript: inference_transcript,
         file_name: fileName,
         url: url,
-        audio_duration: audio_duration
+        audio_duration: parseFloat(audio_duration),
       };
     })
   );
@@ -245,7 +245,13 @@ export const getCompletedTaskCount = async (id, role) => {
 
 export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
   const { from: fromDate, to: toDate } = dates;
-  console.log("getReviewerTaskCount fromDate", fromDate, "toDate", toDate, reviewerObj);
+  console.log(
+    "getReviewerTaskCount fromDate",
+    fromDate,
+    "toDate",
+    toDate,
+    reviewerObj
+  );
   try {
     if (fromDate && toDate) {
       console.log("when both are present", fromDate, toDate);
