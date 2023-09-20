@@ -125,8 +125,8 @@ const AudioTranscript = ({ tasks, userDetail }) => {
       >
         {/* Page content here */}
         {isLoading ? (
-          <div className="flex min-h-screen flex-col justify-center items-center">
-            <h1 className="font-bold text-3xl">loading...</h1>
+          <div className="flex flex-col justify-center items-center mt-10 p-5">
+            <h1 className="font-bold text-md md:text-3xl">loading...</h1>
           </div>
         ) : anyTask ? (
           <>
@@ -180,8 +180,8 @@ const AudioTranscript = ({ tasks, userDetail }) => {
             />
           </>
         ) : (
-          <div className="flex min-h-screen flex-col justify-center items-center">
-            <h1 className="font-bold text-3xl">
+          <div className="flex flex-col justify-center items-center mt-10 p-5">
+            <h1 className="font-bold text-lg md:text-3xl">
               No task found, will allocate soon
             </h1>
           </div>
