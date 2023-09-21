@@ -4,7 +4,7 @@ import { assignTasks, updateTask } from "@/model/action";
 import React, { useState, useRef, useEffect } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
-import { getCompletedTaskCount } from "@/model/task";
+import { UserProgressStats } from "@/model/task";
 import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
 
@@ -13,6 +13,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
   const [completedTask, setCompletedTask] = useState(0);
+  const [totalTask, setTotalTask] = useState(0);
   const audioRef = useRef(null);
   const inputRef = useRef(null);
   const [anyTask, setAnyTask] = useState(false);
@@ -25,7 +26,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   }
   useEffect(() => {
     let isMounted = true;
-    completedTaskCount();
+    getUserProgress();
     // Assign a value to currentTimeRef.current
     currentTimeRef.current = new Date().toISOString();
     if (taskList?.length) {
@@ -57,10 +58,16 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     };
   }, [taskList]);
 
-  async function completedTaskCount() {
-    const taskCount = await getCompletedTaskCount(userId, role);
-    setCompletedTask(taskCount);
-  }
+  const getUserProgress = async () => {
+    const { completedTaskCount, totalTaskCount } = await UserProgressStats(
+      userId,
+      role,
+      groupId
+    );
+    console.log("UserProgressStats", completedTaskCount, totalTaskCount);
+    setCompletedTask(completedTaskCount);
+    setTotalTask(totalTaskCount);
+  };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
     try {
@@ -80,8 +87,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
         toast.success(updatedTask.success);
       }
       if (action === "submit") {
-        const count = completedTaskCount();
-        setCompletedTask(count);
+        getUserProgress();
       }
 
       if (getLastTaskIndex() != index) {
@@ -115,6 +121,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
       <Sidebar
         userDetail={userDetail}
         completedTask={completedTask}
+        totalTask={totalTask}
         index={index}
         taskList={taskList}
         role={role}

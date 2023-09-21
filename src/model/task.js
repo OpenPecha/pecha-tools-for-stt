@@ -464,3 +464,58 @@ export const getTranscriberTaskList = async (id, dates) => {
     throw new Error(error);
   }
 };
+
+// get total count of tasks assigned to a group based on group id
+const getGroupTaskCount = async (id) => {
+  try {
+    const groupTaskCount = await prisma.task.count({
+      where: {
+        group_id: parseInt(id),
+      },
+    });
+    return groupTaskCount;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// get user progress based on the role, user id and group id
+export const UserProgressStats = async (id, role, groupId) => {
+  let completedTaskCount;
+  let totalTaskCount;
+  try {
+    completedTaskCount = await getCompletedTaskCount(id, role);
+    switch (role) {
+      case "TRANSCRIBER":
+        totalTaskCount = await getGroupTaskCount(groupId);
+        break;
+      case "REVIEWER":
+        totalTaskCount = await prisma.task.count({
+          where: {
+            group_id: parseInt(groupId),
+            state: { in: ["submitted", "accepted", "finalised"] },
+          },
+        });
+        break;
+      case "FINAL_REVIEWER":
+        totalTaskCount = await prisma.task.count({
+          where: {
+            group_id: parseInt(groupId),
+            state: { in: ["accepted", "finalised"] },
+          },
+        });
+        break;
+      default:
+        break;
+    }
+    console.log(
+      "completedTaskCount",
+      completedTaskCount,
+      "totalTaskCount",
+      totalTaskCount
+    );
+    return { completedTaskCount, totalTaskCount };
+  } catch (error) {
+    throw new Error(error);
+  }
+};

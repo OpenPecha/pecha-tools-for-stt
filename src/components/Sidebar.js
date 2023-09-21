@@ -5,6 +5,7 @@ const Sidebar = ({
   index,
   taskList,
   completedTask,
+  totalTask,
   role,
 }) => {
   return (
@@ -44,37 +45,44 @@ const Sidebar = ({
             <section className="p-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">Project Info</h3>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">
-                  User
-                </label>
+                <label className="text-sm font-bold mb-2">User</label>
                 <span className="text-right">{userDetail.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">
-                  Group
-                </label>
+                <label className="text-sm font-bold mb-2">Group</label>
                 <span className=" text-right">{userDetail.group.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">
-                  Task ID
-                </label>
-                <span className=" text-right">
-                  {taskList[index]?.id}
-                </span>
+                <label className="text-sm font-bold mb-2">Task ID</label>
+                <span className=" text-right">{taskList[index]?.id}</span>
               </div>
             </section>
             <section className="p-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">TARGET PROGRESS</h3>
+              <progress
+                className="progress progress-success my-4"
+                value={completedTask}
+                max={totalTask}
+              ></progress>
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
                     ? "Submitted"
                     : role === "REVIEWER"
-                      ? "Reviewed"
-                      : "Final Reviewed"}
+                    ? "Reviewed"
+                    : "Final Reviewed"}
                 </label>
                 <span className=" text-right">{completedTask}</span>
+              </div>
+              <div className="flex text-right justify-between">
+                <label className="text-sm font-bold mb-2">
+                  {role === "TRANSCRIBER"
+                    ? "Total Assigned"
+                    : role === "REVIEWER"
+                    ? "Total Submitted"
+                    : "Total Accepted"}
+                </label>
+                <span className=" text-right">{totalTask}</span>
               </div>
             </section>
           </div>
