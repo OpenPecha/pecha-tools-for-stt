@@ -19,9 +19,9 @@ const UserReportTable = ({ userTaskRecord }) => {
           {/* head */}
           <thead className="text-gray-700 bg-gray-50">
             <tr>
-              <th className="pr-60">Transcript</th>
-              <th>Is correct?</th>
+              <th className="pr-80">Transcript</th>
               <th>Audio</th>
+              <th>State</th>
               <th>Submitted at</th>
               <th>Reviewed at</th>
               <th>File name</th>
@@ -33,26 +33,36 @@ const UserReportTable = ({ userTaskRecord }) => {
           <tbody>
             {userTaskRecord.map((task) => (
               <tr key={task.id}>
-                <td>
+                <td
+                  className={`border-l-4 ${
+                    task.transcript === task.reviewed_transcript
+                      ? "border-green-500"
+                      : "border-red-500"
+                  }`}
+                >
                   <div className="grid gap-2 mb-2">
                     <strong>Submitted:</strong>
                     {task.transcript}
                   </div>
-                  <div className="grid gap-2 mb-2">
-                    <strong>Reviewed:</strong>
-                    {task.reviewed_transcript}
-                  </div>
-                </td>
-                <td>
-                  {task.transcript === task.reviewed_transcript
-                    ? "true"
-                    : "false"}
+                  {task.reviewed_transcript !== null && (
+                    <div className="grid gap-2 mb-2">
+                      <strong>Reviewed:</strong>
+                      {task.reviewed_transcript}
+                    </div>
+                  )}
+                  {task.final_transcript !== null && (
+                    <div className="grid gap-2 mb-2">
+                      <strong>Final:</strong>
+                      {task.final_transcript}
+                    </div>
+                  )}
                 </td>
                 <td>
                   <audio controls controlsList="nodownload">
                     <source src={task.url} type="audio/mpeg" />
                   </audio>
                 </td>
+                <td>{task.state}</td>
                 <td>
                   {task.submitted_at !== null
                     ? formattedDate(task?.submitted_at)
