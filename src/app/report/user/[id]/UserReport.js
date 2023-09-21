@@ -11,6 +11,7 @@ const UserReport = ({ searchParams, id, users }) => {
   const [userTaskRecord, setUserTaskRecord] = useState([]);
   const [totalTasks, setTotalTasks] = useState(0);
   const [selectedOption, setSelectedOption] = useState(id ? id : "");
+  const [secretAccess, setSecretAccess] = useState(false);
   const [dates, setDates] = useState({ from: "", to: "" });
   const router = useRouter();
   const page = searchParams["page"] ?? "1";
@@ -57,9 +58,17 @@ const UserReport = ({ searchParams, id, users }) => {
   const totalTasksCount = totalTasks;
   const pageCount = Math.ceil(totalTasksCount / limit);
 
+  const handlePassword = (event) => {
+    if (event.target.value === process.env.NEXT_PUBLIC_PASSWORD) {
+      setSecretAccess(true);
+    } else {
+      setSecretAccess(false);
+    }
+  };
+
   return (
     <>
-      <form className="flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
+      <form className="flex flex-col md:flex-row justify-evenly items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
         <Select
           title="user_id"
           label="User"
@@ -79,9 +88,21 @@ const UserReport = ({ searchParams, id, users }) => {
             handleDateChange={handleDateChange}
           />
         </div>
+        <div className="">
+          <input
+            name="password"
+            placeholder="Password"
+            type="password"
+            className="input input-bordered max-w-xs"
+            onChange={handlePassword}
+          />
+        </div>
       </form>
       <div className="flex flex-col justify-center items-center mt-10">
-        <UserReportTable userTaskRecord={userTaskRecord} />
+        <UserReportTable
+          userTaskRecord={userTaskRecord}
+          secretAccess={secretAccess}
+        />
         <PaginationControls
           page={page}
           per_page={per_page}

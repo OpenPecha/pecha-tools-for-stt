@@ -1,6 +1,8 @@
-import React from "react";
+import { revertTaskState } from "@/model/action";
+import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
-const UserReportTable = ({ userTaskRecord }) => {
+const UserReportTable = ({ userTaskRecord, secretAccess }) => {
   function formattedDate(date) {
     return date.toLocaleString("en-US", {
       month: "2-digit",
@@ -12,6 +14,28 @@ const UserReportTable = ({ userTaskRecord }) => {
     });
   }
 
+  const [disabledButtons, setDisabledButtons] = useState({});
+
+  const handleRevertState = async (id, state) => {
+    console.log(id, state);
+    if (disabledButtons[id]) return; // If the button is already disabled, do nothing
+
+    try {
+      const updatedTask = await revertTaskState(id, state);
+
+      if (updatedTask?.error) {
+        toast.error(updatedTask.error);
+      } else {
+        toast.success(updatedTask.success);
+
+        // Disable the button after success
+        setDisabledButtons({ ...disabledButtons, [id]: true });
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -22,6 +46,7 @@ const UserReportTable = ({ userTaskRecord }) => {
               <th className="pr-80">Transcript</th>
               <th>Audio</th>
               <th>State</th>
+              {secretAccess && <th>Revert State</th>}
               <th>Submitted at</th>
               <th>Reviewed at</th>
               <th>File name</th>
@@ -63,6 +88,17 @@ const UserReportTable = ({ userTaskRecord }) => {
                   </audio>
                 </td>
                 <td>{task.state}</td>
+                {secretAccess && (
+                  <td>
+                    <button
+                      className="btn"
+                      disabled={disabledButtons[task.id]}
+                      onClick={() => handleRevertState(task.id, task.state)}
+                    >
+                      ❌
+                    </button>
+                  </td>
+                )}
                 <td>
                   {task.submitted_at !== null
                     ? formattedDate(task?.submitted_at)

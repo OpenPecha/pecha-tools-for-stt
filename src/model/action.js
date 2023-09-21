@@ -446,3 +446,37 @@ export const taskToastMsg = async (action) => {
       break;
   }
 };
+
+// admin level to revert the state of a task based on state send from frontend
+export const revertTaskState = async (id, state) => {
+  console.log("revertTaskState", id, state);
+  const newState =
+    state === "submitted"
+      ? "transcribing"
+      : state === "accepted"
+      ? "submitted"
+      : "accepted";
+
+  console.log("newState", newState);
+  try {
+    const updatedFile = await prisma.Task.update({
+      where: {
+        id,
+      },
+      data: {
+        state: newState,
+      },
+    });
+    if (updatedFile) {
+      return {
+        success: "Task state reverted successfully",
+      };
+    } else {
+      return {
+        error: "Error reverting task state",
+      };
+    }
+  } catch (error) {
+    console.log("Error updating task", error);
+  }
+};
