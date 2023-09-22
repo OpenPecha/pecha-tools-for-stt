@@ -203,6 +203,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
                 lte: new Date(toDate).toISOString(),
               },
             },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
+              },
+            },
           });
           break;
         case "REVIEWER":
@@ -217,6 +229,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
                 lte: new Date(toDate).toISOString(),
               },
             },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
+              },
+            },
           });
           break;
         case "FINAL_REVIEWER":
@@ -229,6 +253,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
               reviewed_at: {
                 gte: new Date(fromDate).toISOString(),
                 lte: new Date(toDate).toISOString(),
+              },
+            },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
               },
             },
           });
@@ -251,6 +287,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
               transcriber_id: parseInt(id),
               state: { in: ["submitted", "accepted", "finalised"] },
             },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
+              },
+            },
           });
           break;
         case "REVIEWER":
@@ -261,6 +309,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
               reviewer_id: parseInt(id),
               state: { in: ["accepted", "finalised"] },
             },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
+              },
+            },
           });
           break;
         case "FINAL_REVIEWER":
@@ -270,6 +330,18 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
             where: {
               final_reviewer_id: parseInt(id),
               state: { in: ["finalised"] },
+            },
+            include: {
+              transcriber: {
+                select: {
+                  name: true,
+                },
+              },
+              reviewer: {
+                select: {
+                  name: true,
+                },
+              },
             },
           });
           break;
