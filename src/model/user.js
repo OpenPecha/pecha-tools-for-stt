@@ -176,9 +176,6 @@ export const getUsersByGroup = async (groupId) => {
         group_id: parseInt(groupId),
         role: "TRANSCRIBER",
       },
-      include: {
-        transcriber_task: true,
-      },
     });
     return users;
   } catch (error) {
@@ -218,9 +215,11 @@ export const generateUsersTaskReport = async (users, dates) => {
       syllableCount: 0,
     };
 
+    // get the number of tasks submitted by the user
     const taskSubmittedCount = await getUserSpecificTasksCount(id, dates);
     transcriberObj.noSubmitted = taskSubmittedCount;
 
+    // get the list of tasks by the user with selected fields
     const userTasks = await getTranscriberTaskList(id, dates);
 
     const updatedTranscriberObj = await UserTaskReport(
@@ -232,6 +231,7 @@ export const generateUsersTaskReport = async (users, dates) => {
   return transcriberList;
 };
 
+    // get the task statistics - task reviewed, reviewed secs, syllable count
 export const UserTaskReport = (transcriberObj, userTasks) => {
   const userTaskSummary = userTasks.reduce(
     (acc, task) => {
