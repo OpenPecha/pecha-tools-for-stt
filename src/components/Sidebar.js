@@ -1,4 +1,7 @@
 import React from "react";
+import AppContext from "./AppContext";
+import { useContext } from "react";
+import LanguageToggle from "./LanguageToggle";
 const Sidebar = ({
   children,
   userDetail,
@@ -9,6 +12,9 @@ const Sidebar = ({
   totalTask,
   role,
 }) => {
+
+  const value = useContext(AppContext);
+  let { languageSelected } = value;
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -76,8 +82,8 @@ const Sidebar = ({
                   {role === "TRANSCRIBER"
                     ? "Submitted"
                     : role === "REVIEWER"
-                    ? "Reviewed"
-                    : "Final Reviewed"}
+                      ? "Reviewed"
+                      : "Final Reviewed"}
                 </label>
                 <span className=" text-right">{completedTasks}</span>
               </div>
@@ -87,8 +93,8 @@ const Sidebar = ({
                     {role === "TRANSCRIBER"
                       ? "Reviewed"
                       : role === "REVIEWER"
-                      ? "Final Reviewed"
-                      : ""}
+                        ? "Final Reviewed"
+                        : ""}
                   </label>
                   <span className=" text-right">{passedTasks}</span>
                 </div>
@@ -98,11 +104,15 @@ const Sidebar = ({
                   {role === "TRANSCRIBER"
                     ? "Total Assigned"
                     : role === "REVIEWER"
-                    ? "Total Submitted"
-                    : "Total Accepted"}
+                      ? "Total Submitted"
+                      : "Total Accepted"}
                 </label>
                 <span className=" text-right">{totalTask}</span>
               </div>
+            </section>
+            <section className="p-5 border-b border-b-[#384451]">
+            <h3 className="uppercase font-bold mb-2">Language</h3>
+              <LanguageToggle />
             </section>
           </div>
         </div>

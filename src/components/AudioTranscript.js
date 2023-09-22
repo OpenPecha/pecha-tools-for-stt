@@ -7,8 +7,10 @@ import ActionButtons from "./ActionButtons";
 import { UserProgressStats } from "@/model/task";
 import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
+import AppContext from "../components/AppContext";
 
 const AudioTranscript = ({ tasks, userDetail }) => {
+  const [languageSelected, setLanguageSelected] = useState("bo");
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
@@ -94,8 +96,8 @@ const AudioTranscript = ({ tasks, userDetail }) => {
         role === "TRANSCRIBER"
           ? setTranscript(taskList[index + 1].inference_transcript)
           : role === "REVIEWER"
-          ? setTranscript(taskList[index + 1].transcript)
-          : setTranscript(taskList[index + 1].reviewed_transcript);
+            ? setTranscript(taskList[index + 1].transcript)
+            : setTranscript(taskList[index + 1].reviewed_transcript);
         setIndex(index + 1);
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
@@ -116,7 +118,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   };
 
   return (
-    <>
+    <AppContext.Provider value={{languageSelected, setLanguageSelected}}>
       <Sidebar
         userDetail={userDetail}
         completedTasks={completedTasks}
@@ -190,7 +192,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
           </div>
         )}
       </Sidebar>
-    </>
+    </AppContext.Provider>
   );
 };
 
