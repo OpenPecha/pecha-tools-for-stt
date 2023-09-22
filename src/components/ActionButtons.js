@@ -8,6 +8,7 @@ const ActionButtons = ({
   tasks,
   transcript,
   role,
+  home
 }) => {
   // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
 
@@ -24,7 +25,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsCheckLg width="5rem" />
-              <p>Submit</p>
+              <p>{home.submit}</p>
             </div>
           </button>
         </div>
@@ -39,7 +40,7 @@ const ActionButtons = ({
             >
               <div className="flex flex-col items-center">
                 <BsXLg />
-                <p>Reject</p>
+                <p>{home.reject}</p>
               </div>
             </button>
           </div>
@@ -52,7 +53,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsArrowReturnLeft />
-              <p>Save</p>
+              <p>{home.save}</p>
             </div>
           </button>
         </div>
@@ -66,7 +67,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsTrash />
-              <p>Trash</p>
+              <p>{home.trash}</p>
             </div>
           </button>
         </div>

@@ -9,6 +9,7 @@ export const AudioPlayer = ({
   inputRef,
   transcript,
   updateTaskAndIndex,
+  home
 }) => {
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
   const [isPlaying, setIsPlaying] = useState(false);
@@ -56,6 +57,7 @@ export const AudioPlayer = ({
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleKeyPress = (e) => {
@@ -120,7 +122,7 @@ export const AudioPlayer = ({
           className="flex item-center btn btn-ghost text-lg p-2 font-semibold"
           onClick={changePlaybackRate}
         >
-          <span className="text-xs">SPEED</span>
+          <span className="text-xs">{home.speed}</span>
           <span>{playbackRate}X</span>
         </button>
       </div>

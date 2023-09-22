@@ -2,6 +2,7 @@
 
 import { formatTime } from "@/lib/formatTime";
 import prisma from "@/service/db";
+import { revalidatePath } from "next/cache";
 
 const ASSIGN_TASKS = 5;
 //get user detail if exist
@@ -318,7 +319,7 @@ export const updateTask = async (
   role,
   currentTime
 ) => {
-  console.log("update task", action, id, transcript, task, role, currentTime);
+  console.log("update task", action, id, transcript, role, currentTime);
   const changeState = await changeTaskState(task, role, action);
   let duration = null;
   if (
@@ -467,6 +468,7 @@ export const revertTaskState = async (id, state) => {
         state: newState,
       },
     });
+    revalidatePath(`/report/user/${id}`);
     if (updatedFile) {
       return {
         success: "Task state reverted successfully",

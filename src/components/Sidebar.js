@@ -8,6 +8,7 @@ const Sidebar = ({
   passedTasks,
   totalTask,
   role,
+  home,
 }) => {
   return (
     <>
@@ -33,7 +34,7 @@ const Sidebar = ({
                 </svg>
               </label>
             </div>
-            <div className="flex-1 px-2 mx-2">Pecha STT Tool</div>
+            <div className="flex-1 px-2 mx-2">{home.title}</div>
           </div>
           {children}
         </div>
@@ -41,25 +42,25 @@ const Sidebar = ({
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <div className="flex flex-col w-60 min-h-full h-full bg-[#54606e] text-white">
             <header className="bg-[#384451] p-4">
-              <div className="text-lg">Pecha STT Tool</div>
+              <div className="text-lg">{home.title}</div>
             </header>
             <section className="p-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">Project Info</h3>
+              <h3 className="uppercase font-bold mb-2">{home.project}</h3>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">User</label>
+                <label className="text-sm font-bold mb-2">{home.user}</label>
                 <span className="text-right">{userDetail.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">Group</label>
+                <label className="text-sm font-bold mb-2">{home.group}</label>
                 <span className=" text-right">{userDetail.group.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">Task ID</label>
+                <label className="text-sm font-bold mb-2">{home.task}</label>
                 <span className=" text-right">{taskList[index]?.id}</span>
               </div>
             </section>
             <section className="p-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">TARGET PROGRESS</h3>
+              <h3 className="uppercase font-bold mb-2">{home.target}</h3>
               <div
                 className="tooltip tooltip-bottom w-full mt-2 mb-6"
                 data-tip={`${completedTasks}/${totalTask}`}
@@ -76,7 +77,7 @@ const Sidebar = ({
                   {role === "TRANSCRIBER"
                     ? "Submitted"
                     : role === "REVIEWER"
-                    ? "Reviewed"
+                    ? `${home.reviewed}`
                     : "Final Reviewed"}
                 </label>
                 <span className=" text-right">{completedTasks}</span>
@@ -85,7 +86,7 @@ const Sidebar = ({
                 <div className="flex text-right justify-between">
                   <label className="text-sm font-bold mb-2">
                     {role === "TRANSCRIBER"
-                      ? "Reviewed"
+                      ? `${home.reviewed}`
                       : role === "REVIEWER"
                       ? "Final Reviewed"
                       : ""}

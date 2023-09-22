@@ -1,0 +1,23 @@
+{
+  "home": {
+    "title": "Pecha STT Tool",
+    "project": "Project Info",
+    "user": "User",
+    "group": "Group",
+    "task": "Task ID",
+    "target": "TARGET PROGRESS",
+    "reviewed": "Reviewed",
+    "final_reviewed": "Final Reviewed",
+    "total_submitted": "Total Submitted",
+    "transcriber": "Transcriber",
+    "reviewer": "Reviewer",
+    "final_reviewer": "Final Reviewer",
+    "submit": "Submit",
+    "reject": "Reject",
+    "save": "Save",
+    "trash": "Trash",
+    "file": "File",
+    "speed": "Speed"
+
+  }
+}

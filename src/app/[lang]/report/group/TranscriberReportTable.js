@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { calculatePay } from "@/lib/calculatePay"
-const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
+const TranscriberReportTable = ({ userStatistics, selectGroup }) => {
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -18,7 +18,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             </tr>
           </thead>
           <tbody>
-            {usersStatistic.map((user) => (
+            {userStatistics.map((user) => (
               <tr key={user.id}>
                 <td>
                   <Link href={`/report/user/${user.id}`}>{user.name}</Link>

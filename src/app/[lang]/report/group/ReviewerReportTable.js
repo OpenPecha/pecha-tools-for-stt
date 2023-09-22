@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-const ReviewerReportTable = ({ reviewersStatistic }) => {
+const ReviewerReportTable = ({ reviewerStatistics }) => {
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -16,7 +16,7 @@ const ReviewerReportTable = ({ reviewersStatistic }) => {
             </tr>
           </thead>
           <tbody>
-            {reviewersStatistic.map((reviewer) => (
+            {reviewerStatistics.map((reviewer) => (
               <tr key={reviewer.id}>
                 <td>
                   <Link href={`/report/user/${reviewer.id}`}>

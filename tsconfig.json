@@ -22,6 +22,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/dashboard/group/GroupDashboard.js", "src/app/dashboard/group/EditGroupModal.js", "src/app/dashboard/group/AddGroupModal.js", "src/components/AudioTranscript.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/[lang]/dashboard/group/GroupDashboard.js",
+    "src/app/[lang]/dashboard/group/EditGroupModal.js",
+    "src/app/[lang]/dashboard/group/AddGroupModal.js",
+    "src/components/AudioTranscript.js",
+    "i18n-config.ts"
+  ],
   "exclude": ["node_modules"]
 }

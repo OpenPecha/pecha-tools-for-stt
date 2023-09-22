@@ -1,6 +1,6 @@
 import React from "react";
 import TaskForm from "./TaskForm";
-import PaginationControls from "../../../components/PaginationControls";
+import PaginationControls from "@/components/PaginationControls";
 import { getAllTask, getTotalTaskCount } from "@/model/task";
 
 const TaskDashbooard = async ({ searchParams, groups }) => {

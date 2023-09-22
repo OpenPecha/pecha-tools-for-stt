@@ -1,8 +1,19 @@
 import Link from "next/link";
-import { getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
 import RightSidebar from "@/components/RightSidebar";
-export default async function Home({ searchParams }: { searchParams: any }) {
+import { getUserTask } from "@/model/action";
+import { Locale } from "../../../i18n-config";
+import { getDictionary } from "../../../dictionaries";
+
+export default async function Home({
+  searchParams,
+  params: { lang },
+}: {
+  searchParams: any;
+  params: { lang: Locale };
+}) {
+  const { home } = await getDictionary(lang);
+  console.log("lang home  ", home);
   const { session } = searchParams;
   let userTasks;
   let userDetail;
@@ -26,10 +37,10 @@ export default async function Home({ searchParams }: { searchParams: any }) {
             <span className="block">or</span>
           </div>
           <div className="flex flex-col gap-6 sm:flex-row">
-            <Link href="/dashboard" type="button" className="btn btn-accent">
+            <Link href="dashboard" type="button" className="btn btn-accent">
               Dashboard
             </Link>
-            <Link href="/report/group" type="button" className="btn btn-accent">
+            <Link href="report/group" type="button" className="btn btn-accent">
               Report
             </Link>
           </div>
@@ -39,7 +50,11 @@ export default async function Home({ searchParams }: { searchParams: any }) {
           {errMsg}
         </div>
       ) : (
-        <AudioTranscript tasks={userTasks} userDetail={userDetail} />
+        <AudioTranscript
+          tasks={userTasks}
+          userDetail={userDetail}
+          home={home}
+        />
       )}
       <RightSidebar>
         <iframe

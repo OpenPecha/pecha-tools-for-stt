@@ -8,7 +8,7 @@ import { UserProgressStats } from "@/model/task";
 import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
 
-const AudioTranscript = ({ tasks, userDetail }) => {
+const AudioTranscript = ({ tasks, userDetail, home }) => {
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
@@ -65,7 +65,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     console.log("UserProgressStats", completedTaskCount, totalTaskCount);
     setCompletedTasks(completedTaskCount);
     setTotalTask(totalTaskCount);
-    setPassedTasks(totalTaskPassed)
+    setPassedTasks(totalTaskPassed);
   };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
@@ -125,6 +125,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
         index={index}
         taskList={taskList}
         role={role}
+        home={home}
       >
         {/* Page content here */}
         {isLoading ? (
@@ -136,12 +137,12 @@ const AudioTranscript = ({ tasks, userDetail }) => {
             {(role === "REVIEWER" || role === "FINAL_REVIEWER") && (
               <div>
                 <p className="mt-5">
-                  <strong>Transcriber : </strong>
+                  <strong>{home.transcriber} : </strong>
                   <span>{taskList[index].transcriber?.name}</span>
                 </p>
                 {role === "FINAL_REVIEWER" && (
                   <p className="mt-2">
-                    <strong>Reviewer : </strong>
+                    <strong>{home.reviewer} : </strong>
                     <span>{taskList[index].reviewer?.name}</span>
                   </p>
                 )}
@@ -156,6 +157,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
                   inputRef={inputRef}
                   transcript={transcript}
                   updateTaskAndIndex={updateTaskAndIndex}
+                  home={home}
                 />
                 <textarea
                   ref={inputRef}
@@ -168,7 +170,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
                 ></textarea>
                 <div className="ml-auto text-xs">
                   <span>
-                    <strong className="uppercase">File:</strong>
+                    <strong className="uppercase">{home.file}:</strong>
                     {(taskList[index]?.url).split("/").pop()}
                   </span>
                 </div>
@@ -180,6 +182,7 @@ const AudioTranscript = ({ tasks, userDetail }) => {
               index={index}
               transcript={transcript}
               role={role}
+              home={home}
             />
           </>
         ) : (

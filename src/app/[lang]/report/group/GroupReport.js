@@ -10,38 +10,45 @@ import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
 
 const GroupReport = ({ groups }) => {
-  const [usersStatistic, setUsersStatistic] = useState([]);
-  const [reviewersStatistic, setReviewersStatistic] = useState([]);
-  const [selectGroup, setSelectGroup] = useState("");
+  const [userStatistics, setUserStatistics] = useState([]);
+  const [reviewerStatistics, setReviewerStatistics] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [dates, setDates] = useState({ from: "", to: "" });
 
   useEffect(() => {
-    if (selectGroup) {
-      async function getUserReportByGroup() {
-        const usersOfGroup = await generateUserReportByGroup(
-          selectGroup,
-          dates
-        );
-        setUsersStatistic(usersOfGroup);
-      }
-      async function getReviewerReportByGroup() {
-        const reviewersOfGroup = await generateReviewerReportbyGroup(
-          selectGroup,
-          dates
-        );
-        setReviewersStatistic(reviewersOfGroup);
-      }
-      getReviewerReportByGroup();
-      getUserReportByGroup();
+    console.log("inside useffect");
+    if (selectedGroup) {
+      console.log("inside if", selectedGroup);
+      fetchUserReportByGroup();
+      fetchReviewerReportByGroup();
     }
-  }, [selectGroup, dates]);
+  }, [selectedGroup, dates]);
 
-  const handleGroupChange = async (event) => {
-    setSelectGroup(event.target.value);
+  const fetchUserReportByGroup = async () => {
+    console.log("fetchUserReportByGroup called");
+    const usersOfGroup = await generateUserReportByGroup(selectedGroup, dates);
+    setUserStatistics(usersOfGroup);
   };
 
-  const handleDateChange = async (event) => {
-    setDates((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+  const fetchReviewerReportByGroup = async () => {
+    console.log("fetchReviewerReportByGroup called");
+    const reviewersOfGroup = await generateReviewerReportbyGroup(
+      selectedGroup,
+      dates
+    );
+    setReviewerStatistics(reviewersOfGroup);
+  };
+
+  const handleGroupChange = (event) => {
+    console.log("handleGroupChange", event.target.value);
+    setSelectedGroup(event.target.value);
+  };
+
+  const handleDateChange = (event) => {
+    setDates((prevDates) => ({
+      ...prevDates,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   return (
@@ -51,7 +58,7 @@ const GroupReport = ({ groups }) => {
           title="group_id"
           label="group"
           options={groups}
-          selectedOption={selectGroup}
+          selectedOption={selectedGroup}
           handleOptionChange={handleGroupChange}
         />
         <div className="flex flex-col md:flex-row gap-2 md:gap-6">
@@ -69,10 +76,10 @@ const GroupReport = ({ groups }) => {
       </form>
       <div className="flex flex-col gap-10 justify-center items-center mt-10">
         <TranscriberReportTable
-          usersStatistic={usersStatistic}
-          selectGroup={selectGroup}
+          userStatistics={userStatistics}
+          selectedGroup={selectedGroup}
         />
-        <ReviewerReportTable reviewersStatistic={reviewersStatistic} />
+        <ReviewerReportTable reviewerStatistics={reviewerStatistics} />
       </div>
     </>
   );
