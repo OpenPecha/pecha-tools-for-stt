@@ -14,7 +14,7 @@ const Sidebar = ({
 }) => {
 
   const value = useContext(AppContext);
-  let { languageSelected } = value;
+  let { lang } = value;
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -47,25 +47,25 @@ const Sidebar = ({
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <div className="flex flex-col w-60 min-h-full h-full bg-[#54606e] text-white">
             <header className="bg-[#384451] p-4">
-              <div className="text-lg">Pecha STT Tool</div>
+              <div className="text-lg">{lang.title}</div>
             </header>
             <section className="p-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">Project Info</h3>
+              <h3 className="uppercase font-bold mb-2">{lang.project}</h3>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">User</label>
+                <label className="text-sm font-bold mb-2">{lang.user}</label>
                 <span className="text-right">{userDetail.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">Group</label>
+                <label className="text-sm font-bold mb-2">{lang.group}</label>
                 <span className=" text-right">{userDetail.group.name}</span>
               </div>
               <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">Task ID</label>
+                <label className="text-sm font-bold mb-2">{lang.task}</label>
                 <span className=" text-right">{taskList[index]?.id}</span>
               </div>
             </section>
             <section className="p-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">TARGET PROGRESS</h3>
+              <h3 className="uppercase font-bold mb-2">{lang.target}</h3>
               <div
                 className="tooltip tooltip-bottom w-full mt-2 mb-6"
                 data-tip={`${completedTasks}/${totalTask}`}
@@ -80,10 +80,10 @@ const Sidebar = ({
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
-                    ? "Submitted"
+                    ? lang.submitted
                     : role === "REVIEWER"
-                      ? "Reviewed"
-                      : "Final Reviewed"}
+                      ? lang.reviewed
+                      : lang.final_reviewed}
                 </label>
                 <span className=" text-right">{completedTasks}</span>
               </div>
@@ -91,9 +91,9 @@ const Sidebar = ({
                 <div className="flex text-right justify-between">
                   <label className="text-sm font-bold mb-2">
                     {role === "TRANSCRIBER"
-                      ? "Reviewed"
+                      ? lang.reviewed
                       : role === "REVIEWER"
-                        ? "Final Reviewed"
+                        ? lang.final_reviewed
                         : ""}
                   </label>
                   <span className=" text-right">{passedTasks}</span>
@@ -102,16 +102,16 @@ const Sidebar = ({
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
-                    ? "Total Assigned"
+                    ? lang.total_assigned
                     : role === "REVIEWER"
-                      ? "Total Submitted"
+                      ? lang.total_submitted
                       : "Total Accepted"}
                 </label>
                 <span className=" text-right">{totalTask}</span>
               </div>
             </section>
             <section className="p-5 border-b border-b-[#384451]">
-            <h3 className="uppercase font-bold mb-2">Language</h3>
+            <h3 className="uppercase font-bold mb-2">{lang.language}</h3>
               <LanguageToggle />
             </section>
           </div>

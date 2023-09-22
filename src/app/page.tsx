@@ -2,7 +2,10 @@ import Link from "next/link";
 import { getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
 import RightSidebar from "@/components/RightSidebar";
+import languagesObject from "../../data/language";
+
 export default async function Home({ searchParams }: { searchParams: any }) {
+  const language = languagesObject;
   const { session } = searchParams;
   let userTasks;
   let userDetail;
@@ -39,7 +42,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
           {errMsg}
         </div>
       ) : (
-        <AudioTranscript tasks={userTasks} userDetail={userDetail} />
+        <AudioTranscript tasks={userTasks} userDetail={userDetail} language={language}/>
       )}
       <RightSidebar>
         <iframe

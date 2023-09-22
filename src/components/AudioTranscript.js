@@ -9,8 +9,10 @@ import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
 import AppContext from "../components/AppContext";
 
-const AudioTranscript = ({ tasks, userDetail }) => {
+const AudioTranscript = ({ tasks, userDetail, language }) => {
   const [languageSelected, setLanguageSelected] = useState("bo");
+  const lang = language[languageSelected];
+
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
@@ -116,9 +118,9 @@ const AudioTranscript = ({ tasks, userDetail }) => {
       throw new Error(error);
     }
   };
-
+  
   return (
-    <AppContext.Provider value={{languageSelected, setLanguageSelected}}>
+    <AppContext.Provider value={{languageSelected, setLanguageSelected, lang}}>
       <Sidebar
         userDetail={userDetail}
         completedTasks={completedTasks}
