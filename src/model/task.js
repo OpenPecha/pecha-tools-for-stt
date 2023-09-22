@@ -481,19 +481,34 @@ const getGroupTaskCount = async (id) => {
 
 // get user progress based on the role, user id and group id
 export const UserProgressStats = async (id, role, groupId) => {
-  let completedTaskCount;
-  let totalTaskCount;
+  let completedTaskCount = 0;
+  let totalTaskCount = 0;
+  let totalTaskPassed = 0;
   try {
     completedTaskCount = await getCompletedTaskCount(id, role);
     switch (role) {
       case "TRANSCRIBER":
         totalTaskCount = await getGroupTaskCount(groupId);
+        totalTaskPassed = await prisma.task.count({
+          where: {
+            group_id: parseInt(groupId),
+            transcriber_id: parseInt(id),
+            state: { in: ["accepted", "finalised"] },
+          },
+        });
         break;
       case "REVIEWER":
         totalTaskCount = await prisma.task.count({
           where: {
             group_id: parseInt(groupId),
             state: { in: ["submitted", "accepted", "finalised"] },
+          },
+        });
+        totalTaskPassed = await prisma.task.count({
+          where: {
+            group_id: parseInt(groupId),
+            reviewer_id: parseInt(id),
+            state: "finalised",
           },
         });
         break;
@@ -514,7 +529,7 @@ export const UserProgressStats = async (id, role, groupId) => {
       "totalTaskCount",
       totalTaskCount
     );
-    return { completedTaskCount, totalTaskCount };
+    return { completedTaskCount, totalTaskCount, totalTaskPassed };
   } catch (error) {
     throw new Error(error);
   }

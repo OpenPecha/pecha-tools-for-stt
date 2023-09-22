@@ -12,8 +12,9 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
-  const [completedTask, setCompletedTask] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState(0);
   const [totalTask, setTotalTask] = useState(0);
+  const [passedTasks, setPassedTasks] = useState(0);
   const audioRef = useRef(null);
   const inputRef = useRef(null);
   const [anyTask, setAnyTask] = useState(false);
@@ -59,14 +60,12 @@ const AudioTranscript = ({ tasks, userDetail }) => {
   }, [taskList]);
 
   const getUserProgress = async () => {
-    const { completedTaskCount, totalTaskCount } = await UserProgressStats(
-      userId,
-      role,
-      groupId
-    );
+    const { completedTaskCount, totalTaskCount, totalTaskPassed } =
+      await UserProgressStats(userId, role, groupId);
     console.log("UserProgressStats", completedTaskCount, totalTaskCount);
-    setCompletedTask(completedTaskCount);
+    setCompletedTasks(completedTaskCount);
     setTotalTask(totalTaskCount);
+    setPassedTasks(totalTaskPassed)
   };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
@@ -120,7 +119,8 @@ const AudioTranscript = ({ tasks, userDetail }) => {
     <>
       <Sidebar
         userDetail={userDetail}
-        completedTask={completedTask}
+        completedTasks={completedTasks}
+        passedTasks={passedTasks}
         totalTask={totalTask}
         index={index}
         taskList={taskList}

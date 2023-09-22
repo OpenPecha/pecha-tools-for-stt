@@ -4,7 +4,8 @@ const Sidebar = ({
   userDetail,
   index,
   taskList,
-  completedTask,
+  completedTasks,
+  passedTasks,
   totalTask,
   role,
 }) => {
@@ -59,11 +60,17 @@ const Sidebar = ({
             </section>
             <section className="p-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">TARGET PROGRESS</h3>
-              <progress
-                className="progress progress-success my-4"
-                value={completedTask}
-                max={totalTask}
-              ></progress>
+              <div
+                className="tooltip tooltip-bottom w-full mt-2 mb-6"
+                data-tip={`${completedTasks}/${totalTask}`}
+              >
+                <progress
+                  className="progress progress-success"
+                  value={completedTasks}
+                  max={totalTask}
+                ></progress>
+              </div>
+
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
@@ -72,8 +79,20 @@ const Sidebar = ({
                     ? "Reviewed"
                     : "Final Reviewed"}
                 </label>
-                <span className=" text-right">{completedTask}</span>
+                <span className=" text-right">{completedTasks}</span>
               </div>
+              {(role === "TRANSCRIBER" || role === "REVIEWER") && (
+                <div className="flex text-right justify-between">
+                  <label className="text-sm font-bold mb-2">
+                    {role === "TRANSCRIBER"
+                      ? "Reviewed"
+                      : role === "REVIEWER"
+                      ? "Final Reviewed"
+                      : ""}
+                  </label>
+                  <span className=" text-right">{passedTasks}</span>
+                </div>
+              )}
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
