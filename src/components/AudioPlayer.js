@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { ImLoop } from "react-icons/im";
+import AppContext from "./AppContext";
+import { useContext } from "react";
 
 export const AudioPlayer = ({
   tasks,
   index,
   audioRef,
-  inputRef,
   transcript,
   updateTaskAndIndex,
 }) => {
+  const value = useContext(AppContext);
+  let { lang } = value;
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoopEnabled, setIsLoopEnabled] = useState(false); // [false, true
@@ -120,7 +123,7 @@ export const AudioPlayer = ({
           className="flex item-center btn btn-ghost text-lg p-2 font-semibold"
           onClick={changePlaybackRate}
         >
-          <span className="text-xs">SPEED</span>
+          <span className="text-xs">{lang.speed}</span>
           <span>{playbackRate}X</span>
         </button>
       </div>

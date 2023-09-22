@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { BsCheckLg, BsXLg, BsArrowReturnLeft, BsTrash } from "react-icons/bs";
+import { useContext } from "react";
+import AppContext from "./AppContext";
 
 const ActionButtons = ({
   updateTaskAndIndex,
@@ -10,7 +12,8 @@ const ActionButtons = ({
   role,
 }) => {
   // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
-
+  const value = useContext(AppContext);
+  let { lang } = value;
   return (
     <>
       <div className="fixed bottom-0 flex gap-1 border shadow-sm p-2">
@@ -24,7 +27,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsCheckLg width="5rem" />
-              <p>Submit</p>
+              <p>{lang.submit}</p>
             </div>
           </button>
         </div>
@@ -39,7 +42,7 @@ const ActionButtons = ({
             >
               <div className="flex flex-col items-center">
                 <BsXLg />
-                <p>Reject</p>
+                <p>{lang.reject}</p>
               </div>
             </button>
           </div>
@@ -52,7 +55,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsArrowReturnLeft />
-              <p>Save</p>
+              <p>{lang.save}</p>
             </div>
           </button>
         </div>
@@ -66,7 +69,7 @@ const ActionButtons = ({
           >
             <div className="flex flex-col items-center">
               <BsTrash />
-              <p>Trash</p>
+              <p>{lang.trash}</p>
             </div>
           </button>
         </div>

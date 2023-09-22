@@ -140,12 +140,12 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
             {(role === "REVIEWER" || role === "FINAL_REVIEWER") && (
               <div>
                 <p className="mt-5">
-                  <strong>Transcriber : </strong>
+                  <strong>{lang.transcriber} : </strong>
                   <span>{taskList[index].transcriber?.name}</span>
                 </p>
                 {role === "FINAL_REVIEWER" && (
                   <p className="mt-2">
-                    <strong>Reviewer : </strong>
+                    <strong>{lang.reviewer} : </strong>
                     <span>{taskList[index].reviewer?.name}</span>
                   </p>
                 )}
@@ -172,7 +172,7 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
                 ></textarea>
                 <div className="ml-auto text-xs">
                   <span>
-                    <strong className="uppercase">File:</strong>
+                    <strong className="uppercase">{lang.file} : </strong>
                     {(taskList[index]?.url).split("/").pop()}
                   </span>
                 </div>
