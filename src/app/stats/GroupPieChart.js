@@ -7,7 +7,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const GroupPieChart = ({ group }) => {
   const { taskImportCount, taskSubmittedCount, taskAcceptedCount } = group;
-  console.log("GroupPieChart group:::", group);
   const data = {
     labels: ["Imported", "Submitted", "Accepted"],
     datasets: [

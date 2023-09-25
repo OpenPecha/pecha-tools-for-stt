@@ -11,10 +11,18 @@ datasource db {
 }
 
 model Group {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(255)
-  users User[]
-  tasks Task[]
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
+  users         User[]
+  tasks         Task[]
+  Department    Department? @relation(fields: [department_id], references: [id])
+  department_id Int?
+}
+
+model Department {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(255)
+  groups Group[]
 }
 
 enum Role {
