@@ -1,9 +1,25 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { editGroup } from "@/model/group";
+import Select from "@/components/Select";
 
-const EditGroupModal = ({ selectedRow }) => {
+const EditGroupModal = ({ selectedRow, departments }) => {
   const ref = useRef(null);
+  const [departmentId, setDepartmentId] = useState("");
+
+  const handleDepartmentChange = async (event) => {
+    setDepartmentId(event.target.value);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    if (selectedRow?.Department !== null) {
+      setDepartmentId(selectedRow?.Department?.id);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedRow]);
 
   return (
     <>
@@ -85,6 +101,13 @@ const EditGroupModal = ({ selectedRow }) => {
                 className="input input-bordered w-full"
               />
             </div>
+            <Select
+              title="department_id"
+              label="Department"
+              options={departments}
+              selectedOption={departmentId}
+              handleOptionChange={handleDepartmentChange}
+            />
           </div>
           <button
             type="submit"

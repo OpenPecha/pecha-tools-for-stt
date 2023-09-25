@@ -1,9 +1,15 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { createGroup } from "@/model/group";
+import Select from "@/components/Select";
 
-const AddGroupModal = () => {
+const AddGroupModal = ({ departments }) => {
+  const [departmentId, setDepartmentId] = useState("");
+
+  const handleDepartmentChange = async (event) => {
+    setDepartmentId(event.target.value);
+  };
   const ref = useRef(null);
   return (
     <>
@@ -22,19 +28,28 @@ const AddGroupModal = () => {
               ✕
             </button>
           </div>
-          <div className="form-control w-full sm:w-3/4">
-            <label className="label" htmlFor="name">
-              <span className="label-text text-base font-semibold ">
-                Group Name
-              </span>
-            </label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Enter group name"
-              required
-              className="input input-bordered"
+          <div className="form-control grid gap-4 mb-4 sm:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="name">
+                <span className="label-text text-base font-semibold ">
+                  Group Name
+                </span>
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Enter group name"
+                required
+                className="input input-bordered w-full"
+              />
+            </div>
+            <Select
+              title="department_id"
+              label="Department"
+              options={departments}
+              selectedOption={departmentId}
+              handleOptionChange={handleDepartmentChange}
             />
           </div>
           <button

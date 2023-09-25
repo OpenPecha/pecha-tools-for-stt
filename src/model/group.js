@@ -10,6 +10,7 @@ export const getAllGroup = async () => {
         _count: {
           select: { tasks: true, users: true },
         },
+        Department: true,
       },
     });
     return allGroup;
@@ -21,10 +22,12 @@ export const getAllGroup = async () => {
 
 export const createGroup = async (formData) => {
   const groupName = formData.get("name");
+  const departmentId = formData.get("department_id");
   try {
     const newGroup = await prisma.group.create({
       data: {
         name: groupName,
+        department_id: parseInt(departmentId),
       },
     });
     revalidatePath("/dashboard/group");
@@ -52,6 +55,7 @@ export const deleteGroup = async (id) => {
 
 export const editGroup = async (id, formData) => {
   const groupName = formData.get("name");
+  const departmentId = formData.get("department_id");
   try {
     const group = await prisma.group.update({
       where: {
@@ -59,6 +63,7 @@ export const editGroup = async (id, formData) => {
       },
       data: {
         name: groupName,
+        department_id: parseInt(departmentId),
       },
     });
     revalidatePath("/dashboard/group");
