@@ -68,3 +68,41 @@ export const editGroup = async (id, formData) => {
     throw new Error(error);
   }
 };
+
+export const getAllGroupTaskImportCount = async (groupList) => {
+  const groupStatsList = [];
+  for (let group of groupList) {
+    const { id, name } = group;
+    console.log(id, name);
+    try {
+      // get the count of tasks imported for each group
+      const groupStats = {
+        id,
+        name,
+        taskImportCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "imported",
+          },
+        }),
+        taskSubmittedCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "submitted",
+          },
+        }),
+        taskAcceptedCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "accepted",
+          },
+        }),
+      };
+      groupStatsList.push(groupStats);
+    } catch (error) {
+      console.error("Error getting all group:", error);
+      throw new Error(error);
+    }
+  }
+  return groupStatsList;
+};
