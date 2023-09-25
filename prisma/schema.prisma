@@ -37,10 +37,10 @@ model Task {
   group_id              Int
   group                 Group     @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   state                 State     @default(imported)
-  inference_transcript  String?   @db.VarChar(255)
-  transcript            String?   @db.VarChar(255)
-  reviewed_transcript   String?   @db.VarChar(255)
-  final_transcript      String?   @db.VarChar(255)
+  inference_transcript  String?   @db.VarChar(500)
+  transcript            String?   @db.VarChar(500)
+  reviewed_transcript   String?   @db.VarChar(500)
+  final_transcript      String?   @db.VarChar(500)
   file_name             String    @unique @db.VarChar(255)
   url                   String    @unique @db.Text
   transcriber_id        Int?
