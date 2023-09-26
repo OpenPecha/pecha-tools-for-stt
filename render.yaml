@@ -4,7 +4,7 @@ services:
     env: node
     plan: starter
     buildCommand: npm ci --production=false && npm run build && npm prune --production
-    startCommand: npx run migrate deploy && npm run start
+    startCommand: npx run migrate deploy && npx prisma generate && npm run start
     autoDeploy: false
     envVars:
       - key: NODE_VERSION
