@@ -1,17 +1,30 @@
 import React from "react";
 
 const GroupImportStats = ({ groupStat, importedThreshold }) => {
+  console.log("GroupImportStats:::", groupStat);
+  // Function to generate a random color based on a seed (unique ID)
+  const generateRandomColor = (seed) => {
+    // get differnt lighter hex color based on unique seed
+    const seedColor = Math.floor(
+      Math.abs(Math.sin(seed) * 16777215) % 16777215
+    ).toString(16);
+    const className = `bg-[#${seedColor}]`;
+    return className;
+  };
+
   return (
     <>
       {groupStat.map((group) => (
         <div
           key={group.id}
-          className={`bg-white shadow-md rounded-md p-4 
-        ${
-          group.taskImportCount < importedThreshold
-            ? "border-4 border-red-500"
-            : ""
-        }
+          className={`
+          ${generateRandomColor(
+            group.department_id
+          )} shadow-md rounded-md p-4 ${
+            group.taskImportCount < importedThreshold
+              ? "border-4 border-red-500"
+              : ""
+          } 
          `}
         >
           <div className="flex flex-col justify-center items-center">

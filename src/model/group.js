@@ -12,6 +12,9 @@ export const getAllGroup = async () => {
         },
         Department: true,
       },
+      orderBy: {
+        department_id: "asc",
+      },
     });
     return allGroup;
   } catch (error) {
@@ -75,15 +78,17 @@ export const editGroup = async (id, formData) => {
 };
 
 export const getAllGroupTaskImportCount = async (groupList) => {
+  // make a array of diff list of group  with diff department_id
   const groupStatsList = [];
   for (let group of groupList) {
-    const { id, name } = group;
+    const { id, name, department_id } = group;
     console.log(id, name);
     try {
       // get the count of tasks imported for each group
       const groupStats = {
         id,
         name,
+        department_id,
         taskImportCount: await prisma.task.count({
           where: {
             group_id: id,
@@ -109,5 +114,23 @@ export const getAllGroupTaskImportCount = async (groupList) => {
       throw new Error(error);
     }
   }
-  return groupStatsList;
+  const groupedByDepartment = groupByDepartmentId(groupStatsList);
+  console.log("groupedByDepartment:::", groupedByDepartment);
+  return groupedByDepartment;
 };
+
+function groupByDepartmentId(arr) {
+  const grouped = {};
+
+  arr.forEach((obj) => {
+    const { department_id } = obj;
+
+    if (!grouped[department_id]) {
+      grouped[department_id] = [];
+    }
+
+    grouped[department_id].push(obj);
+  });
+
+  return Object.values(grouped);
+}

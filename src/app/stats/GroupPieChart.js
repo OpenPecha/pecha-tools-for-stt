@@ -6,6 +6,7 @@ import { Pie } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const GroupPieChart = ({ group }) => {
+  console.log("GroupPieChart:::", group);
   const { taskImportCount, taskSubmittedCount, taskAcceptedCount } = group;
   const data = {
     labels: ["Imported", "Submitted", "Accepted"],
@@ -21,29 +22,36 @@ const GroupPieChart = ({ group }) => {
   };
 
   return (
-    <div className="p-5">
-      <Pie
-        className="w-1/3 h-1/3"
-        data={data}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: "top",
-            },
-            title: {
-              display: true,
-              text: "Group Task State Stats",
-              color: "black",
-              font: {
-                size: 20,
-              },
-            },
-          },
-        }}
-      ></Pie>
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <div className=" ">{group.name ? group.name : ""}</div>
+          <div className="p-5">
+            <Pie
+              className="w-full h-full"
+              data={data}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  title: {
+                    display: true,
+                    text: "Group Task State Stats",
+                    color: "black",
+                    font: {
+                      size: 20,
+                    },
+                  },
+                },
+              }}
+            ></Pie>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
