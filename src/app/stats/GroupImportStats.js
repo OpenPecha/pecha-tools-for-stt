@@ -49,7 +49,7 @@ const GroupImportStats = ({ groupStat }) => {
           } 
          `}
         >
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex justify-center items-center gap-5">
             <div className="text-2xl font-bold">{group.name}</div>
             <div className="text-xl font-bold">{group.taskImportCount}</div>
           </div>

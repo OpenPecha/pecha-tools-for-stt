@@ -18,7 +18,7 @@ const Stats = async () => {
           {groupStatByDept.map((groupStat, index) => (
             <div
               key={index}
-              className="grid grid-cols-2 md:grid-cols-4 gap-5 py-5 "
+              className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5"
             >
               <GroupImportStats groupStat={groupStat} />
             </div>

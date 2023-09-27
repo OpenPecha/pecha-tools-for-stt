@@ -103,7 +103,7 @@ const TaskStats = ({ groupStatByDept }) => {
 
   return (
     <>
-      <div className="w-4/5 sm:w-1/2 md:w-1/4 mt-10">
+      <div className="w-4/5 sm:w-1/2 md:w-1/4 my-5">
         <Select
           title="scope"
           label="Scope"
@@ -112,8 +112,8 @@ const TaskStats = ({ groupStatByDept }) => {
           handleOptionChange={handleScopeChange}
         />
       </div>
-      <div>
-        <div className="mt-10">
+      <div className="mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {statsList.map((group, index) => (
             <GroupPieChart key={group.id ? group.id : index} group={group} />
           ))}

@@ -12,7 +12,7 @@ const GroupPieChart = ({ group }) => {
     labels: ["Imported", "Submitted", "Accepted"],
     datasets: [
       {
-        label: "Task State",
+        label: "Task Count",
         data: [taskImportCount, taskSubmittedCount, taskAcceptedCount],
         backgroundColor: ["red", "blue", "yellow"],
         borderColor: ["red", "blue", "yellow"],
@@ -23,32 +23,32 @@ const GroupPieChart = ({ group }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <div className=" ">{group.name ? group.name : ""}</div>
-          <div className="p-5">
-            <Pie
-              className="w-full h-full"
-              data={data}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: "top",
-                  },
-                  title: {
-                    display: true,
-                    text: "Group Task State Stats",
-                    color: "black",
-                    font: {
-                      size: 20,
-                    },
+      <div className="flex flex-col">
+        <div className="text-center font-semibold text-lg">
+          {group.name ? group.name : ""}
+        </div>
+        <div className="p-5">
+          <Pie
+            className="w-full h-full"
+            data={data}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Group Task State Stats",
+                  color: "black",
+                  font: {
+                    size: 20,
                   },
                 },
-              }}
-            ></Pie>
-          </div>
+              },
+            }}
+          ></Pie>
         </div>
       </div>
     </>
