@@ -82,13 +82,14 @@ export const getAllGroupTaskImportCount = async (groupList) => {
   const groupStatsList = [];
   for (let group of groupList) {
     const { id, name, department_id } = group;
-    console.log(id, name);
+    const departmentName = group.Department?.name;
     try {
       // get the count of tasks imported for each group
       const groupStats = {
         id,
         name,
         department_id,
+        departmentName,
         taskImportCount: await prisma.task.count({
           where: {
             group_id: id,
@@ -115,7 +116,6 @@ export const getAllGroupTaskImportCount = async (groupList) => {
     }
   }
   const groupedByDepartment = groupByDepartmentId(groupStatsList);
-  console.log("groupedByDepartment:::", groupedByDepartment);
   return groupedByDepartment;
 };
 

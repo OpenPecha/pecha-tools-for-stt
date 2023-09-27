@@ -21,6 +21,9 @@ export const getAllUser = async () => {
         },
         group: true,
       },
+      orderBy: {
+        id: "asc",
+      },
     });
     return users;
   } catch (error) {
@@ -231,7 +234,7 @@ export const generateUsersTaskReport = async (users, dates) => {
   return transcriberList;
 };
 
-    // get the task statistics - task reviewed, reviewed secs, syllable count
+// get the task statistics - task reviewed, reviewed secs, syllable count
 export const UserTaskReport = (transcriberObj, userTasks) => {
   const userTaskSummary = userTasks.reduce(
     (acc, task) => {

@@ -1,7 +1,6 @@
 import React from "react";
 
 const GroupImportStats = ({ groupStat }) => {
-  console.log("GroupImportStats:::", groupStat);
   const importedThreshold = 500;
 
   // Function to generate a random color based on a seed (unique ID)

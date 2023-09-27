@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const GroupPieChart = ({ group }) => {
   console.log("GroupPieChart:::", group);
@@ -23,33 +23,28 @@ const GroupPieChart = ({ group }) => {
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="text-center font-semibold text-lg">
-          {group.name ? group.name : ""}
-        </div>
-        <div className="p-5">
-          <Pie
-            className="w-full h-full"
-            data={data}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: "top",
-                },
-                title: {
-                  display: true,
-                  text: "Group Task State Stats",
-                  color: "black",
-                  font: {
-                    size: 20,
-                  },
+      <div className="p-5">
+        <Pie
+          className="w-full h-full"
+          data={data}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "top",
+              },
+              title: {
+                display: true,
+                text: `${group.name ? group.name : ""}`,
+                color: "black",
+                font: {
+                  size: 20,
                 },
               },
-            }}
-          ></Pie>
-        </div>
+            },
+          }}
+        ></Pie>
       </div>
     </>
   );

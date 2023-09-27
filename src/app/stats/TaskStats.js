@@ -48,11 +48,12 @@ const TaskStats = ({ groupStatByDept }) => {
     // Create an object to store the sums for each department_id
     const departmentSums = {};
 
-    // Iterate through the groupedByDepartment array
+    // Iterate through the groupStatByDept array
     groupStatByDept.forEach((group) => {
       group.forEach((item) => {
         const {
           department_id,
+          departmentName,
           taskImportCount,
           taskSubmittedCount,
           taskAcceptedCount,
@@ -61,6 +62,7 @@ const TaskStats = ({ groupStatByDept }) => {
         // Initialize the sums for the department if it doesn't exist
         if (!departmentSums[department_id]) {
           departmentSums[department_id] = {
+            name: departmentName,
             taskImportCount: 0,
             taskSubmittedCount: 0,
             taskAcceptedCount: 0,
@@ -79,7 +81,6 @@ const TaskStats = ({ groupStatByDept }) => {
       id: parseInt(department_id, 10),
       ...departmentSums[department_id],
     }));
-
     setStatsList(sumsArray);
   };
 
