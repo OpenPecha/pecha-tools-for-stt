@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 const Dashboard = () => {
-  const links = ["group", "user", "task", "department"];
+  const links = ["department", "group", "user", "task"];
   return (
     <div className="h-screen flex flex-col sm:flex-row justify-center items-center space-y-5 space-x-0 sm:space-y-0 sm:space-x-5">
       {links.map((link) => (

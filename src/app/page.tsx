@@ -20,6 +20,12 @@ export default async function Home({ searchParams }: { searchParams: any }) {
     }
   }
 
+  const routes = [
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Report", path: "/report/group" },
+    { name: "Stats", path: "/stats" },
+  ];
+
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto">
       {session === undefined || session === "" ? (
@@ -29,12 +35,16 @@ export default async function Home({ searchParams }: { searchParams: any }) {
             <span className="block">or</span>
           </div>
           <div className="flex flex-col gap-6 sm:flex-row">
-            <Link href="/dashboard" type="button" className="btn btn-accent">
-              Dashboard
-            </Link>
-            <Link href="/report/group" type="button" className="btn btn-accent">
-              Report
-            </Link>
+            {routes.map((route) => (
+              <Link
+                key={route.name}
+                href={route.path}
+                type="button"
+                className="btn btn-accent"
+              >
+                {route.name}
+              </Link>
+            ))}
           </div>
         </>
       ) : errMsg ? (
@@ -42,7 +52,11 @@ export default async function Home({ searchParams }: { searchParams: any }) {
           {errMsg}
         </div>
       ) : (
-        <AudioTranscript tasks={userTasks} userDetail={userDetail} language={language}/>
+        <AudioTranscript
+          tasks={userTasks}
+          userDetail={userDetail}
+          language={language}
+        />
       )}
       <RightSidebar>
         <iframe
