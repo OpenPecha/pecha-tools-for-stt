@@ -77,7 +77,7 @@ export const editGroup = async (id, formData) => {
   }
 };
 
-export const getAllGroupTaskImportCount = async (groupList) => {
+export const getAllGroupTaskStats = async (groupList) => {
   // make a array of diff list of group  with diff department_id
   const groupStatsList = [];
   for (let group of groupList) {
@@ -90,10 +90,16 @@ export const getAllGroupTaskImportCount = async (groupList) => {
         name,
         department_id,
         departmentName,
-        taskImportCount: await prisma.task.count({
+        taskImportedCount: await prisma.task.count({
           where: {
             group_id: id,
             state: "imported",
+          },
+        }),
+        taskTranscribingCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "transcribing",
           },
         }),
         taskSubmittedCount: await prisma.task.count({
@@ -108,10 +114,22 @@ export const getAllGroupTaskImportCount = async (groupList) => {
             state: "accepted",
           },
         }),
+        taskFinishedCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "finalised",
+          },
+        }),
+        taskTrashedCount: await prisma.task.count({
+          where: {
+            group_id: id,
+            state: "trashed",
+          },
+        }),
       };
       groupStatsList.push(groupStats);
     } catch (error) {
-      console.error("Error getting all group:", error);
+      console.error("Error getting all groups task stats:", error);
       throw new Error(error);
     }
   }

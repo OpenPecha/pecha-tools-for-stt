@@ -7,15 +7,36 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const GroupPieChart = ({ group }) => {
   console.log("GroupPieChart:::", group);
-  const { taskImportCount, taskSubmittedCount, taskAcceptedCount } = group;
+  const {
+    taskImportedCount,
+    taskTranscribingCount,
+    taskSubmittedCount,
+    taskAcceptedCount,
+    taskFinishedCount,
+    taskTrashedCount,
+  } = group;
   const data = {
-    labels: ["Imported", "Submitted", "Accepted"],
+    labels: [
+      "Imported",
+      "Transcribing",
+      "Submitted",
+      "Accepted",
+      "Finalised",
+      "Trashed",
+    ],
     datasets: [
       {
         label: "Task Count",
-        data: [taskImportCount, taskSubmittedCount, taskAcceptedCount],
-        backgroundColor: ["red", "blue", "yellow"],
-        borderColor: ["red", "blue", "yellow"],
+        data: [
+          taskImportedCount,
+          taskTranscribingCount,
+          taskSubmittedCount,
+          taskAcceptedCount,
+          taskFinishedCount,
+          taskTrashedCount,
+        ],
+        backgroundColor: ["grey", "blue", "yellow", "green", "purple", "red"],
+        borderColor: ["grey", "blue", "yellow", "green", "purple", "red"],
         borderWidth: 1,
       },
     ],

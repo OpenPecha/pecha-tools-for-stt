@@ -38,7 +38,7 @@ const GroupImportStats = ({ groupStat }) => {
           key={group.id}
           className={`
            shadow-md rounded-md p-4 ${
-             group.taskImportCount < importedThreshold
+             group.taskImportedCount < importedThreshold
                ? "border-4 border-red-500"
                : ""
            } 
@@ -49,7 +49,7 @@ const GroupImportStats = ({ groupStat }) => {
         >
           <div className="flex justify-center items-center gap-5">
             <div className="text-2xl font-bold">{group.name}</div>
-            <div className="text-xl font-bold">{group.taskImportCount}</div>
+            <div className="text-xl font-bold">{group.taskImportedCount}</div>
           </div>
         </div>
       ))}

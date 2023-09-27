@@ -54,25 +54,35 @@ const TaskStats = ({ groupStatByDept }) => {
         const {
           department_id,
           departmentName,
-          taskImportCount,
+          taskImportedCount,
+          taskTranscribingCount,
           taskSubmittedCount,
           taskAcceptedCount,
+          taskFinalisedCount,
+          taskTrashedCount,
         } = item;
 
         // Initialize the sums for the department if it doesn't exist
         if (!departmentSums[department_id]) {
           departmentSums[department_id] = {
             name: departmentName,
-            taskImportCount: 0,
+            taskImportedCount: 0,
+            taskTranscribingCount: 0,
             taskSubmittedCount: 0,
             taskAcceptedCount: 0,
+            taskFinalisedCount: 0,
+            taskTrashedCount: 0,
           };
         }
 
         // Add the counts to the sums for the department
-        departmentSums[department_id].taskImportCount += taskImportCount;
+        departmentSums[department_id].taskImportedCount += taskImportedCount;
+        departmentSums[department_id].taskTranscribingCount +=
+          taskTranscribingCount;
         departmentSums[department_id].taskSubmittedCount += taskSubmittedCount;
         departmentSums[department_id].taskAcceptedCount += taskAcceptedCount;
+        departmentSums[department_id].taskFinalisedCount += taskFinalisedCount;
+        departmentSums[department_id].taskTrashedCount += taskTrashedCount;
       });
     });
 
@@ -88,15 +98,21 @@ const TaskStats = ({ groupStatByDept }) => {
     const groupStat = [].concat(...groupStatByDept);
     const allDepartmentStats = groupStat.reduce(
       (accumulator, currentItem) => {
-        accumulator.taskImportCount += currentItem.taskImportCount;
+        accumulator.taskImportedCount += currentItem.taskImportedCount;
+        accumulator.taskTranscribingCount += currentItem.taskTranscribingCount;
         accumulator.taskSubmittedCount += currentItem.taskSubmittedCount;
         accumulator.taskAcceptedCount += currentItem.taskAcceptedCount;
+        accumulator.taskFinalisedCount += currentItem.taskFinalisedCount;
+        accumulator.taskTrashedCount += currentItem.taskTrashedCount;
         return accumulator;
       },
       {
-        taskImportCount: 0,
+        taskImportedCount: 0,
+        taskTranscribingCount: 0,
         taskSubmittedCount: 0,
         taskAcceptedCount: 0,
+        taskFinalisedCount: 0,
+        taskTrashedCount: 0,
       }
     );
     setStatsList([allDepartmentStats]);

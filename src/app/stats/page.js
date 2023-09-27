@@ -1,11 +1,11 @@
-import { getAllGroup, getAllGroupTaskImportCount } from "@/model/group";
+import { getAllGroup, getAllGroupTaskStats } from "@/model/group";
 import React from "react";
 import GroupImportStats from "./GroupImportStats";
 import TaskStats from "./TaskStats";
 
 const Stats = async () => {
   const allGroup = await getAllGroup();
-  const groupStatByDept = await getAllGroupTaskImportCount(allGroup);
+  const groupStatByDept = await getAllGroupTaskStats(allGroup);
 
   // make a grid of groupStat of 4 columns
   return (
