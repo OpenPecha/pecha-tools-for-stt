@@ -69,7 +69,7 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
     console.log("UserProgressStats", completedTaskCount, totalTaskCount);
     setCompletedTasks(completedTaskCount);
     setTotalTask(totalTaskCount);
-    setPassedTasks(totalTaskPassed)
+    setPassedTasks(totalTaskPassed);
   };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
@@ -98,8 +98,8 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
         role === "TRANSCRIBER"
           ? setTranscript(taskList[index + 1].inference_transcript)
           : role === "REVIEWER"
-            ? setTranscript(taskList[index + 1].transcript)
-            : setTranscript(taskList[index + 1].reviewed_transcript);
+          ? setTranscript(taskList[index + 1].transcript)
+          : setTranscript(taskList[index + 1].reviewed_transcript);
         setIndex(index + 1);
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
@@ -118,9 +118,11 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       throw new Error(error);
     }
   };
-  
+
   return (
-    <AppContext.Provider value={{languageSelected, setLanguageSelected, lang}}>
+    <AppContext.Provider
+      value={{ languageSelected, setLanguageSelected, lang }}
+    >
       <Sidebar
         userDetail={userDetail}
         completedTasks={completedTasks}
@@ -165,7 +167,7 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
                   ref={inputRef}
                   value={transcript || ""}
                   onChange={(e) => setTranscript(e.target.value)}
-                  className="rounded-md p-4 border border-slate-400 w-full"
+                  className="rounded-md p-4 border border-slate-400 w-full text-xl"
                   placeholder="Type here..."
                   rows={7}
                   id="transcript"

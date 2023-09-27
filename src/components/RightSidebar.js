@@ -18,7 +18,7 @@ export default function Sidebar({ children }) {
       )}
 
       <div
-        className={`top-0 right-0 w-[90vw] md:w-[35vw] bg-[#54606e] md:p-5 p-1 text-white fixed h-full z-40  ease-in-out duration-300 ${
+        className={`top-0 right-0 w-[90vw] md:w-[50vw] bg-[#54606e] md:p-5 p-1 text-white fixed h-full z-40  ease-in-out duration-300 ${
           showSidebar ? "translate-x-0 " : "translate-x-full"
         }`}
       >
