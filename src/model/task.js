@@ -537,6 +537,51 @@ export const getTranscriberTaskList = async (id, dates) => {
   }
 };
 
+export const getReviewerTaskList = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  try {
+    if (fromDate && toDate) {
+      console.log(
+        "getReviewerTaskList with both date are present",
+        fromDate,
+        toDate
+      );
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          reviewer_id: id,
+          reviewed_at: {
+            gte: new Date(fromDate),
+            lte: new Date(toDate),
+          },
+        },
+        select: {
+          audio_duration: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    } else {
+      console.log(
+        "getReviewerTaskList when one or no date is present",
+        fromDate,
+        toDate
+      );
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          reviewer_id: id,
+        },
+        select: {
+          audio_duration: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 // get total count of tasks assigned to a group based on group id
 const getGroupTaskCount = async (id) => {
   try {
@@ -603,6 +648,30 @@ export const UserProgressStats = async (id, role, groupId) => {
     );
     return { completedTaskCount, totalTaskCount, totalTaskPassed };
   } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getTaskWithRevertedState = async (task) => {
+  try {
+    let newState;
+    if (task.state === "submitted" || task.state === "trashed") {
+      newState = "transcribing";
+    }
+    if (task.state === "accepted" || task.state === "trashed") {
+      newState = "submitted";
+    }
+    const updatedTask = await prisma.task.update({
+      where: {
+        id: parseInt(task.id),
+      },
+      data: {
+        state: newState,
+      },
+    });
+    return updatedTask;
+  } catch (error) {
+    console.error("Error getting reverted state task:", error);
     throw new Error(error);
   }
 };
