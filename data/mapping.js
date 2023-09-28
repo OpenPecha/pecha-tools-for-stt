@@ -1,6 +1,7 @@
 const mappingObj =
 {    
     "mm986@cam.ac.uk": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=mm986@cam.ac.uk", department: "ocr" },
+    "mariekemeelen@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=mariekemeelen@gmail.com", department: "ocr" },
     "tashitsering@esukhia.org": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=tashitsering@esukhia.org", department: "ocr" },
     "tenkus47@gmail.com" : { url: "https://work.pecha.tools/stt_cs_gb_review/?session=spsither@gmail.com", department: "stt" },
     "shugtso@monlam.ai" : { url: "https://work.pecha.tools/glyph_annotation_ga/?session=shugtso@monlam.ai", department: "ocr" },
