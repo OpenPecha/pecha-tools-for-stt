@@ -336,7 +336,7 @@ export const updateTask = async (
   switch (role) {
     case "TRANSCRIBER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
@@ -347,9 +347,9 @@ export const updateTask = async (
             duration: duration,
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -361,7 +361,7 @@ export const updateTask = async (
       break;
     case "REVIEWER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
@@ -375,9 +375,9 @@ export const updateTask = async (
             reviewed_at: new Date().toISOString(),
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -389,7 +389,7 @@ export const updateTask = async (
       break;
     case "FINAL_REVIEWER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
@@ -403,9 +403,9 @@ export const updateTask = async (
             finalised_reviewed_at: new Date().toISOString(),
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -459,7 +459,7 @@ export const revertTaskState = async (id, state) => {
 
   console.log("newState", newState);
   try {
-    const updatedFile = await prisma.Task.update({
+    const updatedTask = await prisma.Task.update({
       where: {
         id,
       },
@@ -467,7 +467,7 @@ export const revertTaskState = async (id, state) => {
         state: newState,
       },
     });
-    if (updatedFile) {
+    if (updatedTask) {
       return {
         success: "Task state reverted successfully",
       };

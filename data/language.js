@@ -21,6 +21,7 @@
       file: "File",
       speed: "Speed",
       language: "Language",
+      history: "History",
     },
     bo: {
         title: "འབྲི་ཀློག་རིག་ནུས་ཡོ་ཆས།",
@@ -44,6 +45,7 @@
         file: "ཡིག་ཆ།",
         speed: "མྱུར་ཚད།",
         language: "སྐད་ཡིག།",
+        history: "ལོ་རྒྱུས།",
     },
   };
   

@@ -2,19 +2,49 @@ import React from "react";
 import AppContext from "./AppContext";
 import { useContext } from "react";
 import LanguageToggle from "./LanguageToggle";
+import { BsCheckLg, BsXLg, BsArrowReturnLeft, BsTrash } from "react-icons/bs";
+import { getTaskWithRevertedState } from "@/model/task";
+
 const Sidebar = ({
   children,
   userDetail,
+  userTaskStats,
   index,
   taskList,
-  completedTasks,
-  passedTasks,
-  totalTask,
   role,
+  history,
+  setIndex,
+  setTaskList,
+  setHistory,
 }) => {
-
+  const { completedTaskCount, totalTaskCount, totalTaskPassed } = userTaskStats;
   const value = useContext(AppContext);
   let { lang } = value;
+  console.log("tasklist", taskList, "history", history);
+
+  const handleHistoryClick = async (task) => {
+    // get the task from db with task state step down by 1
+    //check if the task is already in the taskList
+    // if it is, remove that old task from the list and push the new task to the top
+    // if it is not, just push the new task to the top
+    // remove the task from the history list
+    const newTask = await getTaskWithRevertedState(task);
+    setHistory(history.filter((t) => t.id !== task.id));
+    const index = taskList.findIndex((t) => t.id === task.id);
+    if (index !== -1) {
+      const newTaskList = [...taskList];
+      newTaskList.splice(index, 1);
+      newTaskList.unshift(newTask);
+      setTaskList(newTaskList);
+      // setIndex(0);
+      return;
+    } else {
+      setTaskList([newTask, ...taskList]);
+      // setIndex(0);
+      return;
+    }
+  };
+
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -46,10 +76,10 @@ const Sidebar = ({
         <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <div className="flex flex-col w-60 min-h-full h-full bg-[#54606e] text-white">
-            <header className="bg-[#384451] p-4">
+            <header className="bg-[#384451] p-4 mb-5">
               <div className="text-lg">{lang.title}</div>
             </header>
-            <section className="p-5 border-b border-b-[#384451]">
+            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">{lang.project}</h3>
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">{lang.user}</label>
@@ -64,16 +94,16 @@ const Sidebar = ({
                 <span className=" text-right">{taskList[index]?.id}</span>
               </div>
             </section>
-            <section className="p-5 border-b border-b-[#384451]">
+            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">{lang.target}</h3>
               <div
                 className="tooltip tooltip-bottom w-full mt-2 mb-6"
-                data-tip={`${completedTasks}/${totalTask}`}
+                data-tip={`${completedTaskCount}/${totalTaskCount}`}
               >
                 <progress
                   className="progress progress-success"
-                  value={completedTasks}
-                  max={totalTask}
+                  value={completedTaskCount}
+                  max={totalTaskCount}
                 ></progress>
               </div>
 
@@ -82,10 +112,10 @@ const Sidebar = ({
                   {role === "TRANSCRIBER"
                     ? lang.submitted
                     : role === "REVIEWER"
-                      ? lang.reviewed
-                      : lang.final_reviewed}
+                    ? lang.reviewed
+                    : lang.final_reviewed}
                 </label>
-                <span className=" text-right">{completedTasks}</span>
+                <span className=" text-right">{completedTaskCount}</span>
               </div>
               {(role === "TRANSCRIBER" || role === "REVIEWER") && (
                 <div className="flex text-right justify-between">
@@ -93,10 +123,10 @@ const Sidebar = ({
                     {role === "TRANSCRIBER"
                       ? lang.reviewed
                       : role === "REVIEWER"
-                        ? lang.final_reviewed
-                        : ""}
+                      ? lang.final_reviewed
+                      : ""}
                   </label>
-                  <span className=" text-right">{passedTasks}</span>
+                  <span className=" text-right">{totalTaskPassed}</span>
                 </div>
               )}
               <div className="flex text-right justify-between">
@@ -104,15 +134,45 @@ const Sidebar = ({
                   {role === "TRANSCRIBER"
                     ? lang.total_assigned
                     : role === "REVIEWER"
-                      ? lang.total_submitted
-                      : "Total Accepted"}
+                    ? lang.total_submitted
+                    : "Total Accepted"}
                 </label>
-                <span className=" text-right">{totalTask}</span>
+                <span className=" text-right">{totalTaskCount}</span>
               </div>
             </section>
-            <section className="p-5 border-b border-b-[#384451]">
-            <h3 className="uppercase font-bold mb-2">{lang.language}</h3>
+            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
+              <h3 className="uppercase font-bold mb-2">{lang.language}</h3>
               <LanguageToggle />
+            </section>
+            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451] overflow-y-auto flex-1">
+              <h3 className="uppercase font-bold mb-2 top-0 sticky bg-[#54606e]">
+                {lang.history}
+              </h3>
+              {history.map((task) => (
+                <div
+                  key={task.id}
+                  className="my-4 cursor-pointer flex items-center"
+                  onClick={() => handleHistoryClick(task)}
+                >
+                  <p className="text-lg line-clamp-2">
+                    {role === "TRANSCRIBER"
+                      ? task.transcript !== null
+                        ? task.transcript
+                        : task.inference_transcript
+                      : role === "REVIEWER"
+                      ? task.reviewed_transcript !== null
+                        ? task.reviewed_transcript
+                        : task.transcript
+                      : task.final_reviewed_transcript !== null
+                      ? task.final_reviewed_transcript
+                      : task.reviewed_transcript}
+                  </p>
+                  {(task.state === "submitted" ||
+                    task.state === "accepted" ||
+                    task.state === "finalised") && <BsCheckLg size="2rem" />}
+                  {task.state === "trashed" && <BsTrash size="2rem" />}
+                </div>
+              ))}
             </section>
           </div>
         </div>
