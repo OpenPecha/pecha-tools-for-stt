@@ -13,6 +13,7 @@ const ReviewerReportTable = ({ reviewersStatistic }) => {
               <th>Task Reviewed</th>
               <th>Task Accepted</th>
               <th>Task Finalised</th>
+              <th>Reviewed minutes</th>
             </tr>
           </thead>
           <tbody>
@@ -26,6 +27,7 @@ const ReviewerReportTable = ({ reviewersStatistic }) => {
                 <td>{reviewer.noReviewed}</td>
                 <td>{reviewer.noAccepted}</td>
                 <td>{reviewer.noFinalised}</td>
+                <td>{(reviewer.reviewedSecs / 60).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

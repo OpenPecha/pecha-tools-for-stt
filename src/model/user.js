@@ -4,6 +4,7 @@ import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import {
   getReviewerTaskCount,
+  getReviewerTaskList,
   getTranscriberTaskList,
   getUserSpecificTasksCount,
 } from "./task";
@@ -305,7 +306,15 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
       noReviewed: 0,
       noAccepted: 0,
       noFinalised: 0,
+      reviewedSecs: 0,
     };
+
+    // get the list of tasks by the user with selected fields
+    const reviewerTasks = await getReviewerTaskList(id, dates);
+    const reviewedInSec = getReviewedInSec(reviewerTasks);
+    console.log("reviewedInSec", reviewedInSec);
+    reviewerObj.reviewedSecs = reviewedInSec;
+
     const updatedReviwerObj = await getReviewerTaskCount(
       id,
       dates,
@@ -315,4 +324,14 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
   }
   console.log("Generated Reviewer Task Statistics Report:", reviewerList);
   return reviewerList;
+};
+
+const getReviewedInSec = (reviewerTasks) => {
+  const reviewedInSec = reviewerTasks.reduce((acc, task) => {
+    if (task.state === "accepted" || task.state === "finalised") {
+      acc = acc + task.audio_duration;
+    }
+    return acc;
+  }, 0);
+  return reviewedInSec;
 };
