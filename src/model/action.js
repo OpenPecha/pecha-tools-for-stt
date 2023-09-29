@@ -309,7 +309,7 @@ export const changeTaskState = (task, role, action) => {
   }
 };
 
-// update the files
+// update the takes based on user action
 export const updateTask = async (
   action,
   id,
@@ -343,6 +343,8 @@ export const updateTask = async (
           data: {
             state: changeState.state,
             transcript: changeState.state === "trashed" ? null : transcript,
+            reviewed_transcript: null,
+            final_transcript: null,
             submitted_at: new Date().toISOString(),
             duration: duration,
           },
@@ -367,6 +369,11 @@ export const updateTask = async (
           },
           data: {
             state: changeState.state,
+            // when reviewer reject the task, set transcript as incoming transcript and other action keep it same
+            transcript:
+              changeState.state === "transcribing"
+                ? transcript
+                : task.transcript,
             reviewed_transcript:
               changeState.state === "trashed" ||
               changeState.state === "transcribing"
@@ -395,6 +402,11 @@ export const updateTask = async (
           },
           data: {
             state: changeState.state,
+            // when final reviewer reject the task, set reviewed transcript as incoming transcript and other action keep it same
+            reviewed_transcript:
+              changeState.state === "submitted"
+                ? transcript
+                : task.reviewed_transcript,
             final_transcript:
               changeState.state === "trashed" ||
               changeState.state === "submitted"

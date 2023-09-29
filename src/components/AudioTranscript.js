@@ -109,36 +109,18 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
         console.log(
           " this is not  last task in task list ",
           index,
-          role,
-          taskList[index]
+          getLastTaskIndex()
         );
         // remove the task updated from the task list
         setTaskList((prev) => prev.filter((task) => task.id !== id));
-        // switch (role) {
-        //   case "TRANSCRIBER":
-        //     taskList[index + 1]?.transcript !== null
-        //       ? setTranscript(taskList[index + 1]?.transcript)
-        //       : setTranscript(taskList[index + 1]?.inference_transcript);
-        //     break;
-        //   case "REVIEWER":
-        //     taskList[index].reviewed_transcript !== null
-        //       ? setTranscript(taskList[index + 1]?.reviewed_transcript)
-        //       : setTranscript(taskList[index + 1]?.transcript);
-        //     break;
-        //   case "FINAL_REVIEWER":
-        //     setTranscript(taskList[index + 1]?.reviewed_transcript);
-        //     break;
-        //   default:
-        //     break;
-        // }
-        // setIndex(index + 1);
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
         }
       } else {
         console.log(
           " this is the last task in task list, assigning more task ",
-          index
+          index,
+          getLastTaskIndex()
         );
         const moreTask = await assignTasks(groupId, userId, role);
         setIsLoading(true);

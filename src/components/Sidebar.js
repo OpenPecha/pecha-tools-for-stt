@@ -24,25 +24,12 @@ const Sidebar = ({
 
   const handleHistoryClick = async (task) => {
     // get the task from db with task state step down by 1
-    //check if the task is already in the taskList
-    // if it is, remove that old task from the list and push the new task to the top
     // if it is not, just push the new task to the top
-    // remove the task from the history list
     const newTask = await getTaskWithRevertedState(task);
+    // remove the task from the history list
     setHistory(history.filter((t) => t.id !== task.id));
-    const index = taskList.findIndex((t) => t.id === task.id);
-    if (index !== -1) {
-      const newTaskList = [...taskList];
-      newTaskList.splice(index, 1);
-      newTaskList.unshift(newTask);
-      setTaskList(newTaskList);
-      // setIndex(0);
-      return;
-    } else {
-      setTaskList([newTask, ...taskList]);
-      // setIndex(0);
-      return;
-    }
+    setTaskList([newTask, ...taskList]);
+    return;
   };
 
   return (
@@ -163,8 +150,8 @@ const Sidebar = ({
                       ? task.reviewed_transcript !== null
                         ? task.reviewed_transcript
                         : task.transcript
-                      : task.final_reviewed_transcript !== null
-                      ? task.final_reviewed_transcript
+                      : task.final_transcript !== null
+                      ? task.final_transcript
                       : task.reviewed_transcript}
                   </p>
                   {(task.state === "submitted" ||
