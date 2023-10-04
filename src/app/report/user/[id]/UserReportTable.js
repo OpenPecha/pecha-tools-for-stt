@@ -61,10 +61,11 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
             {userTaskRecord.map((task) => (
               <tr key={task.id}>
                 <td
-                  className={`border-l-4 ${task.transcript === task.reviewed_transcript
+                  className={`border-l-4 ${
+                    task.transcriber_is_correct
                       ? "border-green-500"
                       : "border-red-500"
-                    }`}
+                  }`}
                 >
                   <div className="grid gap-2 mb-2">
                     <strong>Submitted:</strong>
@@ -103,9 +104,7 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
                 <td>
                   {task.transcriber !== null ? task.transcriber?.name : ""}
                 </td>
-                <td>
-                  {task.reviewer !== null ? task.reviewer?.name : ""}
-                </td>
+                <td>{task.reviewer !== null ? task.reviewer?.name : ""}</td>
                 <td>
                   {task.submitted_at !== null
                     ? formattedDate(task?.submitted_at)

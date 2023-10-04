@@ -220,6 +220,7 @@ export const generateUsersTaskReport = async (users, dates) => {
       submittedInMin: 0,
       reviewedInMin: 0,
       syllableCount: 0,
+      noReviewedCorrected: 0,
     };
 
     // get the number of tasks submitted by the user
@@ -257,6 +258,9 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
         ).length;
         acc.syllableCount = acc.syllableCount + syllableCount;
       }
+      if (task.transcriber_is_correct === false) {
+        acc.noReviewedCorrected++;
+      }
       return acc;
     },
     {
@@ -264,6 +268,7 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       noReviewed: 0,
       reviewedSecs: 0,
       syllableCount: 0,
+      noReviewedCorrected: 0,
     }
   );
   return userTaskSummary;

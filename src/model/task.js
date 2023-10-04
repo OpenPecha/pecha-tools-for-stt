@@ -511,6 +511,7 @@ export const getTranscriberTaskList = async (id, dates) => {
           audio_duration: true,
           reviewed_transcript: true,
           state: true,
+          transcriber_is_correct: true,
         },
       });
       return filteredTasks;
@@ -528,6 +529,7 @@ export const getTranscriberTaskList = async (id, dates) => {
           audio_duration: true,
           reviewed_transcript: true,
           state: true,
+          transcriber_is_correct: true,
         },
       });
       return filteredTasks;
