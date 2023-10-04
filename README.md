@@ -46,7 +46,3 @@ set Environment variables as:
 **Pecha STT Tool** is build using Nextjs 13,Prisma and PostgreSQL.
 
 We are always open to cooperation in introducing new features, tool integrations and testing solutions.
-
-```
-
-```
