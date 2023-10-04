@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  <br>
+  <a href="https://openpecha.org"><img src="https://avatars.githubusercontent.com/u/82142807?s=400&u=19e108a15566f3a1449bafb03b8dd706a72aebcd&v=4" alt="OpenPecha" width="150"></a>
+  <br>
+</h1>
 
-## Getting Started
+<h3 align="center">Pecha STT Tool</h3>
 
-First, run the development server:
+<!-- Replace the title of the repository -->
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+<p align="center">
+  <a href="#description">Description</a> •
+  <a href="#install">Install</a> •
+  <a href="#environmentvariables">Environment Variables</a> •
+  <a href="#owners">Owners</a> •
+  <a href="#Acknowledgements">Acknowledgements</a> •
+</p>
+<hr>
+
+## Description
+
+Pecha web app tool for collecting STT data
+
+## Install
+
+Requires to have node and npm installed.
+
+`$ npm install`
+
+## environmentvariables
+
+set Environment variables as:
+
+- DATABASE_URL
+
+<!-- This section must link to the docs which are in the root of the repository in /docs -->
+
+## Owners
+
+- [@tentamdin](https://github.com/tentamdin)
+
+<!-- This section lists the owners of the repo -->
+
+## Acknowledgements
+
+**Pecha STT Tool** is build using Nextjs 13,Prisma and PostgreSQL.
+
+We are always open to cooperation in introducing new features, tool integrations and testing solutions.
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# pecha-tool-stt-staging
-# pecha-tool-stt-staging
+```
