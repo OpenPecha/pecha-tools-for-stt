@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { calculatePay } from "@/lib/calculatePay"
+import { calculatePay } from "@/lib/calculatePay";
 const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
   return (
     <>
@@ -12,7 +12,10 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <th>Transcriber Name</th>
               <th>Task Submitted</th>
               <th>Task Reviewed</th>
+              <th>Reviewed %</th>
+              <th>Submitted minutes</th>
               <th>Reviewed minutes</th>
+              <th>Reviewed min %</th>
               <th>Reviewed syllable count</th>
               <th>Rs.</th>
             </tr>
@@ -25,9 +28,25 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                 </td>
                 <td>{user.noSubmitted}</td>
                 <td>{user.noReviewed}</td>
-                <td>{(user.reviewedSecs / 60).toFixed(2)}</td>
+                <td>
+                  {((user.noReviewed / user.noSubmitted) * 100).toFixed(2)}
+                </td>
+                <td>{user.submittedInMin}</td>
+                <td>{user.reviewedInMin}</td>
+                <td>
+                  {((user.reviewedInMin / user.submittedInMin) * 100).toFixed(
+                    2
+                  )}
+                </td>
                 <td>{user.syllableCount}</td>
-                <td>{calculatePay(selectGroup, user.reviewedSecs, user.syllableCount, user.noReviewed)}</td>
+                <td>
+                  {calculatePay(
+                    selectGroup,
+                    user.reviewedSecs,
+                    user.syllableCount,
+                    user.noReviewed
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

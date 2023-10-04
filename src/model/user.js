@@ -7,6 +7,7 @@ import {
   getReviewerTaskList,
   getTranscriberTaskList,
   getUserSpecificTasksCount,
+  getUserSubmittedSecs,
 } from "./task";
 
 export const getAllUser = async () => {
@@ -216,12 +217,17 @@ export const generateUsersTaskReport = async (users, dates) => {
       noSubmitted: 0,
       noReviewed: 0,
       reviewedSecs: 0,
+      submittedInMin: 0,
+      reviewedInMin: 0,
       syllableCount: 0,
     };
 
     // get the number of tasks submitted by the user
     const taskSubmittedCount = await getUserSpecificTasksCount(id, dates);
     transcriberObj.noSubmitted = taskSubmittedCount;
+
+    const submittedSecs = await getUserSubmittedSecs(id, dates);
+    transcriberObj.submittedInMin = (submittedSecs / 60).toFixed(2);
 
     // get the list of tasks by the user with selected fields
     const userTasks = await getTranscriberTaskList(id, dates);
@@ -230,6 +236,10 @@ export const generateUsersTaskReport = async (users, dates) => {
       transcriberObj,
       userTasks
     );
+    updatedTranscriberObj.reviewedInMin = (
+      updatedTranscriberObj.reviewedSecs / 60
+    ).toFixed(2);
+
     transcriberList.push(updatedTranscriberObj);
   }
   return transcriberList;
@@ -249,7 +259,12 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       }
       return acc;
     },
-    { ...transcriberObj, noReviewed: 0, reviewedSecs: 0, syllableCount: 0 }
+    {
+      ...transcriberObj,
+      noReviewed: 0,
+      reviewedSecs: 0,
+      syllableCount: 0,
+    }
   );
   return userTaskSummary;
 };

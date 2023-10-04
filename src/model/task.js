@@ -675,3 +675,46 @@ export const getTaskWithRevertedState = async (task) => {
     throw new Error(error);
   }
 };
+
+export const getUserSubmittedSecs = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  try {
+    if (fromDate && toDate) {
+      console.log(
+        "getUserSubmittedSecs with both date are present",
+        fromDate,
+        toDate
+      );
+      const results = await prisma.task.aggregate({
+        where: {
+          transcriber_id: id,
+          state: { in: ["submitted", "accepted", "finalised"] },
+          submitted_at: {
+            gte: new Date(fromDate),
+            lte: new Date(toDate),
+          },
+        },
+        _sum: {
+          audio_duration: true,
+        },
+      });
+      const submittedSecs = results._sum.audio_duration;
+      return submittedSecs;
+    } else {
+      console.log("getUserSubmittedSecs when one or no date is present");
+      const results = await prisma.task.aggregate({
+        where: {
+          transcriber_id: id,
+          state: { in: ["submitted", "accepted", "finalised"] },
+        },
+        _sum: {
+          audio_duration: true,
+        },
+      });
+      const submittedSecs = results._sum.audio_duration;
+      return submittedSecs;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
