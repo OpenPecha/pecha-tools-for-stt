@@ -13,10 +13,10 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <th>Task Submitted</th>
               <th>Task Reviewed</th>
               <th>Reviewed %</th>
-              <th>Submitted minutes</th>
-              <th>Reviewed minutes</th>
+              <th>Submitted Min.</th>
+              <th>Reviewed Min.</th>
               <th>Reviewed min %</th>
-              <th>Reviewed syllable count</th>
+              <th>Reviewed Syllable count</th>
               <th>Rs.</th>
             </tr>
           </thead>
@@ -29,14 +29,19 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                 <td>{user.noSubmitted}</td>
                 <td>{user.noReviewed}</td>
                 <td>
-                  {((user.noReviewed / user.noSubmitted) * 100).toFixed(2)}
+                  {user.noReviewed !== 0
+                    ? ((user.noReviewed / user.noSubmitted) * 100).toFixed(2)
+                    : 0}
                 </td>
                 <td>{user.submittedInMin}</td>
                 <td>{user.reviewedInMin}</td>
                 <td>
-                  {((user.reviewedInMin / user.submittedInMin) * 100).toFixed(
-                    2
-                  )}
+                  {user.reviewedInMin !== 0
+                    ? (
+                        (user.reviewedInMin / user.submittedInMin) *
+                        100
+                      ).toFixed(2)
+                    : 0}
                 </td>
                 <td>{user.syllableCount}</td>
                 <td>

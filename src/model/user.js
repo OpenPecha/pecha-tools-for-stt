@@ -227,7 +227,7 @@ export const generateUsersTaskReport = async (users, dates) => {
     transcriberObj.noSubmitted = taskSubmittedCount;
 
     const submittedSecs = await getUserSubmittedSecs(id, dates);
-    transcriberObj.submittedInMin = (submittedSecs / 60).toFixed(2);
+    transcriberObj.submittedInMin = parseFloat((submittedSecs / 60).toFixed(2));
 
     // get the list of tasks by the user with selected fields
     const userTasks = await getTranscriberTaskList(id, dates);
@@ -236,9 +236,9 @@ export const generateUsersTaskReport = async (users, dates) => {
       transcriberObj,
       userTasks
     );
-    updatedTranscriberObj.reviewedInMin = (
-      updatedTranscriberObj.reviewedSecs / 60
-    ).toFixed(2);
+    updatedTranscriberObj.reviewedInMin = parseFloat(
+      (updatedTranscriberObj.reviewedSecs / 60).toFixed(2)
+    );
 
     transcriberList.push(updatedTranscriberObj);
   }
