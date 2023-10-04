@@ -21,6 +21,10 @@
 
 Pecha web app tool for collecting STT data
 
+## RFXs
+Requests for work (RFWs) and requests for comments (RFCs) associated with this project:
+* [RFW0051][https://github.com/OpenPecha/Requests/issues/175]
+
 ## Install
 
 Requires to have node and npm installed.
