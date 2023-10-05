@@ -82,6 +82,10 @@ export const AudioPlayer = ({
     }
   };
 
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+  };
+
   return (
     <>
       <audio
@@ -90,6 +94,7 @@ export const AudioPlayer = ({
         loop={isLoopEnabled}
         className="w-full"
         key={tasks[index]?.id}
+        onEnded={handleAudioEnded}
       >
         <source src={tasks[index]?.url} type="audio/mp3" />
       </audio>
