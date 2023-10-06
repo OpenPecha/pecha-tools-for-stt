@@ -309,7 +309,7 @@ export const changeTaskState = (task, role, action) => {
   }
 };
 
-// update the files
+// update the takes based on user action
 export const updateTask = async (
   action,
   id,
@@ -336,20 +336,22 @@ export const updateTask = async (
   switch (role) {
     case "TRANSCRIBER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
           data: {
             state: changeState.state,
             transcript: changeState.state === "trashed" ? null : transcript,
+            reviewed_transcript: null,
+            final_transcript: null,
             submitted_at: new Date().toISOString(),
             duration: duration,
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -361,12 +363,17 @@ export const updateTask = async (
       break;
     case "REVIEWER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
           data: {
             state: changeState.state,
+            // when reviewer reject the task, set transcript as incoming transcript and other action keep it same
+            transcript:
+              changeState.state === "transcribing"
+                ? transcript
+                : task.transcript,
             reviewed_transcript:
               changeState.state === "trashed" ||
               changeState.state === "transcribing"
@@ -375,9 +382,9 @@ export const updateTask = async (
             reviewed_at: new Date().toISOString(),
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -389,12 +396,17 @@ export const updateTask = async (
       break;
     case "FINAL_REVIEWER":
       try {
-        const updatedFile = await prisma.Task.update({
+        const updatedTask = await prisma.Task.update({
           where: {
             id,
           },
           data: {
             state: changeState.state,
+            // when final reviewer reject the task, set reviewed transcript as incoming transcript and other action keep it same
+            reviewed_transcript:
+              changeState.state === "submitted"
+                ? transcript
+                : task.reviewed_transcript,
             final_transcript:
               changeState.state === "trashed" ||
               changeState.state === "submitted"
@@ -403,9 +415,9 @@ export const updateTask = async (
             finalised_reviewed_at: new Date().toISOString(),
           },
         });
-        if (updatedFile) {
+        if (updatedTask) {
           const msg = await taskToastMsg(action);
-          return msg;
+          return { msg, updatedTask };
         } else {
           return {
             error: "Error updating task",
@@ -459,7 +471,7 @@ export const revertTaskState = async (id, state) => {
 
   console.log("newState", newState);
   try {
-    const updatedFile = await prisma.Task.update({
+    const updatedTask = await prisma.Task.update({
       where: {
         id,
       },
@@ -467,7 +479,7 @@ export const revertTaskState = async (id, state) => {
         state: newState,
       },
     });
-    if (updatedFile) {
+    if (updatedTask) {
       return {
         success: "Task state reverted successfully",
       };

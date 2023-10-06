@@ -12,17 +12,19 @@ import AppContext from "../components/AppContext";
 const AudioTranscript = ({ tasks, userDetail, language }) => {
   const [languageSelected, setLanguageSelected] = useState("bo");
   const lang = language[languageSelected];
-
   const [taskList, setTaskList] = useState(tasks);
   const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
-  const [completedTasks, setCompletedTasks] = useState(0);
-  const [totalTask, setTotalTask] = useState(0);
-  const [passedTasks, setPassedTasks] = useState(0);
+  const [userTaskStats, setUserTaskStats] = useState({
+    completedTaskCount: 0,
+    totalTaskCount: 0,
+    totalTaskPassed: 0,
+  }); // {completedTaskCount, totalTaskCount, totalTaskPassed}
   const audioRef = useRef(null);
   const inputRef = useRef(null);
   const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [history, setHistory] = useState([]);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
 
@@ -66,17 +68,24 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
   const getUserProgress = async () => {
     const { completedTaskCount, totalTaskCount, totalTaskPassed } =
       await UserProgressStats(userId, role, groupId);
-    console.log("UserProgressStats", completedTaskCount, totalTaskCount);
-    setCompletedTasks(completedTaskCount);
-    setTotalTask(totalTaskCount);
-    setPassedTasks(totalTaskPassed);
+    setUserTaskStats({
+      completedTaskCount,
+      totalTaskCount,
+      totalTaskPassed,
+    });
+  };
+
+  const updateHistoryList = (updatedTask) => {
+    console.log("updateHistoryList", updatedTask);
+    // add the updated task to the top of the history
+    setHistory((prev) => [updatedTask, ...prev]);
   };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
     try {
       const { id } = task;
-
-      const updatedTask = await updateTask(
+      // update the task in the database
+      const { msg, updatedTask } = await updateTask(
         action,
         id,
         transcript,
@@ -84,30 +93,34 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
         role,
         currentTimeRef.current
       );
-      if (updatedTask?.error) {
-        toast.error(updatedTask.error);
+      if (msg?.error) {
+        toast.error(msg.error);
       } else {
-        toast.success(updatedTask.success);
+        toast.success(msg.success);
       }
       if (action === "submit") {
         getUserProgress();
       }
+      if (action === "submit" || action === "trash") {
+        updateHistoryList(updatedTask);
+      }
 
       if (getLastTaskIndex() != index) {
-        console.log(" this is not  last task in task list ", index);
-        role === "TRANSCRIBER"
-          ? setTranscript(taskList[index + 1].inference_transcript)
-          : role === "REVIEWER"
-          ? setTranscript(taskList[index + 1].transcript)
-          : setTranscript(taskList[index + 1].reviewed_transcript);
-        setIndex(index + 1);
+        console.log(
+          " this is not  last task in task list ",
+          index,
+          getLastTaskIndex()
+        );
+        // remove the task updated from the task list
+        setTaskList((prev) => prev.filter((task) => task.id !== id));
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
         }
       } else {
         console.log(
           " this is the last task in task list, assigning more task ",
-          index
+          index,
+          getLastTaskIndex()
         );
         const moreTask = await assignTasks(groupId, userId, role);
         setIsLoading(true);
@@ -125,12 +138,14 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
     >
       <Sidebar
         userDetail={userDetail}
-        completedTasks={completedTasks}
-        passedTasks={passedTasks}
-        totalTask={totalTask}
+        userTaskStats={userTaskStats}
         index={index}
         taskList={taskList}
         role={role}
+        history={history}
+        setTaskList={setTaskList}
+        setIndex={setIndex}
+        setHistory={setHistory}
       >
         {/* Page content here */}
         {isLoading ? (
