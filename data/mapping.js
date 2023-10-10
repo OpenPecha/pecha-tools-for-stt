@@ -9,6 +9,7 @@ const mappingObj =
     "sangmotenz79@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=sangmotenz79@gmail.com", department: "ocr" },
     "choezom2015@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=choezom2015@gmail.com", department: "ocr" },
     "dakung132@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=dakung132@gmail.com", department: "ocr" },
+    "sonamgyatso3767@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=sonamgyatso3767@gmail.com", department: "ocr" },
 
     "yeshidolma5882@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_gb/?session=yeshidolma5882@gmail.com", department: "ocr" },
     "tenphuns@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_gb/?session=tenphuns@gmail.com", department: "ocr" },
@@ -20,7 +21,6 @@ const mappingObj =
 
     "kungachoden1983@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=kungachoden1983@gmail.com", department: "ocr" },
     "tsedhak123@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=tsedhak123@gmail.com", department: "ocr" },
-    "sonamgyatso3767@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=sonamgyatso3767@gmail.com", department: "ocr" },
     "tensam51@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=tensam51@gmail.com", department: "ocr" },
     "dhephala@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=dhephala@gmail.com", department: "ocr" },
     "kunchokd787@gmail.com": { url: "https://work.pecha.tools/line_to_text_ga/?session=kunchokd787@gmail.com", department: "ocr" },
