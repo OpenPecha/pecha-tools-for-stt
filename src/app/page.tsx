@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
 
   const routes = [
     { name: "Dashboard", path: "/dashboard" },
-    { name: "Report", path: "/report/group" },
+    { name: "Report", path: "/report" },
     { name: "Stats", path: "/stats" },
   ];
 

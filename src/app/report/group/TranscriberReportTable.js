@@ -39,7 +39,6 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
   };
 
   return (
-    <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
         <table className="table  ">
           {/* head */}
@@ -67,7 +66,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             </tr>
           </thead>
           <tbody>
-            {usersStatistic.map((user) => (
+            {usersStatistic?.map((user) => (
               <tr key={user.id}>
                 <td>
                   <Link href={`/report/user/${user.id}`}>{user.name}</Link>
@@ -112,7 +111,6 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
           </tbody>
         </table>
       </div>
-    </>
   );
 };
 

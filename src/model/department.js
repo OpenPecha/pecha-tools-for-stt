@@ -10,6 +10,12 @@ export const getAllDepartment = async () => {
         _count: {
           select: { groups: true },
         },
+        groups: {
+          select: {
+            id: true,
+            name: true,
+          },
+        }
       },
     });
     return allDepartment;
