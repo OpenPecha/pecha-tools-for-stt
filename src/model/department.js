@@ -36,7 +36,7 @@ export const createDepartment = async (formData) => {
     revalidatePath("/dashboard/department");
     return newDepartment;
   } catch (error) {
-    console.log("Error creating a department", error);
+    //console.log("Error creating a department", error);
     throw new Error(error);
   }
 };
@@ -51,7 +51,7 @@ export const deleteDepartment = async (id) => {
     revalidatePath("/dashboard/department");
     return department;
   } catch (error) {
-    console.log("Error deleting a department", error);
+    //console.log("Error deleting a department", error);
     throw new Error(error);
   }
 };
@@ -70,7 +70,7 @@ export const editDepartment = async (id, formData) => {
     revalidatePath("/dashboard/department");
     return group;
   } catch (error) {
-    console.log("Error updating a department", error);
+    //console.log("Error updating a department", error);
     throw new Error(error);
   }
 };

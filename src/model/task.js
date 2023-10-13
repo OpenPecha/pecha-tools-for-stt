@@ -31,7 +31,7 @@ export const getTotalTaskCount = async () => {
 
 export async function createTasksFromCSV(fileData, formData) {
   const groupId = formData.get("group_id");
-  console.log("createTasksFromCSV called", "ID", groupId);
+  //console.log("createTasksFromCSV called", "ID", groupId);
 
   // Create an array to hold task data
   const tasksToCreate = await Promise.all(
@@ -81,12 +81,7 @@ export const getUserSpecificTasksCount = async (id, dates) => {
   let userTaskCount;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getUserSpecificTasksCount when both date are present",
-        fromDate,
-        toDate,
-        userRole
-      );
+      //console.log("getUserSpecificTasksCount when both date are present", fromDate, toDate, userRole);
       switch (userRole) {
         case "TRANSCRIBER":
           userTaskCount = await prisma.task.count({
@@ -129,11 +124,7 @@ export const getUserSpecificTasksCount = async (id, dates) => {
       }
       return userTaskCount;
     } else {
-      console.log(
-        "getUserSpecificTasksCount when only one or no date is present",
-        fromDate,
-        toDate
-      );
+      //console.log("getUserSpecificTasksCount when only one or no date is present", fromDate, toDate);
       switch (userRole) {
         case "TRANSCRIBER":
           userTaskCount = await prisma.task.count({
@@ -162,7 +153,7 @@ export const getUserSpecificTasksCount = async (id, dates) => {
         default:
           break;
       }
-      console.log("userTaskCount", userTaskCount);
+      //console.log("userTaskCount", userTaskCount);
       return userTaskCount;
     }
   } catch (error) {
@@ -184,12 +175,7 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
   let userTaskList;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getUserSpecificTasks when both date are present",
-        fromDate,
-        toDate,
-        userRole
-      );
+      //console.log("getUserSpecificTasks when both date are present", fromDate, toDate, userRole);
       switch (userRole) {
         case "TRANSCRIBER":
           userTaskList = await prisma.task.findMany({
@@ -273,11 +259,7 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
           break;
       }
     } else {
-      console.log(
-        "getUserSpecificTasks when only one or no date is present",
-        fromDate,
-        toDate
-      );
+      //console.log("getUserSpecificTasks when only one or no date is present", fromDate, toDate);
       switch (userRole) {
         case "TRANSCRIBER":
           userTaskList = await prisma.task.findMany({
@@ -424,11 +406,7 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
   const { from: fromDate, to: toDate } = dates;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getReviewerTaskCount when both date are present",
-        fromDate,
-        toDate
-      );
+      //console.log("getReviewerTaskCount when both date are present", fromDate, toDate);
       reviewerObj.noReviewed = await prisma.task.count({
         where: {
           reviewer_id: parseInt(id),
@@ -460,11 +438,7 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
         },
       });
     } else {
-      console.log(
-        "getReviewerTaskCount when one or no date is present",
-        fromDate,
-        toDate
-      );
+      //console.log("getReviewerTaskCount when one or no date is present", fromDate, toDate);
       reviewerObj.noReviewed = await prisma.task.count({
         where: {
           reviewer_id: parseInt(id),
@@ -494,11 +468,7 @@ export const getTranscriberTaskList = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getTranscriberTaskList with both date are present",
-        fromDate,
-        toDate
-      );
+      //console.log("getTranscriberTaskList with both date are present", fromDate, toDate);
       const filteredTasks = await prisma.task.findMany({
         where: {
           transcriber_id: id,
@@ -509,6 +479,7 @@ export const getTranscriberTaskList = async (id, dates) => {
         },
         select: {
           audio_duration: true,
+          transcript: true,
           reviewed_transcript: true,
           state: true,
           transcriber_is_correct: true,
@@ -516,17 +487,14 @@ export const getTranscriberTaskList = async (id, dates) => {
       });
       return filteredTasks;
     } else {
-      console.log(
-        "getTranscriberTaskList when one or no date is present",
-        fromDate,
-        toDate
-      );
+      //console.log("getTranscriberTaskList when one or no date is present", fromDate, toDate);
       const filteredTasks = await prisma.task.findMany({
         where: {
           transcriber_id: id,
         },
         select: {
           audio_duration: true,
+          transcript: true,
           reviewed_transcript: true,
           state: true,
           transcriber_is_correct: true,
@@ -543,11 +511,7 @@ export const getReviewerTaskList = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getReviewerTaskList with both date are present",
-        fromDate,
-        toDate
-      );
+      //console.log("getReviewerTaskList with both date are present", fromDate, toDate);
       const filteredTasks = await prisma.task.findMany({
         where: {
           reviewer_id: id,
@@ -563,11 +527,7 @@ export const getReviewerTaskList = async (id, dates) => {
       });
       return filteredTasks;
     } else {
-      console.log(
-        "getReviewerTaskList when one or no date is present",
-        fromDate,
-        toDate
-      );
+      //console.log("getReviewerTaskList when one or no date is present", fromDate, toDate);
       const filteredTasks = await prisma.task.findMany({
         where: {
           reviewer_id: id,
@@ -642,12 +602,7 @@ export const UserProgressStats = async (id, role, groupId) => {
       default:
         break;
     }
-    console.log(
-      "completedTaskCount",
-      completedTaskCount,
-      "totalTaskCount",
-      totalTaskCount
-    );
+    //console.log("completedTaskCount", completedTaskCount, "totalTaskCount", totalTaskCount);
     return { completedTaskCount, totalTaskCount, totalTaskPassed };
   } catch (error) {
     throw new Error(error);
@@ -688,11 +643,7 @@ export const getUserSubmittedSecs = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   try {
     if (fromDate && toDate) {
-      console.log(
-        "getUserSubmittedSecs with both date are present",
-        fromDate,
-        toDate
-      );
+      //console.log("getUserSubmittedSecs with both date are present", fromDate, toDate);
       const results = await prisma.task.aggregate({
         where: {
           transcriber_id: id,
@@ -709,7 +660,7 @@ export const getUserSubmittedSecs = async (id, dates) => {
       const submittedSecs = results._sum.audio_duration;
       return submittedSecs;
     } else {
-      console.log("getUserSubmittedSecs when one or no date is present");
+      //console.log("getUserSubmittedSecs when one or no date is present");
       const results = await prisma.task.aggregate({
         where: {
           transcriber_id: id,

@@ -6,7 +6,7 @@ import { Pie } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const GroupPieChart = ({ group }) => {
-  console.log("GroupPieChart:::", group);
+  //console.log("GroupPieChart:::", group);
   const {
     taskImportedCount,
     taskTranscribingCount,

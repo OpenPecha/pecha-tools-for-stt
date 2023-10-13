@@ -76,7 +76,7 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
   };
 
   const updateHistoryList = (updatedTask) => {
-    console.log("updateHistoryList", updatedTask);
+    //console.log("updateHistoryList", updatedTask);
     // add the updated task to the top of the history
     setHistory((prev) => [updatedTask, ...prev]);
   };
@@ -106,22 +106,14 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       }
 
       if (getLastTaskIndex() != index) {
-        console.log(
-          " this is not  last task in task list ",
-          index,
-          getLastTaskIndex()
-        );
+        //console.log(" this is not  last task in task list ", index, getLastTaskIndex());
         // remove the task updated from the task list
         setTaskList((prev) => prev.filter((task) => task.id !== id));
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
         }
       } else {
-        console.log(
-          " this is the last task in task list, assigning more task ",
-          index,
-          getLastTaskIndex()
-        );
+        //console.log(" this is the last task in task list, assigning more task ", index, getLastTaskIndex());
         const moreTask = await assignTasks(groupId, userId, role);
         setIsLoading(true);
         setIndex(0);

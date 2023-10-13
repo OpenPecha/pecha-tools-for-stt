@@ -6,7 +6,7 @@ import { getAllDepartment } from "@/model/department";
 const Group = async () => {
   const groupList = await getAllGroup();
   const departments = await getAllDepartment();
-  console.log("departments", departments, groupList);
+  //console.log("departments", departments, groupList);
 
   return (
     <>

@@ -60,7 +60,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
           }
           return assingedTasks;
         } catch (error) {
-          console.log("error", error);
+          // console.log("error", error);
           throw new Error(
             "Error while getting assigned task for TRANSCRIBER! Please try another"
           );
@@ -87,7 +87,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
           }
           return assingedTasks;
         } catch (error) {
-          console.log("error", error);
+          //console.log("error", error);
           throw new Error(
             "Error while getting assigned task for REVIEWER! Please try another"
           );
@@ -115,7 +115,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
           }
           return assingedTasks;
         } catch (error) {
-          console.log("error", error);
+          //console.log("error", error);
           throw new Error(
             "Error while getting assigned task for FINAL_REVIEWER! Please try another"
           );
@@ -124,7 +124,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
         break;
     }
   } catch (error) {
-    console.log("Error occurred while getting user task:", error);
+    //console.log("Error occurred while getting user task:", error);
     throw new Error(error);
   }
 };
@@ -170,7 +170,7 @@ export const assignTasks = async (groupId, userId, role) => {
             return assignedTasks;
           }
         } catch (error) {
-          console.log("error", error);
+          //console.log("error", error);
           throw new Error(
             "Error while getting assigned task for REVIEWER! Please try another"
           );
@@ -214,7 +214,7 @@ export const assignTasks = async (groupId, userId, role) => {
             return assignedTasks;
           }
         } catch (error) {
-          console.log("error", error);
+          //console.log("error", error);
           throw new Error(
             "Error while getting assigned task for REVIEWER! Please try another"
           );
@@ -259,7 +259,7 @@ export const assignTasks = async (groupId, userId, role) => {
             return assignedTasks;
           }
         } catch (error) {
-          console.log("error", error);
+          //console.log("error", error);
           throw new Error(
             "Error while getting assigned task for REVIEWER! Please try another"
           );
@@ -269,7 +269,7 @@ export const assignTasks = async (groupId, userId, role) => {
         break;
     }
   } catch (error) {
-    console.log("Error occurred while getting user task:", error);
+    //console.log("Error occurred while getting user task:", error);
     throw new Error(error);
   }
 };
@@ -318,7 +318,7 @@ export const updateTask = async (
   role,
   currentTime
 ) => {
-  console.log("update task", action, id, transcript, task, role, currentTime);
+  //console.log("update task", action, id, transcript, task, role, currentTime);
   const changeState = await changeTaskState(task, role, action);
   let duration = null;
   if (
@@ -331,7 +331,7 @@ export const updateTask = async (
     let endTime = Date.now();
     let timeDiff = endTime - startTime;
     duration = formatTime(timeDiff);
-    console.log("duration", duration);
+    //console.log("duration", duration);
   }
   switch (role) {
     case "TRANSCRIBER":
@@ -358,7 +358,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating TRANSCRIBER task", error);
+        //console.log("Error updating TRANSCRIBER task", error);
       }
       break;
     case "REVIEWER":
@@ -391,7 +391,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating REVIEWER task", error);
+        //console.log("Error updating REVIEWER task", error);
       }
       break;
     case "FINAL_REVIEWER":
@@ -424,7 +424,7 @@ export const updateTask = async (
           };
         }
       } catch (error) {
-        console.log("Error updating FINAL_REVIEWER task", error);
+        //console.log("Error updating FINAL_REVIEWER task", error);
       }
       break;
     default:
@@ -461,7 +461,7 @@ export const taskToastMsg = async (action) => {
 
 // admin level to revert the state of a task based on state send from frontend
 export const revertTaskState = async (id, state) => {
-  console.log("revertTaskState", id, state);
+  //console.log("revertTaskState", id, state);
   const newState =
     state === "submitted"
       ? "transcribing"
@@ -469,7 +469,7 @@ export const revertTaskState = async (id, state) => {
       ? "submitted"
       : "accepted";
 
-  console.log("newState", newState);
+  //console.log("newState", newState);
   try {
     const updatedTask = await prisma.Task.update({
       where: {
@@ -489,6 +489,6 @@ export const revertTaskState = async (id, state) => {
       };
     }
   } catch (error) {
-    console.log("Error updating task", error);
+    //console.log("Error updating task", error);
   }
 };

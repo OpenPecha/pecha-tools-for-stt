@@ -17,7 +17,7 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
   const [disabledButtons, setDisabledButtons] = useState({});
 
   const handleRevertState = async (id, state) => {
-    console.log(id, state);
+    //console.log(id, state);
     if (disabledButtons[id]) return; // If the button is already disabled, do nothing
 
     try {

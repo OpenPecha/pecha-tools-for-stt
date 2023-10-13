@@ -20,7 +20,7 @@ const TaskForm = ({ groups }) => {
       header: true,
       skipEmptyLines: true,
       complete: async function (results) {
-        console.log(results);
+        //console.log(results);
         setSelectedFile(results?.data);
       },
     });
@@ -60,11 +60,7 @@ const TaskForm = ({ groups }) => {
           className="btn btn-accent"
           formAction={async (formData) => {
             ref.current?.reset();
-            console.log(
-              "formData",
-              formData.get("group_id"),
-              formData.get("file_name")
-            );
+            //console.log("formData", formData.get("group_id"), formData.get("file_name"));
             const tasksCreated = await createTasksFromCSV(
               selectedFile,
               formData

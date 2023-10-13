@@ -2,7 +2,7 @@ import prisma from "@/service/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  console.log("when unannotated api is call");
+  //console.log("when unannotated api is call");
   try {
     const tasks = await prisma.task.findMany({});
     return NextResponse.json(tasks);

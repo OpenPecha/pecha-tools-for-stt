@@ -20,7 +20,7 @@ const Sidebar = ({
   const { completedTaskCount, totalTaskCount, totalTaskPassed } = userTaskStats;
   const value = useContext(AppContext);
   let { lang } = value;
-  console.log("tasklist", taskList, "history", history);
+  //console.log("tasklist", taskList, "history", history);
 
   const handleHistoryClick = async (task) => {
     // get the task from db with task state step down by 1

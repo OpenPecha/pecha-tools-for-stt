@@ -10,6 +10,8 @@ import {
   getUserSubmittedSecs,
 } from "./task";
 
+var levenshtein = require('fast-levenshtein');
+
 export const getAllUser = async () => {
   try {
     const users = await prisma.user.findMany({
@@ -87,7 +89,7 @@ export const createUser = async (formData) => {
       };
     }
   } catch (error) {
-    console.log("Error adding a user", error);
+    //console.log("Error adding a user", error);
     throw new Error(error);
   }
 };
@@ -102,7 +104,7 @@ export const deleteUser = async (id) => {
     revalidatePath("/dashboard/user");
     return user;
   } catch (error) {
-    console.log("Error deleting a user", error);
+    //console.log("Error deleting a user", error);
     throw new Error(error);
   }
 };
@@ -169,7 +171,7 @@ export const editUser = async (id, formData) => {
       };
     }
   } catch (error) {
-    console.log("Error updating a user details", error);
+    //console.log("Error updating a user details", error);
     throw new Error(error);
   }
 };
@@ -190,15 +192,11 @@ export const getUsersByGroup = async (groupId) => {
 };
 
 export const generateUserReportByGroup = async (groupId, dates) => {
-  console.log(
-    "generateUserReportByGroup called with group id and dates",
-    groupId,
-    dates
-  );
+  //console.log("generateUserReportByGroup called with group id and dates", groupId, dates);
   try {
     const users = await getUsersByGroup(groupId);
     const usersStatistic = await generateUsersTaskReport(users, dates);
-    console.log("usersStatistic :::", usersStatistic);
+    //console.log("usersStatistic :::", usersStatistic);
     return usersStatistic;
   } catch (error) {
     console.error("Error getting users by group:", error);
@@ -257,6 +255,9 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
           task.reviewed_transcript
         ).length;
         acc.syllableCount = acc.syllableCount + syllableCount;
+        acc.characterCount = acc.characterCount + (task.transcript ? task.transcript.length : 0);
+        acc.cer += levenshtein.get(task.transcript, task.reviewed_transcript);
+
       }
       if (task.transcriber_is_correct === false) {
         acc.noReviewedCorrected++;
@@ -269,6 +270,8 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       reviewedSecs: 0,
       syllableCount: 0,
       noReviewedCorrected: 0,
+      characterCount: 0,
+      cer: 0,
     }
   );
   return userTaskSummary;
@@ -299,11 +302,7 @@ export const reviewerOfGroup = async (groupId) => {
 
 // for all the reviewers of a group retun the task statistics - task reviewed, task accepted, task finalised
 export const generateReviewerReportbyGroup = async (groupId, dates) => {
-  console.log(
-    "generateReviewerReportbyGroup called with group id and dates",
-    groupId,
-    dates
-  );
+  //console.log("generateReviewerReportbyGroup called with group id and dates", groupId, dates);
   try {
     const reviewers = await reviewerOfGroup(groupId);
     const usersReport = generateReviewerTaskReport(reviewers, dates);
@@ -332,7 +331,7 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
     // get the list of tasks by the user with selected fields
     const reviewerTasks = await getReviewerTaskList(id, dates);
     const reviewedInSec = getReviewedInSec(reviewerTasks);
-    console.log("reviewedInSec", reviewedInSec);
+    //console.log("reviewedInSec", reviewedInSec);
     reviewerObj.reviewedSecs = reviewedInSec;
 
     const updatedReviwerObj = await getReviewerTaskCount(
@@ -342,7 +341,7 @@ export const generateReviewerTaskReport = async (reviewers, dates) => {
     );
     reviewerList.push(updatedReviwerObj);
   }
-  console.log("Generated Reviewer Task Statistics Report:", reviewerList);
+  //console.log("Generated Reviewer Task Statistics Report:", reviewerList);
   return reviewerList;
 };
 

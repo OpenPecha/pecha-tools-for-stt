@@ -36,7 +36,7 @@ export const createGroup = async (formData) => {
     revalidatePath("/dashboard/group");
     return newGroup;
   } catch (error) {
-    console.log("Error creating a group", error);
+    //console.log("Error creating a group", error);
     throw new Error(error);
   }
 };
@@ -51,7 +51,7 @@ export const deleteGroup = async (id) => {
     revalidatePath("/dashboard/group");
     return group;
   } catch (error) {
-    console.log("Error deleting a group", error);
+    //console.log("Error deleting a group", error);
     throw new Error(error);
   }
 };
@@ -72,7 +72,7 @@ export const editGroup = async (id, formData) => {
     revalidatePath("/dashboard/group");
     return group;
   } catch (error) {
-    console.log("Error updating a group", error);
+    //console.log("Error updating a group", error);
     throw new Error(error);
   }
 };

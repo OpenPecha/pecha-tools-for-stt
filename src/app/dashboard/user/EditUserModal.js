@@ -161,13 +161,7 @@ const EditUserModal = ({ groups, selectedRow }) => {
               disabled={error}
               formAction={async (formData) => {
                 ref.current?.reset();
-                console.log(
-                  "formData",
-                  formData.get("email"),
-                  formData.get("name"),
-                  formData.get("group_id"),
-                  formData.get("role")
-                );
+                //console.log("formData", formData.get("email"), formData.get("name"), formData.get("group_id"), formData.get("role"));
                 const newUsesr = await editUser(selectedRow?.id, formData);
                 if (newUsesr?.error) {
                   toast.error(newUsesr.error);
