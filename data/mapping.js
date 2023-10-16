@@ -53,6 +53,7 @@ const mappingObj =
     "sherabphuntsok64@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=sherabphuntsok64@gmail.com", department: "ocr" },
     "tsukphudrabsal@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=tsukphudrabsal@gmail.com", department: "ocr" },
     "Gyamstsholama2023@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=Gyamstsholama2023@gmail.com", department: "ocr" },
+    "sherabwoser@icloud.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=sherabwoser@icloud.com", department: "ocr" },
 
     
 }
