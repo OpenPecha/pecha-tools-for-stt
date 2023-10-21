@@ -99,7 +99,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               </td>
               <td>{user.submittedInMin}</td>
               <td>{user.reviewedInMin}</td>
-              <td>
+              <td className={`${glideRedtoGreen(user.reviewedInMin, user.submittedInMin)}`}>
                 {calculatePercent(user.reviewedInMin, user.submittedInMin)}
               </td>
               <td className={`${glideGreentoRed(user.noReviewedCorrected, user.noReviewed)}`}>
@@ -139,11 +139,11 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             </td>
             <td>
               <b>
-                {usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0)}
+                {usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0).toFixed(2)}
               </b>
             </td>
             <td>
-              <b>{usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0)}</b>
+              <b>{usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0).toFixed(2)}</b>
             </td>
             <td>
               <b>
