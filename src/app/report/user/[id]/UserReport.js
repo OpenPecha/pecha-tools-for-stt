@@ -15,10 +15,10 @@ const UserReport = ({ searchParams, id, users }) => {
   const [dates, setDates] = useState({ from: "", to: "" });
   const router = useRouter();
   const page = searchParams["page"] ?? "1";
-  const per_page = searchParams["per_page"] ?? "5";
+  const per_page = searchParams["per_page"] ?? "10";
 
   // Number of items per page
-  const limit = typeof per_page === "string" ? parseInt(per_page) : 5;
+  const limit = typeof per_page === "string" ? parseInt(per_page) : 10;
   // Number of items to skip
   const skip =
     typeof page === "string"
