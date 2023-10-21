@@ -39,6 +39,23 @@ const mappingObj =
     "Kungalhundup1959@gamil.com": { url: "https://work.pecha.tools/ltt_review_ga/?session=Kungalhundup1959@gamil.com", department: "ocr" },
     "pemasungchuk@gmail.com": { url: "https://work.pecha.tools/ltt_review_gb/?session=pemasungchuk@gmail.com", department: "ocr" },
 
+
+    "tsultrimloden1@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-review&session=tsultrimloden1@gmail.com", department: "ocr" },
+    "sherabchokgyal321@gmail.com.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-review&session=sherabchokgyal321@gmail.com", department: "ocr" },
+
+
+    "tsukpo777@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=tsukpo777@gmail.com", department: "ocr" },
+    "tsultrimgyaltsen22@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=tsultrimgyaltsen22@gmail.com", department: "ocr" },
+    "kalsanggyaltsen@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=kalsanggyaltsen@gmail.com", department: "ocr" },
+    "tsewangdrukgyal@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-20230809&session=tsewangdrukgyal@gmail.com", department: "ocr" },
+
+
+    "sherabphuntsok64@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=sherabphuntsok64@gmail.com", department: "ocr" },
+    "tsukphudrabsal@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=tsukphudrabsal@gmail.com", department: "ocr" },
+    "Gyamstsholama2023@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=Gyamstsholama2023@gmail.com", department: "ocr" },
+    "sherabwoser@icloud.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-20230809&session=sherabwoser@icloud.com", department: "ocr" },
+
+    
 }
 
 export const mapping = new Map(Object.entries(mappingObj));
