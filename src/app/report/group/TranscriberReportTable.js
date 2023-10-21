@@ -119,6 +119,75 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               </td>
             </tr>
           ))}
+          <tr>
+            <td>
+              <b>Total</b>
+            </td>
+            <td>
+              <b>{usersStatistic?.reduce((a, b) => a + b.noSubmitted, 0)}</b>
+            </td>
+            <td>
+              <b>{usersStatistic?.reduce((a, b) => a + b.noReviewed, 0)}</b>
+            </td>
+            <td>
+              <b>
+                {calculatePercent(
+                  usersStatistic?.reduce((a, b) => a + b.noReviewed, 0),
+                  usersStatistic?.reduce((a, b) => a + b.noSubmitted, 0)
+                )}
+              </b>
+            </td>
+            <td>
+              <b>
+                {usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0)}
+              </b>
+            </td>
+            <td>
+              <b>{usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0)}</b>
+            </td>
+            <td>
+              <b>
+                {calculatePercent(
+                  usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0),
+                  usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0)
+                )}
+              </b>
+            </td>
+            <td>
+              <b>
+                {calculatePercent(
+                  usersStatistic?.reduce(
+                    (a, b) => a + b.noReviewedCorrected,
+                    0
+                  ),
+                  usersStatistic?.reduce((a, b) => a + b.noReviewed, 0)
+                )}
+              </b>
+            </td>
+            <td>
+              <b>
+                {calculatePercent(
+                  usersStatistic?.reduce((a, b) => a + b.cer, 0),
+                  usersStatistic?.reduce((a, b) => a + b.characterCount, 0)
+                )}
+              </b>
+            </td>
+            <td>
+              <b>
+                {usersStatistic?.reduce((a, b) => a + b.syllableCount, 0)}
+              </b>
+            </td>
+            <td>
+              <b>
+                {calculatePay(
+                  selectGroup,
+                  usersStatistic?.reduce((a, b) => a + b.reviewedSecs, 0),
+                  usersStatistic?.reduce((a, b) => a + b.syllableCount, 0),
+                  usersStatistic?.reduce((a, b) => a + b.noReviewed, 0)
+                )}
+              </b>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
