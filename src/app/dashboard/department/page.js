@@ -7,9 +7,7 @@ const Department = async () => {
 
   return (
     <>
-      <div className="h-screen my-10">
-        <DepartmentDashboard departmentList={departmentList} />
-      </div>
+      <DepartmentDashboard departmentList={departmentList} />
     </>
   );
 };

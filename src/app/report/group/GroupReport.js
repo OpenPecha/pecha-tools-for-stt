@@ -46,7 +46,7 @@ const GroupReport = ({ groups }) => {
 
   return (
     <>
-      <form className="flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
+      <form className="sticky top-0 z-20 py-8 bg-white flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
         <Select
           title="group_id"
           label="group"

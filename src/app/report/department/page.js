@@ -6,9 +6,7 @@ const Department = async () => {
   const departments = await getAllDepartment();
   return (
     <>
-      <div className="h-screen my-10">
-        <DepartmentReport departments={departments} />
-      </div>
+      <DepartmentReport departments={departments} />
     </>
   );
 };

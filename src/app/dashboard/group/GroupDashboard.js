@@ -29,7 +29,7 @@ const GroupDashboard = ({ groupList, departments }) => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-center items-center space-y-5 space-x-0 sm:space-y-0 sm:space-x-10">
+      <div className="sticky top-0 z-20 py-8 bg-white flex flex-col sm:flex-row justify-center items-center space-y-5 space-x-0 sm:space-y-0 sm:space-x-10">
         <DashboardBtn
           label="Create"
           icon={<AiOutlinePlus />}

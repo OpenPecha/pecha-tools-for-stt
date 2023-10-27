@@ -24,7 +24,7 @@ const DepartmentReport = ({ departments }) => {
   };
 
   function getGroupByDepartmentId(departmentId) {
-    if (!departmentId) return []
+    if (!departmentId) return [];
     return departments.find(
       (department) => department.id === parseInt(departmentId)
     )?.groups;
@@ -34,10 +34,7 @@ const DepartmentReport = ({ departments }) => {
     if (selectDepartment) {
       async function getUserReportByGroup() {
         for (let group of getGroupByDepartmentId(selectDepartment)) {
-          const usersOfGroup = await generateUserReportByGroup(
-            group.id,
-            dates
-          );
+          const usersOfGroup = await generateUserReportByGroup(group.id, dates);
           setUsersStatistic((prev) => ({ ...prev, [group.id]: usersOfGroup }));
         }
       }
@@ -48,7 +45,10 @@ const DepartmentReport = ({ departments }) => {
             group.id,
             dates
           );
-          setReviewersStatistic((prev) => ({ ...prev, [group.id]: reviewersOfGroup }));
+          setReviewersStatistic((prev) => ({
+            ...prev,
+            [group.id]: reviewersOfGroup,
+          }));
         }
       }
       getUserReportByGroup();
@@ -57,7 +57,7 @@ const DepartmentReport = ({ departments }) => {
   }, [selectDepartment, dates]);
   return (
     <>
-      <form className="flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
+      <form className="sticky top-0 z-20 py-8 bg-white flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
         <Select
           title="department_id"
           label="department"
@@ -78,18 +78,24 @@ const DepartmentReport = ({ departments }) => {
           />
         </div>
       </form>
-      <div >
-        {getGroupByDepartmentId(selectDepartment).map((group) => <>
-          <div key={group.id} className="flex flex-col gap-10 justify-center items-center mt-10">
-            <h1>{group.name}</h1>
-            <TranscriberReportTable
-              usersStatistic={usersStatistic[group.id]}
-              selectGroup={group.id}
-            />
-            <ReviewerReportTable reviewersStatistic={reviewersStatistic[group.id]} />
-          </div>
-        </>
-        )}
+      <div className="w-full">
+        {getGroupByDepartmentId(selectDepartment).map((group) => (
+          <>
+            <div
+              key={group.id}
+              className="flex flex-col gap-10 justify-center items-center my-8"
+            >
+              <h1>{group.name}</h1>
+              <TranscriberReportTable
+                usersStatistic={usersStatistic[group.id]}
+                selectGroup={group.id}
+              />
+              <ReviewerReportTable
+                reviewersStatistic={reviewersStatistic[group.id]}
+              />
+            </div>
+          </>
+        ))}
       </div>
     </>
   );

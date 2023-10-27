@@ -68,7 +68,7 @@ const UserReport = ({ searchParams, id, users }) => {
 
   return (
     <>
-      <form className="flex flex-col md:flex-row justify-evenly items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
+      <form className="sticky top-0 z-20 py-8 bg-white flex flex-col md:flex-row justify-evenly items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
         <Select
           title="user_id"
           label="User"
@@ -98,7 +98,7 @@ const UserReport = ({ searchParams, id, users }) => {
           />
         </div>
       </form>
-      <div className="flex flex-col justify-center items-center mt-10">
+      <div className="flex flex-col justify-center items-center my-10">
         <UserReportTable
           userTaskRecord={userTaskRecord}
           secretAccess={secretAccess}

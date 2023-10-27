@@ -10,9 +10,7 @@ const Group = async () => {
 
   return (
     <>
-      <div className="h-screen my-10">
-        <GroupDashboard groupList={groupList} departments={departments} />
-      </div>
+      <GroupDashboard groupList={groupList} departments={departments} />
     </>
   );
 };
