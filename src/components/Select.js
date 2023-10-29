@@ -6,10 +6,17 @@ const Select = ({
   options,
   selectedOption,
   handleOptionChange,
+  isReport,
 }) => {
   return (
-    <div className="form-control">
-      <label className="label" htmlFor={title}>
+    <div
+      className={`${
+        isReport
+          ? "flex flex-row gap-2 md:form-control md:gap-0"
+          : "form-control"
+      }`}
+    >
+      <label className="label w-[20%]" htmlFor={title}>
         <span className="label-text text-base font-semibold">{label}</span>
       </label>
       <select

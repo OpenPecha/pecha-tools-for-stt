@@ -1,10 +1,18 @@
 import React from "react";
 
-const DateInput = ({ label, selectedDate, handleDateChange }) => {
+const DateInput = ({ label, selectedDate, handleDateChange, isReport }) => {
   return (
-    <div className="form-control w-fit">
-      <label className="label" htmlFor={label}>
-        <span className="label-text text-base font-semibold capitalize">{label}</span>
+    <div
+      className={`${
+        isReport
+          ? "flex flex-row gap-2 md:form-control md:gap-0"
+          : "form-control"
+      }`}
+    >
+      <label className="label w-[20%]" htmlFor={label}>
+        <span className="label-text text-base font-semibold capitalize">
+          {label}
+        </span>
       </label>
       <input
         name={label}

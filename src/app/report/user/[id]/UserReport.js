@@ -5,7 +5,8 @@ import PaginationControls from "@/components/PaginationControls";
 import UserReportTable from "./UserReportTable";
 import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import useDebounce from "@/components/hooks/useDebounceState";
 
 const UserReport = ({ searchParams, id, users }) => {
   const [userTaskRecord, setUserTaskRecord] = useState([]);
@@ -13,9 +14,14 @@ const UserReport = ({ searchParams, id, users }) => {
   const [selectedOption, setSelectedOption] = useState(id ? id : "");
   const [secretAccess, setSecretAccess] = useState(false);
   const [dates, setDates] = useState({ from: "", to: "" });
+  const [transcript, setTranscript] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
+  const debouncedSearchTerm = useDebounce(transcript, 1000);
   const page = searchParams["page"] ?? "1";
   const per_page = searchParams["per_page"] ?? "10";
+  const isReport = pathname.includes("report");
+  let allUserSpecificTasks = useRef([]);
 
   // Number of items per page
   const limit = typeof per_page === "string" ? parseInt(per_page) : 10;
@@ -30,7 +36,7 @@ const UserReport = ({ searchParams, id, users }) => {
 
   useEffect(() => {
     async function getUserReportByGroup() {
-      const allUserSpecificTasks = await getUserSpecificTasks(
+      allUserSpecificTasks.current = await getUserSpecificTasks(
         selectedOption,
         limit,
         skip,
@@ -40,7 +46,7 @@ const UserReport = ({ searchParams, id, users }) => {
         selectedOption,
         dates
       );
-      setUserTaskRecord(allUserSpecificTasks);
+      setUserTaskRecord(allUserSpecificTasks.current);
       setTotalTasks(totalUserSpecificTasks);
     }
     getUserReportByGroup();
@@ -66,35 +72,64 @@ const UserReport = ({ searchParams, id, users }) => {
     }
   };
 
+  const handleFilter = (event) => {
+    setTranscript(event.target.value);
+  };
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      const filter = debouncedSearchTerm;
+      const filteredTasks = allUserSpecificTasks.current.filter((task) => {
+        const transcript = task.transcript;
+        return transcript.includes(filter);
+      });
+      setUserTaskRecord(filteredTasks);
+    } else {
+      // Return original list of tasks
+      setUserTaskRecord(allUserSpecificTasks.current);
+    }
+  }, [debouncedSearchTerm]);
+
   return (
     <>
-      <form className="sticky top-0 z-20 py-8 bg-white flex flex-col md:flex-row justify-evenly items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
+      <form className="sticky top-0 z-20 p-4 gap-4 bg-white flex flex-col md:flex-row justify-center md:items-end">
         <Select
           title="user_id"
           label="User"
           options={users}
           selectedOption={selectedOption}
           handleOptionChange={handleOptionChange}
+          isReport={isReport}
         />
-        <div className="flex flex-col md:flex-row gap-2 md:gap-6">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
           <DateInput
             label="from"
             selectedDate={dates.from}
             handleDateChange={handleDateChange}
+            isReport={isReport}
           />
           <DateInput
             label="to"
             selectedDate={dates.to}
             handleDateChange={handleDateChange}
+            isReport={isReport}
           />
         </div>
-        <div className="">
+        <div className="ml-[22%] md:ml-0 flex flex-col md:flex-row gap-4 md:gap-6">
           <input
             name="password"
             placeholder="Password"
             type="password"
             className="input input-bordered max-w-xs"
             onChange={handlePassword}
+          />
+          <input
+            name="filter"
+            placeholder="Filter transcript"
+            type="text"
+            className="input input-bordered max-w-xs"
+            value={transcript}
+            onChange={handleFilter}
           />
         </div>
       </form>
@@ -109,6 +144,8 @@ const UserReport = ({ searchParams, id, users }) => {
           hasNextPage={end < totalTasksCount}
           hasPrevPage={skip > 0}
           pageCount={pageCount}
+          isReport={isReport}
+          setTranscript={setTranscript}
         />
       </div>
     </>

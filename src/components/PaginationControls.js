@@ -8,6 +8,8 @@ const PaginationControls = ({
   hasNextPage,
   hasPrevPage,
   pageCount,
+  isReport,
+  setTranscript,
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -18,6 +20,7 @@ const PaginationControls = ({
         className="join-item btn btn-accent disabled:dark:text-gray-400 disabled:dark:bg-gray-600"
         disabled={!hasPrevPage}
         onClick={() => {
+          if (isReport) setTranscript("");
           router.push(
             `${pathname}/?page=${Number(page) - 1}&per_page=${per_page}`
           );
@@ -32,6 +35,7 @@ const PaginationControls = ({
         className="join-item btn btn-accent disabled:dark:text-gray-400 disabled:dark:bg-gray-600"
         disabled={!hasNextPage}
         onClick={() => {
+          if (isReport) setTranscript("");
           router.push(
             `${pathname}/?page=${Number(page) + 1}&per_page=${per_page}`
           );
