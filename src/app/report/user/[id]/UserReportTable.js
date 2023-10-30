@@ -1,8 +1,13 @@
 import { revertTaskState } from "@/model/action";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { toast } from "react-hot-toast";
+import { FaLongArrowAltUp, FaLongArrowAltDown } from "react-icons/fa";
 
-const UserReportTable = ({ userTaskRecord, secretAccess }) => {
+const UserReportTable = ({
+  userTaskRecord,
+  secretAccess,
+  setUserTaskRecord,
+}) => {
   function formattedDate(date) {
     return date.toLocaleString("en-US", {
       month: "2-digit",
@@ -15,6 +20,7 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
   }
 
   const [disabledButtons, setDisabledButtons] = useState({});
+  const countRef = useRef(0);
 
   const handleRevertState = async (id, state) => {
     //console.log(id, state);
@@ -36,6 +42,20 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
     }
   };
 
+  const sortAudioDutation = () => {
+    // sort audio duration in ascending order on one click and descending order on next click
+    countRef.current++;
+    if (countRef.current % 2 === 0) {
+      setUserTaskRecord(
+        [...userTaskRecord].sort((a, b) => b.audio_duration - a.audio_duration)
+      );
+    } else {
+      setUserTaskRecord(
+        [...userTaskRecord].sort((a, b) => a.audio_duration - b.audio_duration)
+      );
+    }
+  };
+
   return (
     <>
       <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
@@ -52,7 +72,14 @@ const UserReportTable = ({ userTaskRecord, secretAccess }) => {
               <th>Submitted at</th>
               <th>Reviewed at</th>
               <th>File name</th>
-              <th>Audio duration</th>
+              <th onClick={sortAudioDutation} className="flex flex-row items-center gap-1 cursor-pointer">
+                Audio duration
+                {countRef.current % 2 === 0 ? (
+                  <FaLongArrowAltDown />
+                ) : (
+                  <FaLongArrowAltUp />
+                )}
+              </th>
               <th>Transcript syllable count</th>
               <th>Reviewed syllable count</th>
             </tr>

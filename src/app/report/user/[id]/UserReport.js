@@ -137,6 +137,7 @@ const UserReport = ({ searchParams, id, users }) => {
         <UserReportTable
           userTaskRecord={userTaskRecord}
           secretAccess={secretAccess}
+          setUserTaskRecord={setUserTaskRecord}
         />
         <PaginationControls
           page={page}
