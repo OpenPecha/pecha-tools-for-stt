@@ -8,6 +8,7 @@ import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
 import TranscriberReportTable from "../group/TranscriberReportTable";
 import ReviewerReportTable from "../group/ReviewerReportTable";
+import DepartmentTotal from "./DepartmentTotal";
 
 const DepartmentReport = ({ departments }) => {
   const [usersStatistic, setUsersStatistic] = useState({});
@@ -55,6 +56,9 @@ const DepartmentReport = ({ departments }) => {
       getReviewerReportByGroup();
     }
   }, [selectDepartment, dates]);
+
+  const isEmpty = (obj) => Object.keys(obj).length === 0;
+
   return (
     <>
       <form className="sticky top-0 z-20 py-8 bg-white flex flex-col md:flex-row justify-around items-center md:items-end space-y-5 space-x-0 md:space-y-0 md:space-x-10">
@@ -96,6 +100,11 @@ const DepartmentReport = ({ departments }) => {
             </div>
           </>
         ))}
+        {!isEmpty(usersStatistic) && (
+          <div className="flex justify-center items-center my-8">
+            <DepartmentTotal usersStatistic={usersStatistic} />
+          </div>
+        )}
       </div>
     </>
   );
