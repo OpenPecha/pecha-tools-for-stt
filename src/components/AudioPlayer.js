@@ -4,13 +4,7 @@ import { ImLoop } from "react-icons/im";
 import AppContext from "./AppContext";
 import { useContext } from "react";
 
-export const AudioPlayer = ({
-  tasks,
-  index,
-  audioRef,
-  transcript,
-  updateTaskAndIndex,
-}) => {
+export const AudioPlayer = ({ tasks, index, audioRef }) => {
   const value = useContext(AppContext);
   let { lang } = value;
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
@@ -69,16 +63,6 @@ export const AudioPlayer = ({
     // Loop: Alt/option + L key
     else if (e.altKey && e.keyCode === 76) {
       toogleLoop();
-    }
-    // Alt/Option + a = submit, Alt/Option + x reject , Alt/Option + s = save, Alt/Option + t = trash
-    else if (e.altKey && e.keyCode === 65) {
-      updateTaskAndIndex("submit", transcript, tasks[index]);
-    } else if (e.altKey && e.keyCode === 88) {
-      updateTaskAndIndex("reject", transcript, tasks[index]);
-    } else if (e.altKey && e.keyCode === 83) {
-      updateTaskAndIndex("save", transcript, tasks[index]);
-    } else if (e.altKey && e.keyCode === 84) {
-      updateTaskAndIndex("trash", transcript, tasks[index]);
     }
   };
 

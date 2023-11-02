@@ -1,7 +1,7 @@
 "use client";
 
 import { assignTasks, updateTask } from "@/model/action";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
 import { UserProgressStats } from "@/model/task";
@@ -28,11 +28,12 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
 
+  console.log("taskList", taskList, "history", history);
+
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
   }
   useEffect(() => {
-    let isMounted = true;
     getUserProgress();
     // Assign a value to currentTimeRef.current
     currentTimeRef.current = new Date().toISOString();
@@ -41,12 +42,14 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       setIsLoading(false);
       switch (role) {
         case "TRANSCRIBER":
-          taskList[index]?.transcript != null
+          taskList[index]?.transcript != null &&
+          taskList[index]?.transcript != ""
             ? setTranscript(taskList[index]?.transcript)
             : setTranscript(taskList[index]?.inference_transcript);
           break;
         case "REVIEWER":
-          taskList[index].reviewed_transcript != null
+          taskList[index].reviewed_transcript != null &&
+          taskList[index].reviewed_transcript != ""
             ? setTranscript(taskList[index]?.reviewed_transcript)
             : setTranscript(taskList[index]?.transcript);
           break;
@@ -60,9 +63,6 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       setAnyTask(false);
       setIsLoading(false);
     }
-    return () => {
-      isMounted = false;
-    };
   }, [taskList]);
 
   const getUserProgress = async () => {
@@ -136,7 +136,6 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
         role={role}
         history={history}
         setTaskList={setTaskList}
-        setIndex={setIndex}
         setHistory={setHistory}
       >
         {/* Page content here */}

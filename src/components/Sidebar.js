@@ -2,7 +2,7 @@ import React from "react";
 import AppContext from "./AppContext";
 import { useContext } from "react";
 import LanguageToggle from "./LanguageToggle";
-import { BsCheckLg, BsXLg, BsArrowReturnLeft, BsTrash } from "react-icons/bs";
+import { BsCheckLg, BsTrash } from "react-icons/bs";
 import { getTaskWithRevertedState } from "@/model/task";
 
 const Sidebar = ({
@@ -13,14 +13,12 @@ const Sidebar = ({
   taskList,
   role,
   history,
-  setIndex,
   setTaskList,
   setHistory,
 }) => {
   const { completedTaskCount, totalTaskCount, totalTaskPassed } = userTaskStats;
   const value = useContext(AppContext);
   let { lang } = value;
-  //console.log("tasklist", taskList, "history", history);
 
   const handleHistoryClick = async (task) => {
     // get the task from db with task state step down by 1
