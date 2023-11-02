@@ -9,12 +9,10 @@ const Sidebar = ({
   children,
   userDetail,
   userTaskStats,
-  index,
   taskList,
   role,
-  history,
   setTaskList,
-  setHistory,
+  userHistory,
 }) => {
   const { completedTaskCount, totalTaskCount, totalTaskPassed } = userTaskStats;
   const value = useContext(AppContext);
@@ -24,8 +22,6 @@ const Sidebar = ({
     // get the task from db with task state step down by 1
     // if it is not, just push the new task to the top
     const newTask = await getTaskWithRevertedState(task);
-    // remove the task from the history list
-    setHistory(history.filter((t) => t.id !== task.id));
     setTaskList([newTask, ...taskList]);
     return;
   };
@@ -60,7 +56,7 @@ const Sidebar = ({
         </div>
         <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-          <div className="flex flex-col w-60 min-h-full h-full bg-[#54606e] text-white">
+          <div className="flex flex-col w-80 min-h-full h-full bg-[#54606e] text-white">
             <header className="bg-[#384451] p-4 mb-5">
               <div className="text-lg">{lang.title}</div>
             </header>
@@ -76,7 +72,7 @@ const Sidebar = ({
               </div>
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">{lang.task}</label>
-                <span className=" text-right">{taskList[index]?.id}</span>
+                <span className=" text-right">{taskList[0]?.id}</span>
               </div>
             </section>
             <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
@@ -130,13 +126,13 @@ const Sidebar = ({
               <LanguageToggle />
             </section>
             <section className="px-5 pb-5 mb-5 border-b border-b-[#384451] overflow-y-auto flex-1">
-              <h3 className="uppercase font-bold mb-2 top-0 sticky bg-[#54606e]">
+              <h3 className="uppercase font-bold pb-2 top-0 sticky bg-[#54606e]">
                 {lang.history}
               </h3>
-              {history.map((task) => (
+              {userHistory.map((task) => (
                 <div
                   key={task.id}
-                  className="my-4 cursor-pointer flex items-center"
+                  className="my-4 cursor-pointer flex justify-between gap-1"
                   onClick={() => handleHistoryClick(task)}
                 >
                   <p className="text-lg line-clamp-2">
@@ -152,10 +148,12 @@ const Sidebar = ({
                       ? task.final_transcript
                       : task.reviewed_transcript}
                   </p>
-                  {(task.state === "submitted" ||
-                    task.state === "accepted" ||
-                    task.state === "finalised") && <BsCheckLg size="2rem" />}
-                  {task.state === "trashed" && <BsTrash size="2rem" />}
+                  <div>
+                    {(task.state === "submitted" ||
+                      task.state === "accepted" ||
+                      task.state === "finalised") && <BsCheckLg size="1rem" />}
+                    {task.state === "trashed" && <BsTrash size="1rem" />}
+                  </div>
                 </div>
               ))}
             </section>

@@ -1,7 +1,7 @@
 "use client";
 
-import { assignTasks, updateTask } from "@/model/action";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { assignTasks, getUserHistory, updateTask } from "@/model/action";
+import React, { useState, useRef, useEffect } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
 import { UserProgressStats } from "@/model/task";
@@ -9,11 +9,10 @@ import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
 import AppContext from "../components/AppContext";
 
-const AudioTranscript = ({ tasks, userDetail, language }) => {
+const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
   const [languageSelected, setLanguageSelected] = useState("bo");
   const lang = language[languageSelected];
   const [taskList, setTaskList] = useState(tasks);
-  const [index, setIndex] = useState(0);
   const [transcript, setTranscript] = useState("");
   const [userTaskStats, setUserTaskStats] = useState({
     completedTaskCount: 0,
@@ -24,11 +23,8 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
   const inputRef = useRef(null);
   const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [history, setHistory] = useState([]);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
-
-  console.log("taskList", taskList, "history", history);
 
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
@@ -42,19 +38,18 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       setIsLoading(false);
       switch (role) {
         case "TRANSCRIBER":
-          taskList[index]?.transcript != null &&
-          taskList[index]?.transcript != ""
-            ? setTranscript(taskList[index]?.transcript)
-            : setTranscript(taskList[index]?.inference_transcript);
+          taskList[0]?.transcript != null && taskList[0]?.transcript != ""
+            ? setTranscript(taskList[0]?.transcript)
+            : setTranscript(taskList[0]?.inference_transcript);
           break;
         case "REVIEWER":
-          taskList[index].reviewed_transcript != null &&
-          taskList[index].reviewed_transcript != ""
-            ? setTranscript(taskList[index]?.reviewed_transcript)
-            : setTranscript(taskList[index]?.transcript);
+          taskList[0].reviewed_transcript != null &&
+          taskList[0].reviewed_transcript != ""
+            ? setTranscript(taskList[0]?.reviewed_transcript)
+            : setTranscript(taskList[0]?.transcript);
           break;
         case "FINAL_REVIEWER":
-          setTranscript(taskList[index]?.reviewed_transcript);
+          setTranscript(taskList[0]?.reviewed_transcript);
           break;
         default:
           break;
@@ -73,12 +68,6 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       totalTaskCount,
       totalTaskPassed,
     });
-  };
-
-  const updateHistoryList = (updatedTask) => {
-    //console.log("updateHistoryList", updatedTask);
-    // add the updated task to the top of the history
-    setHistory((prev) => [updatedTask, ...prev]);
   };
 
   const updateTaskAndIndex = async (action, transcript, task) => {
@@ -101,22 +90,19 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       if (action === "submit") {
         getUserProgress();
       }
-      if (action === "submit" || action === "trash") {
-        updateHistoryList(updatedTask);
-      }
-
-      if (getLastTaskIndex() != index) {
-        //console.log(" this is not  last task in task list ", index, getLastTaskIndex());
+      // if (action === "submit" || action === "trash") {
+      //   getUserHistory(userId);
+      // }
+      if (getLastTaskIndex() != 0) {
         // remove the task updated from the task list
         setTaskList((prev) => prev.filter((task) => task.id !== id));
         if (action === "submit") {
           currentTimeRef.current = new Date().toISOString();
         }
       } else {
-        //console.log(" this is the last task in task list, assigning more task ", index, getLastTaskIndex());
+        // when it is the last task in the task list
         const moreTask = await assignTasks(groupId, userId, role);
         setIsLoading(true);
-        setIndex(0);
         setTaskList(moreTask);
       }
     } catch (error) {
@@ -131,12 +117,10 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
       <Sidebar
         userDetail={userDetail}
         userTaskStats={userTaskStats}
-        index={index}
         taskList={taskList}
         role={role}
-        history={history}
         setTaskList={setTaskList}
-        setHistory={setHistory}
+        userHistory={userHistory}
       >
         {/* Page content here */}
         {isLoading ? (
@@ -149,12 +133,12 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
               <div>
                 <p className="mt-5">
                   <strong>{lang.transcriber} : </strong>
-                  <span>{taskList[index].transcriber?.name}</span>
+                  <span>{taskList[0].transcriber?.name}</span>
                 </p>
                 {role === "FINAL_REVIEWER" && (
                   <p className="mt-2">
                     <strong>{lang.reviewer} : </strong>
-                    <span>{taskList[index].reviewer?.name}</span>
+                    <span>{taskList[0].reviewer?.name}</span>
                   </p>
                 )}
               </div>
@@ -163,7 +147,6 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
               <div className="flex flex-col gap-5 justify-center items-center">
                 <AudioPlayer
                   tasks={taskList}
-                  index={index}
                   audioRef={audioRef}
                   inputRef={inputRef}
                   transcript={transcript}
@@ -181,7 +164,7 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
                 <div className="ml-auto text-xs">
                   <span>
                     <strong className="uppercase">{lang.file} : </strong>
-                    {(taskList[index]?.url).split("/").pop()}
+                    {(taskList[0]?.url).split("/").pop()}
                   </span>
                 </div>
               </div>
@@ -189,7 +172,6 @@ const AudioTranscript = ({ tasks, userDetail, language }) => {
             <ActionButtons
               updateTaskAndIndex={updateTaskAndIndex}
               tasks={taskList}
-              index={index}
               transcript={transcript}
               role={role}
             />

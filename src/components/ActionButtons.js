@@ -4,13 +4,7 @@ import { BsCheckLg, BsXLg, BsArrowReturnLeft, BsTrash } from "react-icons/bs";
 import { useContext, useEffect } from "react";
 import AppContext from "./AppContext";
 
-const ActionButtons = ({
-  updateTaskAndIndex,
-  index,
-  tasks,
-  transcript,
-  role,
-}) => {
+const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
   // a = 65 submit, x = 88 reject , s = 83 save, t = 84 trash
   const value = useContext(AppContext);
   let { lang } = value;
@@ -49,9 +43,7 @@ const ActionButtons = ({
             id="submit-button"
             type="button"
             className="focus:outline-none text-white bg-[#4fd364] font-medium text-md p-6 sm:p-9"
-            onClick={() =>
-              updateTaskAndIndex("submit", transcript, tasks[index])
-            }
+            onClick={() => updateTaskAndIndex("submit", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
               <BsCheckLg width="5rem" />
@@ -65,9 +57,7 @@ const ActionButtons = ({
               id="reject-button"
               type="button"
               className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
-              onClick={() =>
-                updateTaskAndIndex("reject", transcript, tasks[index])
-              }
+              onClick={() => updateTaskAndIndex("reject", transcript, tasks[0])}
             >
               <div className="flex flex-col items-center">
                 <BsXLg />
@@ -81,7 +71,7 @@ const ActionButtons = ({
             id="save-button"
             type="button"
             className="focus:outline-none text-white bg-yellow-500 font-medium text-md p-6 sm:p-9"
-            onClick={() => updateTaskAndIndex("save", transcript, tasks[index])}
+            onClick={() => updateTaskAndIndex("save", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
               <BsArrowReturnLeft />
@@ -94,9 +84,7 @@ const ActionButtons = ({
             id="trash-button"
             type="button"
             className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"
-            onClick={() =>
-              updateTaskAndIndex("trash", transcript, tasks[index])
-            }
+            onClick={() => updateTaskAndIndex("trash", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
               <BsTrash />

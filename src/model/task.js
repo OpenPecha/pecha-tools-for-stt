@@ -632,6 +632,7 @@ export const getTaskWithRevertedState = async (task) => {
         state: newState,
       },
     });
+    revalidatePath("/");
     return updatedTask;
   } catch (error) {
     console.error("Error getting reverted state task:", error);

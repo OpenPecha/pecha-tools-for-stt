@@ -2,6 +2,7 @@
 
 import { formatTime } from "@/lib/formatTime";
 import prisma from "@/service/db";
+import { revalidatePath } from "next/cache";
 
 const ASSIGN_TASKS = 5;
 //get user detail if exist
@@ -29,13 +30,16 @@ export const getUserTask = async (username) => {
       error: "No user found! Please try another with correct username.",
     };
   }
+  // if user is found, get the task based on user role
   const { id: userId, group_id: groupId, role } = userData;
   userTasks = await getAssignedTasks(groupId, userId, role);
   if (userTasks.length == 0) {
+    console.log("no task already assigned", userTasks.length);
     // assign some tasks for user when got no task to work on
     userTasks = await assignTasks(groupId, userId, role);
   }
-  return { userTasks, userData };
+  const userHistory = await getUserHistory(userId);
+  return { userTasks, userData, userHistory };
 };
 
 //getting user's asigned tasks
@@ -351,6 +355,7 @@ export const updateTask = async (
         });
         if (updatedTask) {
           const msg = await taskToastMsg(action);
+          revalidatePath("/");
           return { msg, updatedTask };
         } else {
           return {
@@ -384,6 +389,7 @@ export const updateTask = async (
         });
         if (updatedTask) {
           const msg = await taskToastMsg(action);
+          revalidatePath("/");
           return { msg, updatedTask };
         } else {
           return {
@@ -417,6 +423,7 @@ export const updateTask = async (
         });
         if (updatedTask) {
           const msg = await taskToastMsg(action);
+          revalidatePath("/");
           return { msg, updatedTask };
         } else {
           return {
@@ -490,5 +497,37 @@ export const revertTaskState = async (id, state) => {
     }
   } catch (error) {
     //console.log("Error updating task", error);
+  }
+};
+
+// get all the history of a user based on userId
+export const getUserHistory = async (userId) => {
+  try {
+    const userHistory = await prisma.Task.findMany({
+      where: {
+        OR: [
+          {
+            transcriber_id: userId,
+            state: { in: ["submitted", "trashed"] },
+          },
+          {
+            reviewer_id: userId,
+            state: { in: ["accepted", "trashed"] },
+          },
+          {
+            final_reviewer_id: userId,
+            state: "finalised",
+          },
+        ],
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+    revalidatePath("/");
+    return userHistory;
+  } catch (error) {
+    //console.log("Error getting user history", error);
+    throw new Error(error);
   }
 };

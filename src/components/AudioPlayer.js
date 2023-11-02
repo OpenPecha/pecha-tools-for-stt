@@ -4,7 +4,7 @@ import { ImLoop } from "react-icons/im";
 import AppContext from "./AppContext";
 import { useContext } from "react";
 
-export const AudioPlayer = ({ tasks, index, audioRef }) => {
+export const AudioPlayer = ({ tasks, audioRef }) => {
   const value = useContext(AppContext);
   let { lang } = value;
   const [playbackRate, setPlaybackRate] = useState(1); // 1, 1.25, 1.5, 2, 0.5 (default 1)
@@ -77,10 +77,10 @@ export const AudioPlayer = ({ tasks, index, audioRef }) => {
         controls
         loop={isLoopEnabled}
         className="w-full"
-        key={tasks[index]?.id}
+        key={tasks[0]?.id}
         onEnded={handleAudioEnded}
       >
-        <source src={tasks[index]?.url} type="audio/mp3" />
+        <source src={tasks[0]?.url} type="audio/mp3" />
       </audio>
       <div className="flex gap-10 my-2">
         <div
