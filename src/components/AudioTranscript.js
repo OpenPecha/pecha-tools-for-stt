@@ -20,8 +20,6 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
     totalTaskPassed: 0,
   }); // {completedTaskCount, totalTaskCount, totalTaskPassed}
   const audioRef = useRef(null);
-  const inputRef = useRef(null);
-  const [anyTask, setAnyTask] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
@@ -34,7 +32,6 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
     // Assign a value to currentTimeRef.current
     currentTimeRef.current = new Date().toISOString();
     if (taskList?.length) {
-      setAnyTask(true);
       setIsLoading(false);
       switch (role) {
         case "TRANSCRIBER":
@@ -55,7 +52,6 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
           break;
       }
     } else {
-      setAnyTask(false);
       setIsLoading(false);
     }
   }, [taskList]);
@@ -127,7 +123,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
           <div className="flex flex-col justify-center items-center mt-10 p-5">
             <h1 className="font-bold text-md md:text-3xl">loading...</h1>
           </div>
-        ) : anyTask ? (
+        ) : taskList?.length ? (
           <>
             {(role === "REVIEWER" || role === "FINAL_REVIEWER") && (
               <div>
@@ -148,12 +144,10 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
                 <AudioPlayer
                   tasks={taskList}
                   audioRef={audioRef}
-                  inputRef={inputRef}
                   transcript={transcript}
                   updateTaskAndIndex={updateTaskAndIndex}
                 />
                 <textarea
-                  ref={inputRef}
                   value={transcript || ""}
                   onChange={(e) => setTranscript(e.target.value)}
                   className="rounded-md p-4 border border-slate-400 w-full text-xl"
