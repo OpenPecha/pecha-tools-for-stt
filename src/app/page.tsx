@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUserTask } from "../model/action";
+import { getUserHistory, getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
 import RightSidebar from "@/components/RightSidebar";
 import languagesObject from "../../data/language";
@@ -10,6 +10,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
   let userTasks;
   let userDetail;
   let errMsg;
+  let userHistory;
   if (session && session !== "") {
     const result = await getUserTask(session);
     if (result?.error) {
@@ -17,6 +18,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
     } else {
       userTasks = result?.userTasks;
       userDetail = result?.userData;
+      userHistory = result?.userHistory;
     }
   }
 
@@ -56,6 +58,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
           tasks={userTasks}
           userDetail={userDetail}
           language={language}
+          userHistory={userHistory}
         />
       )}
       <RightSidebar>
