@@ -3,7 +3,7 @@ const mappingObj =
     "mm986@cam.ac.uk": { url: "https://convention-iframe.onrender.com/?base=Corr1-review&session=mm986@cam.ac.uk", department: "ocr" },
     "mariekemeelen@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-review&session=mariekemeelen@gmail.com", department: "ocr" },
     "tashitsering@esukhia.org": { url: "https://convention-iframe.onrender.com/?base=Manual1-review&session=tashitsering@esukhia.org", department: "ocr" },
-    "tenkus47@gmail.com": { url: "https://work.pecha.tools/stt_cs_gb_review/?session=spsither@gmail.com", department: "stt" },
+    "tenkus47@gmail.com": { url: "https://stt.pecha.tools/?session=lhatsoyeshi@gmail.com", department: "stt" },
     
 
     "sangmotenz79@gmail.com": { url: "https://work.pecha.tools/glyph_annotation_ga/?session=sangmotenz79@gmail.com", department: "ocr" },
