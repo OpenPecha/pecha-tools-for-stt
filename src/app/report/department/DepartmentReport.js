@@ -83,27 +83,37 @@ const DepartmentReport = ({ departments }) => {
         </div>
       </form>
       <div className="w-full">
-        {getGroupByDepartmentId(selectDepartment).map((group) => (
-          <>
-            <div
-              key={group.id}
-              className="flex flex-col gap-10 justify-center items-center my-8"
-            >
-              <h1>{group.name}</h1>
-              <TranscriberReportTable
-                usersStatistic={usersStatistic[group.id]}
-                selectGroup={group.id}
-              />
-              <ReviewerReportTable
-                reviewersStatistic={reviewersStatistic[group.id]}
-              />
-            </div>
-          </>
-        ))}
-        {!isEmpty(usersStatistic) && (
-          <div className="flex justify-center items-center my-8">
-            <DepartmentTotal usersStatistic={usersStatistic} />
+        {isEmpty(usersStatistic) &&
+        isEmpty(reviewersStatistic) &&
+        selectDepartment !== "" ? (
+          <div className="text-center mt-10">
+            <span className="loading loading-spinner text-success text-center"></span>
           </div>
+        ) : (
+          <>
+            {getGroupByDepartmentId(selectDepartment).map((group) => (
+              <>
+                <div
+                  key={group.id}
+                  className="flex flex-col gap-10 justify-center items-center my-8"
+                >
+                  <h1>{group.name}</h1>
+                  <TranscriberReportTable
+                    usersStatistic={usersStatistic[group.id]}
+                    selectGroup={group.id}
+                  />
+                  <ReviewerReportTable
+                    reviewersStatistic={reviewersStatistic[group.id]}
+                  />
+                </div>
+              </>
+            ))}
+            {!isEmpty(usersStatistic) && (
+              <div className="flex justify-center items-center my-8">
+                <DepartmentTotal usersStatistic={usersStatistic} />
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

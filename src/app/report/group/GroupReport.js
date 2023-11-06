@@ -68,11 +68,21 @@ const GroupReport = ({ groups }) => {
         </div>
       </form>
       <div className="flex flex-col gap-10 justify-center items-center mt-10">
-        <TranscriberReportTable
-          usersStatistic={usersStatistic}
-          selectGroup={selectGroup}
-        />
-        <ReviewerReportTable reviewersStatistic={reviewersStatistic} />
+        {usersStatistic?.length === 0 &&
+        reviewersStatistic?.length === 0 &&
+        selectGroup ? (
+          <div className="text-center mt-10">
+            <span className="loading loading-spinner text-success text-center"></span>
+          </div>
+        ) : (
+          <>
+            <TranscriberReportTable
+              usersStatistic={usersStatistic}
+              selectGroup={selectGroup}
+            />
+            <ReviewerReportTable reviewersStatistic={reviewersStatistic} />
+          </>
+        )}
       </div>
     </>
   );
