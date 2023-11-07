@@ -141,12 +141,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
             )}
             <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-8 mt-20 mb-40">
               <div className="flex flex-col gap-5 justify-center items-center">
-                <AudioPlayer
-                  tasks={taskList}
-                  audioRef={audioRef}
-                  transcript={transcript}
-                  updateTaskAndIndex={updateTaskAndIndex}
-                />
+                <AudioPlayer tasks={taskList} audioRef={audioRef} />
                 <textarea
                   value={transcript || ""}
                   onChange={(e) => setTranscript(e.target.value)}
