@@ -127,7 +127,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
           <>
             {(role === "REVIEWER" || role === "FINAL_REVIEWER") && (
               <div>
-                <p className="mt-5">
+                <p className="mt-5 md:mt-10">
                   <strong>{lang.transcriber} : </strong>
                   <span>{taskList[0].transcriber?.name}</span>
                 </p>
@@ -139,7 +139,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
                 )}
               </div>
             )}
-            <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-8 mt-20 mb-40">
+            <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-6 md:p-8 mt-5  md:mt-10">
               <div className="flex flex-col gap-5 justify-center items-center">
                 <AudioPlayer tasks={taskList} audioRef={audioRef} />
                 <textarea
@@ -147,7 +147,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
                   onChange={(e) => setTranscript(e.target.value)}
                   className="rounded-md p-4 border border-slate-400 w-full text-xl"
                   placeholder="Type here..."
-                  rows={7}
+                  rows={6}
                   id="transcript"
                 ></textarea>
                 <div className="ml-auto text-xs">

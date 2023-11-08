@@ -84,7 +84,7 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
       </audio>
       <div className="flex gap-10 my-2">
         <div
-          className="tooltip tooltip-bottom"
+          className="md:tooltip tooltip-bottom"
           data-tip={`${
             isPlaying ? "Pause" : "Play"
           } (command + enter, option + enter, ctrl + enter)`}
@@ -96,7 +96,7 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
             {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
           </button>
         </div>
-        <div className="tooltip tooltip-bottom" data-tip="Loop (Alt + l)">
+        <div className="md:tooltip tooltip-bottom" data-tip="Loop (Alt + l)">
           <button
             className={
               isLoopEnabled

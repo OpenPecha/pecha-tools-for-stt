@@ -38,7 +38,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
   return (
     <>
       <div className="fixed bottom-0 flex gap-1 border shadow-sm p-2">
-        <div className="tooltip tooltip-top" data-tip="Submit(Alt + a)">
+        <div className="md:tooltip tooltip-top" data-tip="Submit(Alt + a)">
           <button
             id="submit-button"
             type="button"
@@ -52,7 +52,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
           </button>
         </div>
         {role !== "TRANSCRIBER" && (
-          <div className="tooltip tooltip-top" data-tip="Reject(Alt + x)">
+          <div className="md:tooltip tooltip-top" data-tip="Reject(Alt + x)">
             <button
               id="reject-button"
               type="button"
@@ -66,7 +66,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
             </button>
           </div>
         )}
-        <div className="tooltip tooltip-top" data-tip="Save(Alt + s)">
+        <div className="md:tooltip tooltip-top" data-tip="Save(Alt + s)">
           <button
             id="save-button"
             type="button"
@@ -79,7 +79,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
             </div>
           </button>
         </div>
-        <div className="tooltip tooltip-top" data-tip="Trash(Alt + t)">
+        <div className="md:tooltip tooltip-top" data-tip="Trash(Alt + t)">
           <button
             id="trash-button"
             type="button"
