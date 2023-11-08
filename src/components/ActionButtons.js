@@ -37,12 +37,12 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
 
   return (
     <>
-      <div className="fixed bottom-0 flex gap-1 border shadow-sm p-2">
+      <div className="md:fixed bottom-0 mt-4 flex gap-1 border shadow-sm p-2">
         <div className="md:tooltip tooltip-top" data-tip="Submit(Alt + a)">
           <button
             id="submit-button"
             type="button"
-            className="focus:outline-none text-white bg-[#4fd364] font-medium text-md p-6 sm:p-9"
+            className="focus:outline-none text-white bg-[#4fd364] font-medium text-md p-4 sm:p-9"
             onClick={() => updateTaskAndIndex("submit", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
@@ -56,7 +56,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
             <button
               id="reject-button"
               type="button"
-              className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-6 sm:p-9"
+              className="focus:outline-none text-white bg-[#f74c4a] font-medium text-md p-4 sm:p-9"
               onClick={() => updateTaskAndIndex("reject", transcript, tasks[0])}
             >
               <div className="flex flex-col items-center">
@@ -70,7 +70,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
           <button
             id="save-button"
             type="button"
-            className="focus:outline-none text-white bg-yellow-500 font-medium text-md p-6 sm:p-9"
+            className="focus:outline-none text-white bg-yellow-500 font-medium text-md p-4 sm:p-9"
             onClick={() => updateTaskAndIndex("save", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
@@ -83,7 +83,7 @@ const ActionButtons = ({ updateTaskAndIndex, tasks, transcript, role }) => {
           <button
             id="trash-button"
             type="button"
-            className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-6 sm:p-9"
+            className="focus:outline-none text-white bg-[#b9b9b9] font-medium text-md p-4 sm:p-9"
             onClick={() => updateTaskAndIndex("trash", transcript, tasks[0])}
           >
             <div className="flex flex-col items-center">
