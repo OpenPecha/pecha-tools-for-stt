@@ -2,8 +2,7 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
-import { calculateAudioMinutes, splitIntoSyllables } from "./user";
-import parseJson, { JSONError } from "parse-json";
+import { splitIntoSyllables } from "./user";
 
 // get all tasks basd on the search params
 export const getAllTask = async (limit, skip) => {
