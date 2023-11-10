@@ -34,7 +34,6 @@ export const getUserTask = async (username) => {
   const { id: userId, group_id: groupId, role } = userData;
   userTasks = await getAssignedTasks(groupId, userId, role);
   if (userTasks.length == 0) {
-    console.log("no task already assigned", userTasks.length);
     // assign some tasks for user when got no task to work on
     userTasks = await assignTasks(groupId, userId, role);
   }

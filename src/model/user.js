@@ -3,6 +3,8 @@
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import {
+  getFinalReviewerTaskCount,
+  getFinalReviewerTaskList,
   getReviewerTaskCount,
   getReviewerTaskList,
   getTranscriberTaskList,
@@ -10,7 +12,7 @@ import {
   getUserSubmittedSecs,
 } from "./task";
 
-var levenshtein = require('fast-levenshtein');
+var levenshtein = require("fast-levenshtein");
 
 export const getAllUser = async () => {
   try {
@@ -255,9 +257,9 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
           task.reviewed_transcript
         ).length;
         acc.syllableCount = acc.syllableCount + syllableCount;
-        acc.characterCount = acc.characterCount + (task.transcript ? task.transcript.length : 0);
+        acc.characterCount =
+          acc.characterCount + (task.transcript ? task.transcript.length : 0);
         acc.cer += levenshtein.get(task.transcript, task.reviewed_transcript);
-
       }
       if (task.transcriber_is_correct === false) {
         acc.noReviewedCorrected++;
@@ -353,4 +355,75 @@ const getReviewedInSec = (reviewerTasks) => {
     return acc;
   }, 0);
   return reviewedInSec;
+};
+
+// for all the final reviewers of a group retun the task statistics - task finalised, finalised mintues
+export const generateFinalReviewerReportbyGroup = async (groupId, dates) => {
+  //console.log("generateFinalReviewerReportbyGroup called with group id and dates", groupId, dates);
+  try {
+    const finalReviewers = await finalReviewerOfGroup(groupId);
+    const usersReport = generateFinalReviewerTaskReport(finalReviewers, dates);
+    return usersReport;
+  } catch (error) {
+    console.error("Error getting users by group:", error);
+    throw new Error(error);
+  }
+};
+
+export const finalReviewerOfGroup = async (groupId) => {
+  try {
+    const finalReviewers = await prisma.user.findMany({
+      where: {
+        group_id: parseInt(groupId),
+        role: "FINAL_REVIEWER",
+      },
+    });
+    return finalReviewers;
+  } catch (error) {
+    console.error("Error getting final reviewers of group:", error);
+    throw new Error(error);
+  }
+};
+
+export const generateFinalReviewerTaskReport = async (
+  finalReviewers,
+  dates
+) => {
+  const finalReviewerList = [];
+
+  for (const finalReviewer of finalReviewers) {
+    const { id, name } = finalReviewer;
+
+    const finalReviewerObj = {
+      id,
+      name,
+      noFinalised: 0,
+      finalisedSecs: 0,
+    };
+
+    // get the list of tasks by the user with selected fields
+    const finalReviewerTasks = await getFinalReviewerTaskList(id, dates);
+    const finalisedInSec = getFinalisedInSec(finalReviewerTasks);
+    //console.log("finalisedInSec", finalisedInSec);
+    finalReviewerObj.finalisedSecs = finalisedInSec;
+
+    const updatedFinalReviwerObj = await getFinalReviewerTaskCount(
+      id,
+      dates,
+      finalReviewerObj
+    );
+    finalReviewerList.push(updatedFinalReviwerObj);
+  }
+  //console.log("Generated Final Reviewer Task Statistics Report:", finalReviewerList);
+  return finalReviewerList;
+};
+
+const getFinalisedInSec = (finalReviewerTasks) => {
+  const finalisedInSec = finalReviewerTasks.reduce((acc, task) => {
+    if (task.state === "finalised") {
+      acc = acc + task.audio_duration;
+    }
+    return acc;
+  }, 0);
+  return finalisedInSec;
 };

@@ -3,15 +3,18 @@ import React, { useEffect, useState } from "react";
 import {
   generateUserReportByGroup,
   generateReviewerReportbyGroup,
+  generateFinalReviewerReportbyGroup,
 } from "@/model/user";
 import TranscriberReportTable from "./TranscriberReportTable";
 import ReviewerReportTable from "./ReviewerReportTable";
 import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
+import FinalReviewerTable from "./FinalReviewerTable";
 
 const GroupReport = ({ groups }) => {
   const [usersStatistic, setUsersStatistic] = useState([]);
   const [reviewersStatistic, setReviewersStatistic] = useState([]);
+  const [finalReviewersStatistic, setFinalReviewersStatistic] = useState([]);
   const [selectGroup, setSelectGroup] = useState("");
   const [dates, setDates] = useState({ from: "", to: "" });
 
@@ -31,6 +34,14 @@ const GroupReport = ({ groups }) => {
         );
         setReviewersStatistic(reviewersOfGroup);
       }
+      async function getFinalReviewerReportByGroup() {
+        const finalReviewersOfGroup = await generateFinalReviewerReportbyGroup(
+          selectGroup,
+          dates
+        );
+        setFinalReviewersStatistic(finalReviewersOfGroup);
+      }
+      getFinalReviewerReportByGroup();
       getReviewerReportByGroup();
       getUserReportByGroup();
     }
@@ -81,6 +92,9 @@ const GroupReport = ({ groups }) => {
               selectGroup={selectGroup}
             />
             <ReviewerReportTable reviewersStatistic={reviewersStatistic} />
+            <FinalReviewerTable
+              finalReviewersStatistic={finalReviewersStatistic}
+            />
           </>
         )}
       </div>

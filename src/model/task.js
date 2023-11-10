@@ -470,6 +470,40 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
   }
 };
 
+export const getFinalReviewerTaskCount = async (
+  id,
+  dates,
+  finalReviewerObj
+) => {
+  const { from: fromDate, to: toDate } = dates;
+  try {
+    if (fromDate && toDate) {
+      //console.log("getFinalReviewerTaskCount when both date are present", fromDate, toDate);
+      finalReviewerObj.noFinalised = await prisma.task.count({
+        where: {
+          final_reviewer_id: parseInt(id),
+          state: "finalised",
+          finalised_reviewed_at: {
+            gte: new Date(fromDate).toISOString(),
+            lte: new Date(toDate).toISOString(),
+          },
+        },
+      });
+    } else {
+      //console.log("getFinalReviewerTaskCount when one or no date is present", fromDate, toDate);
+      finalReviewerObj.noFinalised = await prisma.task.count({
+        where: {
+          final_reviewer_id: parseInt(id),
+          state: "finalised",
+        },
+      });
+    }
+    return finalReviewerObj;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const getTranscriberTaskList = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   try {
@@ -537,6 +571,43 @@ export const getReviewerTaskList = async (id, dates) => {
       const filteredTasks = await prisma.task.findMany({
         where: {
           reviewer_id: id,
+        },
+        select: {
+          audio_duration: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getFinalReviewerTaskList = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  try {
+    if (fromDate && toDate) {
+      //console.log("getFinalReviewerTaskList with both date are present", fromDate, toDate);
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          final_reviewer_id: id,
+          finalised_reviewed_at: {
+            gte: new Date(fromDate),
+            lte: new Date(toDate),
+          },
+        },
+        select: {
+          audio_duration: true,
+          state: true,
+        },
+      });
+      return filteredTasks;
+    } else {
+      //console.log("getFinalReviewerTaskList when one or no date is present", fromDate, toDate);
+      const filteredTasks = await prisma.task.findMany({
+        where: {
+          final_reviewer_id: id,
         },
         select: {
           audio_duration: true,

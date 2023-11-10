@@ -3,16 +3,19 @@ import React, { useEffect, useState } from "react";
 import {
   generateUserReportByGroup,
   generateReviewerReportbyGroup,
+  generateFinalReviewerReportbyGroup,
 } from "@/model/user";
 import Select from "@/components/Select";
 import DateInput from "@/components/DateInput";
 import TranscriberReportTable from "../group/TranscriberReportTable";
 import ReviewerReportTable from "../group/ReviewerReportTable";
 import DepartmentTotal from "./DepartmentTotal";
+import FinalReviewerTable from "../group/FinalReviewerTable";
 
 const DepartmentReport = ({ departments }) => {
   const [usersStatistic, setUsersStatistic] = useState({});
   const [reviewersStatistic, setReviewersStatistic] = useState({});
+  const [finalReviewersStatistic, setFinalReviewersStatistic] = useState({});
   const [selectDepartment, setSelectDepartment] = useState("");
   const [dates, setDates] = useState({ from: "", to: "" });
 
@@ -52,6 +55,17 @@ const DepartmentReport = ({ departments }) => {
           }));
         }
       }
+      async function getFinalReviewerReportByGroup() {
+        for (let group of getGroupByDepartmentId(selectDepartment)) {
+          const finalReviewersOfGroup =
+            await generateFinalReviewerReportbyGroup(group.id, dates);
+          setFinalReviewersStatistic((prev) => ({
+            ...prev,
+            [group.id]: finalReviewersOfGroup,
+          }));
+        }
+      }
+      getFinalReviewerReportByGroup();
       getUserReportByGroup();
       getReviewerReportByGroup();
     }
@@ -104,6 +118,9 @@ const DepartmentReport = ({ departments }) => {
                   />
                   <ReviewerReportTable
                     reviewersStatistic={reviewersStatistic[group.id]}
+                  />
+                  <FinalReviewerTable
+                    finalReviewersStatistic={finalReviewersStatistic[group.id]}
                   />
                 </div>
               </>
