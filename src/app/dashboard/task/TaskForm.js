@@ -20,10 +20,27 @@ const TaskForm = ({ groups }) => {
       header: true,
       skipEmptyLines: true,
       complete: async function (results) {
-        //console.log(results);
+        console.log(results);
         setSelectedFile(results?.data);
       },
     });
+  };
+
+  const uploadTask = async (formData) => {
+    if (selectedFile.length > 1000) {
+      toast.error("Please select a file with less than 1000 rows");
+      return;
+    }
+    const taskJson = JSON.stringify(selectedFile);
+    formData.append("tasks", taskJson);
+    const tasksCreated = await createTasksFromCSV(formData);
+    // if tasksCreated is not empty, then toast success message
+    // else toast error message
+    if (tasksCreated?.count > 0) {
+      toast.success("Tasks created successfully");
+    } else {
+      toast.error("Error creating tasks");
+    }
   };
 
   return (
@@ -61,17 +78,7 @@ const TaskForm = ({ groups }) => {
           formAction={async (formData) => {
             ref.current?.reset();
             //console.log("formData", formData.get("group_id"), formData.get("file_name"));
-            const tasksCreated = await createTasksFromCSV(
-              selectedFile,
-              formData
-            );
-            // if tasksCreated is not empty, then toast success message
-            // else toast error message
-            if (tasksCreated?.count > 0) {
-              toast.success("Tasks created successfully");
-            } else {
-              toast.error("Error creating tasks");
-            }
+            uploadTask(formData);
           }}
         >
           Upload

@@ -3,6 +3,7 @@
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import { calculateAudioMinutes, splitIntoSyllables } from "./user";
+import parseJson, { JSONError } from "parse-json";
 
 // get all tasks basd on the search params
 export const getAllTask = async (limit, skip) => {
@@ -29,29 +30,35 @@ export const getTotalTaskCount = async () => {
   }
 };
 
-export async function createTasksFromCSV(fileData, formData) {
-  const groupId = formData.get("group_id");
-  //console.log("createTasksFromCSV called", "ID", groupId);
+export async function createTasksFromCSV(formData) {
+  let tasksToCreate = [];
+  try {
+    const groupId = formData.get("group_id");
+    const tasksFile = formData.get("tasks");
+    const parsedTasksFile = JSON.parse(tasksFile);
+    // Create an array to hold task data
+    tasksToCreate = await Promise.all(
+      parsedTasksFile.map((row) => {
+        // Extract data from the CSV row
+        const inference_transcript = row.inference_transcript;
+        const fileName = row.file_name;
+        const url = row.url;
+        const audio_duration = row.audio_duration;
 
-  // Create an array to hold task data
-  const tasksToCreate = await Promise.all(
-    fileData.map((row) => {
-      // Extract data from the CSV row
-      const inference_transcript = row.inference_transcript;
-      const fileName = row.file_name;
-      const url = row.url;
-      const audio_duration = row.audio_duration;
-
-      // Return task data as an object
-      return {
-        group_id: parseInt(groupId),
-        inference_transcript: inference_transcript,
-        file_name: fileName,
-        url: url,
-        audio_duration: parseFloat(audio_duration),
-      };
-    })
-  );
+        // Return task data as an object
+        return {
+          group_id: parseInt(groupId),
+          inference_transcript: inference_transcript,
+          file_name: fileName,
+          url: url,
+          audio_duration: parseFloat(audio_duration),
+        };
+      })
+    );
+  } catch (error) {
+    console.error("Error parsing tasks file:", error);
+    return { count: 0 };
+  }
 
   try {
     // Use createMany to insert all tasks at once
