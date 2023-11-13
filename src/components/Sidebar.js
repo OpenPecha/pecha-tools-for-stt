@@ -21,7 +21,7 @@ const Sidebar = ({
   const handleHistoryClick = async (task) => {
     // get the task from db with task state step down by 1
     // if it is not, just push the new task to the top
-    const newTask = await getTaskWithRevertedState(task);
+    const newTask = await getTaskWithRevertedState(task, role);
     setTaskList([newTask, ...taskList]);
     return;
   };
@@ -132,7 +132,7 @@ const Sidebar = ({
               {userHistory.map((task) => (
                 <div
                   key={task.id}
-                  className="my-4 cursor-pointer flex justify-between gap-1"
+                  className="my-4 cursor-pointer flex justify-between gap-1 items-center"
                   onClick={() => handleHistoryClick(task)}
                 >
                   <p className="text-lg line-clamp-2">

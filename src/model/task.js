@@ -686,20 +686,27 @@ export const UserProgressStats = async (id, role, groupId) => {
   }
 };
 
-export const getTaskWithRevertedState = async (task) => {
+export const getTaskWithRevertedState = async (task, role) => {
   try {
     let newState;
+
     if (
       task.state === "submitted" ||
-      (task.transcriber_id && task.state === "trashed")
+      (role === "TRANSCRIBER" && task.state === "trashed")
     ) {
       newState = "transcribing";
     }
     if (
       task.state === "accepted" ||
-      (task.reviewer_id && task.state === "trashed")
+      (role === "REVIEWER" && task.state === "trashed")
     ) {
       newState = "submitted";
+    }
+    if (
+      task.state === "finalised" ||
+      (role === "FINAL_REVIEWER" && task.state === "trashed")
+    ) {
+      newState = "accepted";
     }
     const updatedTask = await prisma.task.update({
       where: {
