@@ -522,6 +522,7 @@ export const getUserHistory = async (userId) => {
       orderBy: {
         id: "desc",
       },
+      take: 20,
     });
     revalidatePath("/");
     return userHistory;

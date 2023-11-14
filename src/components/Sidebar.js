@@ -132,7 +132,7 @@ const Sidebar = ({
               {userHistory.map((task) => (
                 <div
                   key={task.id}
-                  className="my-4 cursor-pointer flex justify-between gap-1 items-center"
+                  className="py-4 cursor-pointer flex justify-between gap-1 items-center border-b-2 border-b-[#384451]"
                   onClick={() => handleHistoryClick(task)}
                 >
                   <p className="text-lg line-clamp-2">
@@ -148,7 +148,10 @@ const Sidebar = ({
                       ? task.final_transcript
                       : task.reviewed_transcript}
                   </p>
-                  <div>
+                  <div
+                    className="tooltip tooltip-left"
+                    data-tip={`${task.state}`}
+                  >
                     {(task.state === "submitted" ||
                       task.state === "accepted" ||
                       task.state === "finalised") && <BsCheckLg size="1rem" />}
