@@ -715,6 +715,10 @@ export const getTaskWithRevertedState = async (task, role) => {
       data: {
         state: newState,
       },
+      include: {
+        transcriber: true,
+        reviewer: true,
+      },
     });
     revalidatePath("/");
     return updatedTask;
