@@ -12,7 +12,7 @@ const Stats = async () => {
     <>
       {groupStatByDept && groupStatByDept.length > 0 && (
         <div className="m-5 md:m-10">
-          <div className="text-2xl text-center font-bold">
+          <div className="text-xl md:text-2xl text-center font-bold">
             Group stats on imported task
           </div>
           {groupStatByDept.map((groupStat, index) => (

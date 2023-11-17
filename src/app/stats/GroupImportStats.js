@@ -37,7 +37,7 @@ const GroupImportStats = ({ groupStat }) => {
         <div
           key={group.id}
           className={`
-           shadow-md rounded-md p-4 ${
+           shadow-md rounded-md p-2 md:p-4 ${
              group.taskImportedCount < importedThreshold
                ? "border-4 border-red-500"
                : ""
@@ -47,9 +47,9 @@ const GroupImportStats = ({ groupStat }) => {
             backgroundColor: `${generateRandomColor(group.department_id)}`,
           }}
         >
-          <div className="flex justify-center items-center gap-5">
-            <div className="text-2xl font-bold">{group.name}</div>
-            <div className="text-xl font-bold">{group.taskImportedCount}</div>
+          <div className="flex justify-center items-center gap-5 text-base md:text-xl font-bold">
+            <p>{group.name}</p>
+            <p>{group.taskImportedCount}</p>
           </div>
         </div>
       ))}
