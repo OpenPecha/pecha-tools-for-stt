@@ -112,10 +112,8 @@ const Sidebar = ({
               )}
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">
-                  {role === "TRANSCRIBER"
+                  {role === "TRANSCRIBER" || role === "REVIEWER"
                     ? lang.total_assigned
-                    : role === "REVIEWER"
-                    ? lang.total_submitted
                     : "Total Accepted"}
                 </label>
                 <span className=" text-right">{totalTaskCount}</span>

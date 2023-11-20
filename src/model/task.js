@@ -642,43 +642,40 @@ export const UserProgressStats = async (id, role, groupId) => {
   let totalTaskPassed = 0;
   try {
     completedTaskCount = await getCompletedTaskCount(id, role);
-    switch (role) {
-      case "TRANSCRIBER":
-        totalTaskCount = await getGroupTaskCount(groupId);
-        totalTaskPassed = await prisma.task.count({
-          where: {
+    totalTaskCount = await prisma.task.count({
+      where: {
+        OR: [
+          {
+            group_id: parseInt(groupId),
+            transcriber_id: parseInt(id),
+          },
+          {
+            group_id: parseInt(groupId),
+            reviewer_id: parseInt(id),
+          },
+          {
+            group_id: parseInt(groupId),
+            final_reviewer_id: parseInt(id),
+          },
+        ],
+      },
+    });
+    totalTaskPassed = await prisma.task.count({
+      where: {
+        OR: [
+          {
             group_id: parseInt(groupId),
             transcriber_id: parseInt(id),
             state: { in: ["accepted", "finalised"] },
           },
-        });
-        break;
-      case "REVIEWER":
-        totalTaskCount = await prisma.task.count({
-          where: {
-            group_id: parseInt(groupId),
-            state: { in: ["submitted", "accepted", "finalised"] },
-          },
-        });
-        totalTaskPassed = await prisma.task.count({
-          where: {
+          {
             group_id: parseInt(groupId),
             reviewer_id: parseInt(id),
             state: "finalised",
           },
-        });
-        break;
-      case "FINAL_REVIEWER":
-        totalTaskCount = await prisma.task.count({
-          where: {
-            group_id: parseInt(groupId),
-            state: { in: ["accepted", "finalised"] },
-          },
-        });
-        break;
-      default:
-        break;
-    }
+        ],
+      },
+    });
     //console.log("completedTaskCount", completedTaskCount, "totalTaskCount", totalTaskCount);
     return { completedTaskCount, totalTaskCount, totalTaskPassed };
   } catch (error) {
