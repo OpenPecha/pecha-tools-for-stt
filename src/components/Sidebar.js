@@ -87,19 +87,36 @@ const Sidebar = ({
                   max={totalTaskCount}
                 ></progress>
               </div>
-
-              <div className="flex text-right justify-between">
-                <label className="text-sm font-bold mb-2">
+              <div
+                className="tooltip tooltip-top flex text-right justify-between"
+                data-tip={
+                  role === "TRANSCRIBER"
+                    ? "No. of task submitted by you"
+                    : role === "REVIEWER"
+                    ? "No. of task reviewed by you"
+                    : "No. of task finalised by you"
+                }
+              >
+                <label className=" text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
                     ? lang.submitted
                     : role === "REVIEWER"
                     ? lang.reviewed
                     : lang.final_reviewed}
                 </label>
-                <span className=" text-right">{completedTaskCount}</span>
+                <span className="text-right">{completedTaskCount}</span>
               </div>
               {(role === "TRANSCRIBER" || role === "REVIEWER") && (
-                <div className="flex text-right justify-between">
+                <div
+                  className="tooltip tooltip-top flex text-right justify-between"
+                  data-tip={
+                    role === "TRANSCRIBER"
+                      ? "No. of task reviewed by reviewer"
+                      : role === "REVIEWER"
+                      ? "No. of task finalised by final reviewer"
+                      : ""
+                  }
+                >
                   <label className="text-sm font-bold mb-2">
                     {role === "TRANSCRIBER"
                       ? lang.reviewed
@@ -110,7 +127,14 @@ const Sidebar = ({
                   <span className=" text-right">{totalTaskPassed}</span>
                 </div>
               )}
-              <div className="flex text-right justify-between">
+              <div
+                className="tooltip tooltip-top flex text-right justify-between"
+                data-tip={
+                  role === "TRANSCRIBER" || role === "REVIEWER"
+                    ? "No. of task assigned to you"
+                    : "No. of task accepted"
+                }
+              >
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER" || role === "REVIEWER"
                     ? lang.total_assigned
