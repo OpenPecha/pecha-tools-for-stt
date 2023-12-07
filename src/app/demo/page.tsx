@@ -2,7 +2,6 @@ import React from "react";
 import DemoPage from "./DemoPage";
 import languagesObject from "../../../data/language";
 import prisma from "@/service/db";
-import AudioTranscript from "@/components/AudioTranscript";
 
 const Page = async () => {
   const language = languagesObject;

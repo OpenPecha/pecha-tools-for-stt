@@ -80,7 +80,7 @@ const DemoSidebar = ({
               <h3 className="uppercase font-bold mb-2">{lang.target}</h3>
               <div
                 className="tooltip tooltip-bottom w-full mt-2 mb-6"
-                data-tip={`${userHistory?.length}/${totalTaskCount}`}
+                data-tip={`${userHistory.length}/${totalTaskCount}`}
               >
                 <progress
                   className="progress progress-success"
@@ -88,8 +88,16 @@ const DemoSidebar = ({
                   max={totalTaskCount}
                 ></progress>
               </div>
-
-              <div className="flex text-right justify-between">
+              <div
+                className="tooltip tooltip-top flex text-right justify-between"
+                data-tip={
+                  role === "TRANSCRIBER"
+                    ? "No. of task submitted by you"
+                    : role === "REVIEWER"
+                    ? "No. of task reviewed by you"
+                    : "No. of task finalised by you"
+                }
+              >
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
                     ? lang.submitted
@@ -100,7 +108,16 @@ const DemoSidebar = ({
                 <span className=" text-right">{userHistory?.length}</span>
               </div>
               {(role === "TRANSCRIBER" || role === "REVIEWER") && (
-                <div className="flex text-right justify-between">
+                <div
+                  className="tooltip tooltip-top flex text-right justify-between"
+                  data-tip={
+                    role === "TRANSCRIBER"
+                      ? "No. of task reviewed by reviewer"
+                      : role === "REVIEWER"
+                      ? "No. of task finalised by final reviewer"
+                      : ""
+                  }
+                >
                   <label className="text-sm font-bold mb-2">
                     {role === "TRANSCRIBER"
                       ? lang.reviewed
@@ -111,7 +128,14 @@ const DemoSidebar = ({
                   <span className=" text-right">0</span>
                 </div>
               )}
-              <div className="flex text-right justify-between">
+              <div
+                className="tooltip tooltip-top flex text-right justify-between"
+                data-tip={
+                  role === "TRANSCRIBER" || role === "REVIEWER"
+                    ? "No. of task assigned to you"
+                    : "No. of task accepted"
+                }
+              >
                 <label className="text-sm font-bold mb-2">
                   {role === "TRANSCRIBER"
                     ? lang.total_assigned
@@ -119,7 +143,7 @@ const DemoSidebar = ({
                     ? lang.total_submitted
                     : "Total Accepted"}
                 </label>
-                <span className=" text-right">{totalTaskCount}</span>
+                <span className="text-right">{totalTaskCount}</span>
               </div>
             </section>
             <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
@@ -135,7 +159,7 @@ const DemoSidebar = ({
                 .map((task) => (
                   <div
                     key={task.id}
-                    className="my-4 cursor-pointer flex justify-between gap-1"
+                    className="py-4 cursor-pointer flex justify-between gap-1 items-center border-b-2 border-b-[#384451]"
                     onClick={() => handleHistoryClick(task)}
                   >
                     <p className="text-lg line-clamp-2">
@@ -151,7 +175,10 @@ const DemoSidebar = ({
                         ? task.final_transcript
                         : task.reviewed_transcript}
                     </p>
-                    <div>
+                    <div
+                      className="tooltip tooltip-left"
+                      data-tip={`${task.state}`}
+                    >
                       {(task.state === "submitted" ||
                         task.state === "accepted" ||
                         task.state === "finalised") && (
