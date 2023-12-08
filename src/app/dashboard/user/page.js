@@ -10,9 +10,7 @@ const User = async () => {
 
   return (
     <>
-      <div className="h-screen my-10">
-        <UserDashboard users={users} groups={groups} />
-      </div>
+      <UserDashboard users={users} groups={groups} />
     </>
   );
 };

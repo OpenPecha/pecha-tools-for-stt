@@ -3,7 +3,6 @@ import React from "react";
 import { calculatePay } from "@/lib/calculatePay";
 import { calculatePercent } from "@/lib/calculatePercent";
 const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
-
   const glideGreentoRed = (num1, num2) => {
     // Calculate the percentage
     const percentage = calculatePercent(num1, num2);
@@ -60,12 +59,9 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
 
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
-      <table className="table  ">
+      <table className="table">
         {/* head */}
-        <thead
-          className="text-gray-700 bg-gray-50
-          "
-        >
+        <thead className="text-sm uppercase">
           <tr>
             <th>Transcriber Name</th>
             <th>
@@ -88,24 +84,41 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
         </thead>
         <tbody>
           {usersStatistic?.map((user) => (
-            <tr key={user.id}>
+            <tr className="dark:text-slate-50"  key={user.id}>
               <td>
                 <Link href={`/report/user/${user.id}`}>{user.name}</Link>
               </td>
               <td>{user.noSubmitted}</td>
               <td>{user.noReviewed}</td>
-              <td className={`${glideRedtoGreen(user.noReviewed, user.noSubmitted)}`}>
+              <td
+                className={`${glideRedtoGreen(
+                  user.noReviewed,
+                  user.noSubmitted
+                )}`}
+              >
                 {calculatePercent(user.noReviewed, user.noSubmitted)}
               </td>
               <td>{user.submittedInMin}</td>
               <td>{user.reviewedInMin}</td>
-              <td className={`${glideRedtoGreen(user.reviewedInMin, user.submittedInMin)}`}>
+              <td
+                className={`${glideRedtoGreen(
+                  user.reviewedInMin,
+                  user.submittedInMin
+                )}`}
+              >
                 {calculatePercent(user.reviewedInMin, user.submittedInMin)}
               </td>
-              <td className={`${glideGreentoRed(user.noReviewedCorrected, user.noReviewed)}`}>
+              <td
+                className={`${glideGreentoRed(
+                  user.noReviewedCorrected,
+                  user.noReviewed
+                )}`}
+              >
                 {calculatePercent(user.noReviewedCorrected, user.noReviewed)}
               </td>
-              <td className={`${glideGreentoRed(user.cer, user.characterCount)}`}>
+              <td
+                className={`${glideGreentoRed(user.cer, user.characterCount)}`}
+              >
                 {calculatePercent(user.cer, user.characterCount)}
               </td>
               <td>{user.syllableCount}</td>
@@ -139,11 +152,17 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             </td>
             <td>
               <b>
-                {usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0).toFixed(2)}
+                {usersStatistic
+                  ?.reduce((a, b) => a + b.submittedInMin, 0)
+                  .toFixed(2)}
               </b>
             </td>
             <td>
-              <b>{usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0).toFixed(2)}</b>
+              <b>
+                {usersStatistic
+                  ?.reduce((a, b) => a + b.reviewedInMin, 0)
+                  .toFixed(2)}
+              </b>
             </td>
             <td>
               <b>
@@ -173,9 +192,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               </b>
             </td>
             <td>
-              <b>
-                {usersStatistic?.reduce((a, b) => a + b.syllableCount, 0)}
-              </b>
+              <b>{usersStatistic?.reduce((a, b) => a + b.syllableCount, 0)}</b>
             </td>
             <td>
               <b>

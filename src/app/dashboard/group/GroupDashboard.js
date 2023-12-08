@@ -29,7 +29,7 @@ const GroupDashboard = ({ groupList, departments }) => {
 
   return (
     <div>
-      <div className="sticky top-0 z-20 py-8 bg-white flex flex-col sm:flex-row justify-center items-center space-y-5 space-x-0 sm:space-y-0 sm:space-x-10">
+      <div className="my-10 flex justify-center">
         <DashboardBtn
           label="Create"
           icon={<AiOutlinePlus />}
@@ -38,38 +38,21 @@ const GroupDashboard = ({ groupList, departments }) => {
       </div>
       <div className="flex justify-center items-center my-10">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
-          <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <table className="table">
+            <thead className="text-xs md:text-base uppercase">
               <tr>
-                <th scope="col" className="px-6 py-3">
-                  Id
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Group name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Department name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  No. Users
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  No. Tasks
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
+                <th className="px-6 py-3">Id</th>
+                <th className="px-6 py-3">Group name</th>
+                <th className="px-6 py-3">Department name</th>
+                <th className="px-6 py-3">No. Users</th>
+                <th className="px-6 py-3">No. Tasks</th>
+                <th className="px-6 py-3">Action</th>
               </tr>
             </thead>
             <tbody>
               {groupList?.map((row) => (
-                <tr className="bg-white border-b" key={row.id}>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                  >
-                    {row.id}
-                  </th>
+                <tr className="text-sm md:text-base" key={row.id}>
+                  <th className="px-6 py-4">{row.id}</th>
                   <td className="px-6 py-4">{row.name}</td>
                   <td className="px-6 py-4">{row.Department?.name}</td>
                   <td className="px-6 py-4">{row._count.users || 0}</td>
@@ -77,14 +60,14 @@ const GroupDashboard = ({ groupList, departments }) => {
                   <td className="flex items-center px-6 py-4 space-x-3">
                     <a
                       href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="font-medium text-info hover:underline"
                       onClick={() => handleEditGroup(row)}
                     >
                       Edit
                     </a>
                     <a
                       href="#"
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      className="font-medium text-error hover:underline"
                       onClick={() => handleRemoveGroup(row)}
                     >
                       Remove

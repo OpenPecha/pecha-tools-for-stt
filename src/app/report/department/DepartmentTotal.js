@@ -15,10 +15,7 @@ const DepartmentTotal = ({ usersStatistic }) => {
     <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
       <table className="table  ">
         {/* head */}
-        <thead
-          className="text-gray-700 bg-gray-50
-          "
-        >
+        <thead className="text-sm uppercase">
           <tr>
             <th>Department Total</th>
             <th>

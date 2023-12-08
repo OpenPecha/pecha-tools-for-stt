@@ -5,17 +5,10 @@ import { getAllTask } from "@/model/task";
 
 const Task = async ({ searchParams }) => {
   const groups = await getAllGroup();
-  const tasks = await getAllTask();
 
   return (
     <>
-      <div className="overflow-y-hidden min-h-screen">
-        <TaskDashbooard
-          tasks={tasks}
-          groups={groups}
-          searchParams={searchParams}
-        />
-      </div>
+      <TaskDashbooard groups={groups} searchParams={searchParams} />
     </>
   );
 };
