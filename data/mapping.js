@@ -26,18 +26,7 @@ const mappingObj =
     "tthegchok1985@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_ga&session=tthegchok1985@gmail.com", department: "ocr" },
     "tenzintherchen154@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_ga&session=tenzintherchen154@gmail.com", department: "ocr" },
 
-    "ngawangsamten1989@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=ngawangsamten1989@gmail.com", department: "ocr" },
-    "shugtso@monlam.ai": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=shugtso@monlam.ai", department: "ocr" },
-    "dhondup995@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=dhondup995@gmail.com", department: "ocr" },
-    "dhekharwork123@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=dhekharwork123@gmail.com", department: "ocr" },
-    "khedup62@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=khedup62@gmail.com", department: "ocr" },
-    "thubsamtharchin1982@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=thubsamtharchin1982@gmail.com", department: "ocr" },
-    "nordhentsering57@gmail.com": { url: "https://convention-iframe.onrender.com/?base=line_to_text_gb&session=nordhentsering57@gmail.com", department: "ocr" },
-
-
     "Kungalhundup1959@gamil.com": { url: "https://work.pecha.tools/ltt_review_ga/?session=Kungalhundup1959@gamil.com", department: "ocr" },
-    "pemasungchuk@gmail.com": { url: "https://work.pecha.tools/ltt_review_gb/?session=pemasungchuk@gmail.com", department: "ocr" },
-
 
     "tsultrimloden1@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Corr1-review&session=tsultrimloden1@gmail.com", department: "ocr" },
     "sherabchokgyal321@gmail.com.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-review&session=sherabchokgyal321@gmail.com", department: "ocr" },
