@@ -2,7 +2,6 @@ const mappingObj =
 {
     "mm986@cam.ac.uk": { url: "https://convention-iframe.onrender.com/?base=Corr1-review&session=mm986@cam.ac.uk", department: "ocr" },
     "mariekemeelen@gmail.com": { url: "https://convention-iframe.onrender.com/?base=Manual1-review&session=mariekemeelen@gmail.com", department: "ocr" },
-    "tashitsering@esukhia.org": { url: "https://convention-iframe.onrender.com/?base=line_to_text_ga&session=tashitsering@esukhia.org", department: "ocr" },
     "tenkus47@gmail.com": { url: "https://stt.pecha.tools/?session=lhatsoyeshi@gmail.com", department: "stt" },
     
 
