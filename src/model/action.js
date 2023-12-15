@@ -27,7 +27,8 @@ export const getUserTask = async (username) => {
   const userData = await getUserDetails(username);
   if (userData === null) {
     return {
-      error: "No user found! Please try another with correct username.",
+      error:
+        "No user found. Please try again with the correct username or email..",
     };
   }
   // if user is found, get the task based on user role
