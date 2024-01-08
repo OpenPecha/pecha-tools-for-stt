@@ -4,6 +4,23 @@ import GroupImportStats from "./GroupImportStats";
 import TaskStats from "./TaskStats";
 
 const Stats = async () => {
+
+/*
+Prisma is getting too slow for this task, so let's do it in SQL instead:
+
+select count(*),
+    t.state,
+    g.name as group_name,
+    d.name as department_name
+from "Task" t
+    join "Group" g on t.group_id = g.id
+    join "Department" d on g.department_id = d.id
+group by d.id,
+    g.id,
+    t.state
+order by d.name,
+    g.name;
+*/
   const allGroup = await getAllGroup();
   const groupStatByDept = await getAllGroupTaskStats(allGroup);
 
