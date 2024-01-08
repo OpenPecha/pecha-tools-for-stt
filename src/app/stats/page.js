@@ -20,6 +20,17 @@ group by d.id,
     t.state
 order by d.name,
     g.name;
+
+SELECT count(*),
+         d.name AS department_name ,
+         g.name AS group_name
+FROM "Task" t
+JOIN "Group" g
+    ON g.id = t.group_id
+JOIN "Department" d
+    ON d.id = g.department_id
+WHERE t."state" = 'imported'
+GROUP BY  d.id, g.id;
 */
   const allGroup = await getAllGroup();
   const groupStatByDept = await getAllGroupTaskStats(allGroup);
