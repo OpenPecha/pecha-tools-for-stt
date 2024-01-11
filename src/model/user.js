@@ -215,6 +215,7 @@ export const generateUsersTaskReport = async (users, dates) => {
       id,
       name,
       noSubmitted: 0,
+      noReviewedBasedOnSubmitted: 0,
       noReviewed: 0,
       reviewedSecs: 0,
       submittedInMin: 0,
@@ -226,6 +227,13 @@ export const generateUsersTaskReport = async (users, dates) => {
     // get the number of tasks submitted by the user
     const taskSubmittedCount = await getUserSpecificTasksCount(id, dates);
     transcriberObj.noSubmitted = taskSubmittedCount;
+
+    const taskReviewedBasedOnSubmitted = await getTaskReviewedBasedOnSubmitted(
+      id,
+      dates
+    );
+    transcriberObj.noReviewedBasedOnSubmitted =
+      taskReviewedBasedOnSubmitted?.length;
 
     const submittedSecs = await getUserSubmittedSecs(id, dates);
     transcriberObj.submittedInMin = parseFloat((submittedSecs / 60).toFixed(2));
@@ -244,6 +252,31 @@ export const generateUsersTaskReport = async (users, dates) => {
     transcriberList.push(updatedTranscriberObj);
   }
   return transcriberList;
+};
+
+export const getTaskReviewedBasedOnSubmitted = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  let taskReviewedBasedOnSubmitted;
+  if (fromDate && toDate) {
+    taskReviewedBasedOnSubmitted = await prisma.task.findMany({
+      where: {
+        transcriber_id: parseInt(id),
+        state: { in: ["accepted", "finalised"] },
+        submitted_at: {
+          gte: new Date(fromDate).toISOString(),
+          lte: new Date(toDate).toISOString(),
+        },
+      },
+    });
+  } else {
+    taskReviewedBasedOnSubmitted = await prisma.task.findMany({
+      where: {
+        transcriber_id: parseInt(id),
+        state: { in: ["accepted", "finalised"] },
+      },
+    });
+  }
+  return taskReviewedBasedOnSubmitted;
 };
 
 // get the task statistics - task reviewed, reviewed secs, syllable count

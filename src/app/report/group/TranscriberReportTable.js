@@ -84,7 +84,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
         </thead>
         <tbody>
           {usersStatistic?.map((user) => (
-            <tr className="dark:text-slate-50"  key={user.id}>
+            <tr className="dark:text-slate-50" key={user.id}>
               <td>
                 <Link href={`/report/user/${user.id}`}>{user.name}</Link>
               </td>
@@ -92,11 +92,14 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <td>{user.noReviewed}</td>
               <td
                 className={`${glideRedtoGreen(
-                  user.noReviewed,
+                  user.noReviewedBasedOnSubmitted,
                   user.noSubmitted
                 )}`}
               >
-                {calculatePercent(user.noReviewed, user.noSubmitted)}
+                {calculatePercent(
+                  user.noReviewedBasedOnSubmitted,
+                  user.noSubmitted
+                )}
               </td>
               <td>{user.submittedInMin}</td>
               <td>{user.reviewedInMin}</td>
