@@ -148,7 +148,10 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             <td>
               <b>
                 {calculatePercent(
-                  usersStatistic?.reduce((a, b) => a + b.noReviewed, 0),
+                  usersStatistic?.reduce(
+                    (a, b) => a + b.noReviewedBasedOnSubmitted,
+                    0
+                  ),
                   usersStatistic?.reduce((a, b) => a + b.noSubmitted, 0)
                 )}
               </b>
