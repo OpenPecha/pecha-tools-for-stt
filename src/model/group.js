@@ -80,9 +80,18 @@ export const editGroup = async (id, formData) => {
 export const getAllGroupTaskStats = async (groupList) => {
   // make a array of diff list of group  with diff department_id
   const groupStatsList = [];
+  const taskStatsMain = await prisma.task.groupBy({
+    by: ["state", "group_id"],
+    _count: {
+      _all: true,
+    },
+  });
+  console.log("taskStatsMain:", taskStatsMain);
   for (let group of groupList) {
     const { id, name, department_id } = group;
     const departmentName = group.Department?.name;
+    const taskStatsCount = taskStatsMain.filter((task) => task.group_id === id);
+    console.log("importedTaskCount:", taskStatsCount);
     try {
       // get the count of tasks imported for each group
       const groupStats = {
@@ -90,42 +99,24 @@ export const getAllGroupTaskStats = async (groupList) => {
         name,
         department_id,
         departmentName,
-        taskImportedCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "imported",
-          },
-        }),
-        taskTranscribingCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "transcribing",
-          },
-        }),
-        taskSubmittedCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "submitted",
-          },
-        }),
-        taskAcceptedCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "accepted",
-          },
-        }),
-        taskFinishedCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "finalised",
-          },
-        }),
-        taskTrashedCount: await prisma.task.count({
-          where: {
-            group_id: id,
-            state: "trashed",
-          },
-        }),
+        taskImportedCount:
+          taskStatsCount.find((stats) => stats.state === "imported")?._count
+            ?._all ?? 0,
+        taskTranscribingCount:
+          taskStatsCount.find((stats) => stats.state === "transcribing")?._count
+            ?._all ?? 0,
+        taskSubmittedCount:
+          taskStatsCount.find((stats) => stats.state === "submitted")?._count
+            ?._all ?? 0,
+        taskAcceptedCount:
+          taskStatsCount.find((stats) => stats.state === "accepted")?._count
+            ?._all ?? 0,
+        taskFinishedCount:
+          taskStatsCount.find((stats) => stats.state === "finished")?._count
+            ?._all ?? 0,
+        taskTrashedCount:
+          taskStatsCount.find((stats) => stats.state === "trashed")?._count
+            ?._all ?? 0,
       };
       groupStatsList.push(groupStats);
     } catch (error) {
