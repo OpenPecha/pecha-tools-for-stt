@@ -136,9 +136,7 @@ const Sidebar = ({
                 }
               >
                 <label className="text-sm font-bold mb-2">
-                  {role === "TRANSCRIBER" || role === "REVIEWER"
-                    ? lang.total_assigned
-                    : "Total Accepted"}
+                  {lang.total_assigned}
                 </label>
                 <span className=" text-right">{totalTaskCount}</span>
               </div>
