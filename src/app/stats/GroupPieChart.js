@@ -12,7 +12,7 @@ const GroupPieChart = ({ group }) => {
     taskTranscribingCount,
     taskSubmittedCount,
     taskAcceptedCount,
-    taskFinishedCount,
+    taskFinalisedCount,
     taskTrashedCount,
   } = group;
   const data = {
@@ -32,7 +32,7 @@ const GroupPieChart = ({ group }) => {
           taskTranscribingCount,
           taskSubmittedCount,
           taskAcceptedCount,
-          taskFinishedCount,
+          taskFinalisedCount,
           taskTrashedCount,
         ],
         backgroundColor: ["grey", "blue", "yellow", "green", "purple", "red"],
