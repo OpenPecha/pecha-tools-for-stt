@@ -86,12 +86,12 @@ export const getAllGroupTaskStats = async (groupList) => {
       _all: true,
     },
   });
-  console.log("taskStatsMain:", taskStatsMain);
+  // console.log("taskStatsMain:", taskStatsMain);
   for (let group of groupList) {
     const { id, name, department_id } = group;
     const departmentName = group.Department?.name;
     const taskStatsCount = taskStatsMain.filter((task) => task.group_id === id);
-    console.log("importedTaskCount:", taskStatsCount);
+    // console.log("importedTaskCount:", taskStatsCount);
     try {
       // get the count of tasks imported for each group
       const groupStats = {
@@ -111,8 +111,8 @@ export const getAllGroupTaskStats = async (groupList) => {
         taskAcceptedCount:
           taskStatsCount.find((stats) => stats.state === "accepted")?._count
             ?._all ?? 0,
-        taskFinishedCount:
-          taskStatsCount.find((stats) => stats.state === "finished")?._count
+        taskFinalisedCount:
+          taskStatsCount.find((stats) => stats.state === "finalised")?._count
             ?._all ?? 0,
         taskTrashedCount:
           taskStatsCount.find((stats) => stats.state === "trashed")?._count
