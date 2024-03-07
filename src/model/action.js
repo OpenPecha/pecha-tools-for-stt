@@ -38,7 +38,7 @@ export const getUserTask = async (username) => {
     // assign some tasks for user when got no task to work on
     userTasks = await assignTasks(groupId, userId, role);
   }
-  const userHistory = await getUserHistory(userId);
+  const userHistory = await getUserHistory(userId, groupId);
   return { userTasks, userData, userHistory };
 };
 
@@ -501,7 +501,7 @@ export const revertTaskState = async (id, state) => {
 };
 
 // get all the history of a user based on userId
-export const getUserHistory = async (userId) => {
+export const getUserHistory = async (userId, groupId) => {
   try {
     const userHistory = await prisma.Task.findMany({
       where: {
@@ -509,14 +509,17 @@ export const getUserHistory = async (userId) => {
           {
             transcriber_id: userId,
             state: { in: ["submitted", "trashed"] },
+            group_id: groupId,
           },
           {
             reviewer_id: userId,
             state: { in: ["accepted", "trashed"] },
+            group_id: groupId,
           },
           {
             final_reviewer_id: userId,
             state: "finalised",
+            group_id: groupId,
           },
         ],
       },

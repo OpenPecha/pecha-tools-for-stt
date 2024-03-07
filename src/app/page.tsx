@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUserHistory, getUserTask } from "../model/action";
+import { getUserTask } from "../model/action";
 import AudioTranscript from "@/components/AudioTranscript";
 import RightSidebar from "@/components/RightSidebar";
 import languagesObject from "../../data/language";
