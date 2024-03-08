@@ -69,10 +69,14 @@ const UserReportTable = ({
               {secretAccess && <th>Revert State</th>}
               <th>Transcriber</th>
               <th>Reviewer</th>
+              <th>Final Reviewer</th>
               <th>Submitted at</th>
               <th>Reviewed at</th>
               <th>File name</th>
-              <th onClick={sortAudioDutation} className="flex flex-row items-center gap-1 cursor-pointer">
+              <th
+                onClick={sortAudioDutation}
+                className="flex flex-row items-center gap-1 cursor-pointer"
+              >
                 Audio duration
                 {countRef.current % 2 === 0 ? (
                   <FaLongArrowAltDown />
@@ -129,9 +133,10 @@ const UserReportTable = ({
                   </td>
                 )}
                 <td>
-                  {task.transcriber !== null ? task.transcriber?.name : ""}
+                  <td>{task.transcriber?.name || ""}</td>
                 </td>
-                <td>{task.reviewer !== null ? task.reviewer?.name : ""}</td>
+                <td>{task.reviewer?.name || ""}</td>
+                <td>{task.final_reviewer?.name || ""}</td>
                 <td>
                   {task.submitted_at !== null
                     ? formattedDate(task?.submitted_at)

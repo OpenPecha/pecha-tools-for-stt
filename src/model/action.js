@@ -528,7 +528,6 @@ export const getUserHistory = async (userId, groupId) => {
       },
       take: 20,
     });
-    revalidatePath("/");
     return userHistory;
   } catch (error) {
     //console.log("Error getting user history", error);
