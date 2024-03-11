@@ -15,6 +15,7 @@ const UserReport = ({ searchParams, id, users }) => {
   const [secretAccess, setSecretAccess] = useState(false);
   const [dates, setDates] = useState({ from: "", to: "" });
   const [transcript, setTranscript] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const debouncedSearchTerm = useDebounce(transcript, 1000);
@@ -35,19 +36,27 @@ const UserReport = ({ searchParams, id, users }) => {
   const end = skip + limit;
 
   useEffect(() => {
+    setIsLoading(true); // Start loading
     async function getUserReportByGroup() {
-      allUserSpecificTasks.current = await getUserSpecificTasks(
-        selectedOption,
-        limit,
-        skip,
-        dates
-      );
-      const totalUserSpecificTasks = await getUserSpecificTasksCount(
-        selectedOption,
-        dates
-      );
-      setUserTaskRecord(allUserSpecificTasks.current);
-      setTotalTasks(totalUserSpecificTasks);
+      try {
+        allUserSpecificTasks.current = await getUserSpecificTasks(
+          selectedOption,
+          limit,
+          skip,
+          dates
+        );
+        const totalUserSpecificTasks = await getUserSpecificTasksCount(
+          selectedOption,
+          dates
+        );
+        setUserTaskRecord(allUserSpecificTasks.current); // Update state with the fetched data
+        setTotalTasks(totalUserSpecificTasks); // Update state with the total count
+      } catch (error) {
+        console.error("Failed to fetch user report by group:", error);
+        // Optionally, handle the error state in your UI as well
+      } finally {
+        setIsLoading(false); // End loading regardless of try/catch outcome
+      }
     }
     getUserReportByGroup();
   }, [selectedOption, skip, limit, dates]);
@@ -91,7 +100,7 @@ const UserReport = ({ searchParams, id, users }) => {
   }, [debouncedSearchTerm]);
 
   return (
-    <>
+    <div className="h-full">
       <form className="sticky top-0 z-20 p-4 gap-4 bg-white flex flex-col md:flex-row justify-center md:items-end">
         <Select
           title="user_id"
@@ -134,22 +143,30 @@ const UserReport = ({ searchParams, id, users }) => {
         </div>
       </form>
       <div className="flex flex-col justify-center items-center my-10">
-        <UserReportTable
-          userTaskRecord={userTaskRecord}
-          secretAccess={secretAccess}
-          setUserTaskRecord={setUserTaskRecord}
-        />
-        <PaginationControls
-          page={page}
-          per_page={per_page}
-          hasNextPage={end < totalTasksCount}
-          hasPrevPage={skip > 0}
-          pageCount={pageCount}
-          isReport={isReport}
-          setTranscript={setTranscript}
-        />
+        {isLoading ? (
+          <div className="text-center mt-10">
+            <span className="loading loading-spinner text-success text-center"></span>
+          </div>
+        ) : (
+          <>
+            <UserReportTable
+              userTaskRecord={userTaskRecord}
+              secretAccess={secretAccess}
+              setUserTaskRecord={setUserTaskRecord}
+            />
+            <PaginationControls
+              page={page}
+              per_page={per_page}
+              hasNextPage={end < totalTasksCount}
+              hasPrevPage={skip > 0}
+              pageCount={pageCount}
+              isReport={isReport}
+              setTranscript={setTranscript}
+            />
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

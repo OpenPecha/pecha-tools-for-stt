@@ -58,7 +58,7 @@ const UserReportTable = ({
 
   return (
     <>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
+      <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[70vh]">
         <table className="table table-auto table-pin-rows">
           {/* head */}
           <thead className="text-gray-700 bg-gray-50">
