@@ -194,64 +194,53 @@ export const getUsersByGroup = async (groupId) => {
 };
 
 export const generateUserReportByGroup = async (groupId, dates) => {
-  //console.log("generateUserReportByGroup called with group id and dates", groupId, dates);
   try {
     const users = await getUsersByGroup(groupId);
-    const usersStatistic = await generateUsersTaskReport(users, dates);
-    //console.log("usersStatistic :::", usersStatistic);
+    // if user is not found, return empty array
+    if (!users) {
+      return [];
+    }
+    const usersStatistic = await Promise.all(
+      users.map((user) => generateUsersTaskReport(user, dates))
+    );
     return usersStatistic;
   } catch (error) {
-    console.error("Error getting users by group:", error);
-    throw new Error(error);
+    console.error("Error generating transcriber report by group:", error);
+    throw new Error("Failed to generate transcriber report.");
   }
 };
 
-export const generateUsersTaskReport = async (users, dates) => {
-  const transcriberList = [];
+export const generateUsersTaskReport = async (user, dates) => {
+  const { id: userId, name } = user;
+  const [submittedTaskCount, submittedSecs, userTasks, reviewedTaskCount] =
+    await Promise.all([
+      getUserSpecificTasksCount(userId, dates),
+      getUserSubmittedSecs(userId, dates),
+      getTranscriberTaskList(userId, dates),
+      getTaskReviewedBasedOnSubmitted(userId, dates),
+    ]);
 
-  for (const user of users) {
-    const { id, name } = user;
-    const transcriberObj = {
-      id,
-      name,
-      noSubmitted: 0,
-      noReviewedBasedOnSubmitted: 0,
-      noReviewed: 0,
-      reviewedSecs: 0,
-      submittedInMin: 0,
-      reviewedInMin: 0,
-      syllableCount: 0,
-      noReviewedCorrected: 0,
-    };
+  const transcriberObj = {
+    id: userId,
+    name,
+    noSubmitted: submittedTaskCount,
+    noReviewedBasedOnSubmitted: reviewedTaskCount?.length || 0,
+    noReviewed: 0,
+    reviewedSecs: 0,
+    submittedInMin: parseFloat((submittedSecs / 60).toFixed(2)),
+    reviewedInMin: 0,
+    syllableCount: 0,
+    noReviewedCorrected: 0,
+    characterCount: 0,
+    cer: 0,
+    totalCer: 0,
+  };
 
-    // get the number of tasks submitted by the user
-    const taskSubmittedCount = await getUserSpecificTasksCount(id, dates);
-    transcriberObj.noSubmitted = taskSubmittedCount;
-
-    const taskReviewedBasedOnSubmitted = await getTaskReviewedBasedOnSubmitted(
-      id,
-      dates
-    );
-    transcriberObj.noReviewedBasedOnSubmitted =
-      taskReviewedBasedOnSubmitted?.length;
-
-    const submittedSecs = await getUserSubmittedSecs(id, dates);
-    transcriberObj.submittedInMin = parseFloat((submittedSecs / 60).toFixed(2));
-
-    // get the list of tasks by the user with selected fields
-    const userTasks = await getTranscriberTaskList(id, dates);
-
-    const updatedTranscriberObj = await UserTaskReport(
-      transcriberObj,
-      userTasks
-    );
-    updatedTranscriberObj.reviewedInMin = parseFloat(
-      (updatedTranscriberObj.reviewedSecs / 60).toFixed(2)
-    );
-
-    transcriberList.push(updatedTranscriberObj);
-  }
-  return transcriberList;
+  const updatedTranscriberObj = await UserTaskReport(transcriberObj, userTasks);
+  updatedTranscriberObj.reviewedInMin = parseFloat(
+    (updatedTranscriberObj.reviewedSecs / 60).toFixed(2)
+  );
+  return updatedTranscriberObj;
 };
 
 export const getTaskReviewedBasedOnSubmitted = async (id, dates) => {
@@ -281,34 +270,26 @@ export const getTaskReviewedBasedOnSubmitted = async (id, dates) => {
 
 // get the task statistics - task reviewed, reviewed secs, syllable count
 export const UserTaskReport = (transcriberObj, userTasks) => {
-  const userTaskSummary = userTasks.reduce(
-    (acc, task) => {
-      if (task.state === "accepted" || task.state === "finalised") {
-        acc.noReviewed++;
-        acc.reviewedSecs = acc.reviewedSecs + task.audio_duration;
-        const syllableCount = splitIntoSyllables(
-          task.reviewed_transcript
-        ).length;
-        acc.syllableCount = acc.syllableCount + syllableCount;
-        acc.characterCount =
-          acc.characterCount + (task.transcript ? task.transcript.length : 0);
-        acc.cer += levenshtein.get(task.transcript, task.reviewed_transcript);
+  const userTaskSummary = userTasks.reduce((acc, task) => {
+    if (["accepted", "finalised"].includes(task.state)) {
+      acc.noReviewed++;
+      acc.reviewedSecs += task.audio_duration || 0;
+      const syllableCount = task.reviewed_transcript
+        ? splitIntoSyllables(task.reviewed_transcript).length
+        : 0;
+      acc.syllableCount += syllableCount;
+      acc.characterCount += task.transcript ? task.transcript.length : 0;
+      // Ensure both transcripts are available before calculating CER
+      if (task.transcript && task.reviewed_transcript) {
+        const cer = levenshtein.get(task.transcript, task.reviewed_transcript);
+        acc.totalCer += cer; // Add CER for each task to total
       }
-      if (task.transcriber_is_correct === false) {
-        acc.noReviewedCorrected++;
-      }
-      return acc;
-    },
-    {
-      ...transcriberObj,
-      noReviewed: 0,
-      reviewedSecs: 0,
-      syllableCount: 0,
-      noReviewedCorrected: 0,
-      characterCount: 0,
-      cer: 0,
     }
-  );
+    if (task.transcriber_is_correct === false) {
+      acc.noReviewedCorrected++;
+    }
+    return acc;
+  }, transcriberObj);
   return userTaskSummary;
 };
 
@@ -337,57 +318,36 @@ export const reviewerOfGroup = async (groupId) => {
 
 // for all the reviewers of a group retun the task statistics - task reviewed, task accepted, task finalised
 export const generateReviewerReportbyGroup = async (groupId, dates) => {
-  //console.log("generateReviewerReportbyGroup called with group id and dates", groupId, dates);
   try {
     const reviewers = await reviewerOfGroup(groupId);
-    const usersReport = generateReviewerTaskReport(reviewers, dates);
-    return usersReport;
+    // const usersStatistic = await Promise.all(
+    //   users.map((user) => generateUsersTaskReport(user, dates))
+    // );
+    const reviewersReport = await Promise.all(
+      reviewers.map((reviewer) => generateReviewerTaskReport(reviewer, dates))
+    );
+    return reviewersReport;
   } catch (error) {
     console.error("Error getting users by group:", error);
     throw new Error(error);
   }
 };
 
-export const generateReviewerTaskReport = async (reviewers, dates) => {
-  const reviewerList = [];
+export const generateReviewerTaskReport = async (reviewer, dates) => {
+  const { id, name } = reviewer;
 
-  for (const reviewer of reviewers) {
-    const { id, name } = reviewer;
+  const reviewerObj = {
+    id,
+    name,
+    noReviewed: 0,
+    noAccepted: 0,
+    noFinalised: 0,
+    reviewedSecs: 0,
+  };
 
-    const reviewerObj = {
-      id,
-      name,
-      noReviewed: 0,
-      noAccepted: 0,
-      noFinalised: 0,
-      reviewedSecs: 0,
-    };
+  const updatedReviwerObj = await getReviewerTaskCount(id, dates, reviewerObj);
 
-    // get the list of tasks by the user with selected fields
-    const reviewerTasks = await getReviewerTaskList(id, dates);
-    const reviewedInSec = getReviewedInSec(reviewerTasks);
-    //console.log("reviewedInSec", reviewedInSec);
-    reviewerObj.reviewedSecs = reviewedInSec;
-
-    const updatedReviwerObj = await getReviewerTaskCount(
-      id,
-      dates,
-      reviewerObj
-    );
-    reviewerList.push(updatedReviwerObj);
-  }
-  //console.log("Generated Reviewer Task Statistics Report:", reviewerList);
-  return reviewerList;
-};
-
-const getReviewedInSec = (reviewerTasks) => {
-  const reviewedInSec = reviewerTasks.reduce((acc, task) => {
-    if (task.state === "accepted" || task.state === "finalised") {
-      acc = acc + task.audio_duration;
-    }
-    return acc;
-  }, 0);
-  return reviewedInSec;
+  return updatedReviwerObj;
 };
 
 // for all the final reviewers of a group retun the task statistics - task finalised, finalised mintues

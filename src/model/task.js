@@ -232,13 +232,18 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
 
   try {
     // Count all reviewed tasks (either accepted or finalised)
-    reviewerObj.noReviewed = await prisma.task.count({
+    const reviewedStats = await prisma.task.aggregate({
       where: {
         ...baseWhere,
         state: { in: ["accepted", "finalised"] },
       },
+      _count: true,
+      _sum: {
+        audio_duration: true,
+      },
     });
-
+    reviewerObj.noReviewed = reviewedStats._count || 0;
+    reviewerObj.reviewedSecs = reviewedStats._sum.audio_duration || 0;
     // Count tasks in accepted state
     reviewerObj.noAccepted = await prisma.task.count({
       where: {
@@ -341,7 +346,6 @@ export const getReviewerTaskList = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   try {
     if (fromDate && toDate) {
-      //console.log("getReviewerTaskList with both date are present", fromDate, toDate);
       const filteredTasks = await prisma.task.findMany({
         where: {
           reviewer_id: id,
