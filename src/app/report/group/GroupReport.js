@@ -17,33 +17,41 @@ const GroupReport = ({ groups }) => {
   const [finalReviewersStatistic, setFinalReviewersStatistic] = useState([]);
   const [selectGroup, setSelectGroup] = useState("");
   const [dates, setDates] = useState({ from: "", to: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (selectGroup) {
-      async function getUserReportByGroup() {
-        const usersOfGroup = await generateUserReportByGroup(
-          selectGroup,
-          dates
-        );
-        setUsersStatistic(usersOfGroup);
+      setIsLoading(true); // Start loading
+      async function fetchData() {
+        try {
+          const usersPromise = generateUserReportByGroup(selectGroup, dates);
+          const reviewersPromise = generateReviewerReportbyGroup(
+            selectGroup,
+            dates
+          );
+          const finalReviewersPromise = generateFinalReviewerReportbyGroup(
+            selectGroup,
+            dates
+          );
+
+          // Use Promise.all to wait for all promises to resolve
+          const [usersOfGroup, reviewersOfGroup, finalReviewersOfGroup] =
+            await Promise.all([
+              usersPromise,
+              reviewersPromise,
+              finalReviewersPromise,
+            ]);
+
+          setUsersStatistic(usersOfGroup);
+          setReviewersStatistic(reviewersOfGroup);
+          setFinalReviewersStatistic(finalReviewersOfGroup);
+        } catch (error) {
+          console.error("Error fetching group reports:", error);
+        } finally {
+          setIsLoading(false); // End loading
+        }
       }
-      async function getReviewerReportByGroup() {
-        const reviewersOfGroup = await generateReviewerReportbyGroup(
-          selectGroup,
-          dates
-        );
-        setReviewersStatistic(reviewersOfGroup);
-      }
-      async function getFinalReviewerReportByGroup() {
-        const finalReviewersOfGroup = await generateFinalReviewerReportbyGroup(
-          selectGroup,
-          dates
-        );
-        setFinalReviewersStatistic(finalReviewersOfGroup);
-      }
-      getFinalReviewerReportByGroup();
-      getReviewerReportByGroup();
-      getUserReportByGroup();
+      fetchData();
     }
   }, [selectGroup, dates]);
 
@@ -79,9 +87,7 @@ const GroupReport = ({ groups }) => {
         </div>
       </form>
       <div className="flex flex-col gap-10 justify-center items-center mt-10">
-        {usersStatistic?.length === 0 &&
-        reviewersStatistic?.length === 0 &&
-        selectGroup ? (
+        {isLoading ? (
           <div className="text-center mt-10">
             <span className="loading loading-spinner text-success text-center"></span>
           </div>

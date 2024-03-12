@@ -2,15 +2,12 @@ import React from "react";
 import { calculatePay } from "@/lib/calculatePay";
 import { calculatePercent } from "@/lib/calculatePercent";
 const DepartmentTotal = ({ usersStatistic }) => {
-  console.log(usersStatistic);
-
   const allUsersStatistic = [];
 
   for (let key in usersStatistic) {
     allUsersStatistic.push(...usersStatistic[key]);
   }
 
-  console.log(allUsersStatistic);
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg w-11/12 md:w-4/5 max-h-[80vh]">
       <table className="table  ">

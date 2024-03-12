@@ -13,6 +13,7 @@ import DepartmentTotal from "./DepartmentTotal";
 import FinalReviewerTable from "../group/FinalReviewerTable";
 
 const DepartmentReport = ({ departments }) => {
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const [usersStatistic, setUsersStatistic] = useState({});
   const [reviewersStatistic, setReviewersStatistic] = useState({});
   const [finalReviewersStatistic, setFinalReviewersStatistic] = useState({});
@@ -35,39 +36,64 @@ const DepartmentReport = ({ departments }) => {
   }
 
   useEffect(() => {
-    if (selectDepartment) {
-      async function getUserReportByGroup() {
-        for (let group of getGroupByDepartmentId(selectDepartment)) {
-          const usersOfGroup = await generateUserReportByGroup(group.id, dates);
-          setUsersStatistic((prev) => ({ ...prev, [group.id]: usersOfGroup }));
-        }
-      }
+    async function fetchTasks(groups) {
+      try {
+        const userReports = groups.map((group) =>
+          generateUserReportByGroup(group.id, dates)
+        );
+        const reviewerReports = groups.map((group) =>
+          generateReviewerReportbyGroup(group.id, dates)
+        );
+        const finalReviewerReports = groups.map((group) =>
+          generateFinalReviewerReportbyGroup(group.id, dates)
+        );
 
-      async function getReviewerReportByGroup() {
-        for (let group of getGroupByDepartmentId(selectDepartment)) {
-          const reviewersOfGroup = await generateReviewerReportbyGroup(
-            group.id,
-            dates
-          );
+        // Wait for all promises from all groups to resolve
+        const allUserReports = await Promise.all(userReports);
+        const allReviewerReports = await Promise.all(reviewerReports);
+        const allFinalReviewerReports = await Promise.all(finalReviewerReports);
+
+        // Combine the reports into their respective states
+        groups.forEach((group, index) => {
+          setUsersStatistic((prev) => ({
+            ...prev,
+            [group.id]: allUserReports[index],
+          }));
           setReviewersStatistic((prev) => ({
             ...prev,
-            [group.id]: reviewersOfGroup,
+            [group.id]: allReviewerReports[index],
           }));
-        }
-      }
-      async function getFinalReviewerReportByGroup() {
-        for (let group of getGroupByDepartmentId(selectDepartment)) {
-          const finalReviewersOfGroup =
-            await generateFinalReviewerReportbyGroup(group.id, dates);
           setFinalReviewersStatistic((prev) => ({
             ...prev,
-            [group.id]: finalReviewersOfGroup,
+            [group.id]: allFinalReviewerReports[index],
           }));
-        }
+        });
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      } finally {
+        setIsLoading(false); // Ensure loading is false after all operations
       }
-      getFinalReviewerReportByGroup();
-      getUserReportByGroup();
-      getReviewerReportByGroup();
+    }
+
+    if (selectDepartment) {
+      setIsLoading(true); // Start loading before any operation
+
+      const groups = getGroupByDepartmentId(selectDepartment);
+      if (groups.length > 0) {
+        fetchTasks(groups);
+      } else {
+        // Handle the case when the selected department has no groups
+        setIsLoading(false); // Still need to stop loading
+        setUsersStatistic({});
+        setReviewersStatistic({});
+        setFinalReviewersStatistic({});
+      }
+    } else {
+      // Reset statistics and loading state if no department is selected
+      setIsLoading(false);
+      setUsersStatistic({});
+      setReviewersStatistic({});
+      setFinalReviewersStatistic({});
     }
   }, [selectDepartment, dates]);
 
@@ -97,33 +123,29 @@ const DepartmentReport = ({ departments }) => {
         </div>
       </form>
       <div className="w-full">
-        {isEmpty(usersStatistic) &&
-        isEmpty(reviewersStatistic) &&
-        selectDepartment !== "" ? (
+        {isLoading ? (
           <div className="text-center mt-10">
             <span className="loading loading-spinner text-success text-center"></span>
           </div>
         ) : (
           <>
             {getGroupByDepartmentId(selectDepartment).map((group) => (
-              <>
-                <div
-                  key={group.id}
-                  className="flex flex-col gap-10 justify-center items-center my-8"
-                >
-                  <h1>{group.name}</h1>
-                  <TranscriberReportTable
-                    usersStatistic={usersStatistic[group.id]}
-                    selectGroup={group.id}
-                  />
-                  <ReviewerReportTable
-                    reviewersStatistic={reviewersStatistic[group.id]}
-                  />
-                  <FinalReviewerTable
-                    finalReviewersStatistic={finalReviewersStatistic[group.id]}
-                  />
-                </div>
-              </>
+              <div
+                key={group.id}
+                className="flex flex-col gap-10 justify-center items-center my-8"
+              >
+                <h1>{group.name}</h1>
+                <TranscriberReportTable
+                  usersStatistic={usersStatistic[group.id]}
+                  selectGroup={group.id}
+                />
+                <ReviewerReportTable
+                  reviewersStatistic={reviewersStatistic[group.id]}
+                />
+                <FinalReviewerTable
+                  finalReviewersStatistic={finalReviewersStatistic[group.id]}
+                />
+              </div>
             ))}
             {!isEmpty(usersStatistic) && (
               <div className="flex justify-center items-center my-8">
