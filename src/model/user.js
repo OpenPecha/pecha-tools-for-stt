@@ -230,7 +230,7 @@ export const generateUsersTaskReport = async (user, dates) => {
     submittedInMin: parseFloat((submittedSecs / 60).toFixed(2)),
     reviewedInMin: 0,
     syllableCount: 0,
-    noReviewedCorrected: 0,
+    noTranscriptCorrected: 0,
     characterCount: 0,
     cer: 0,
     totalCer: 0,
@@ -286,7 +286,7 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       }
     }
     if (task.transcriber_is_correct === false) {
-      acc.noReviewedCorrected++;
+      acc.noTranscriptCorrected++;
     }
     return acc;
   }, transcriberObj);
@@ -320,12 +320,10 @@ export const reviewerOfGroup = async (groupId) => {
 export const generateReviewerReportbyGroup = async (groupId, dates) => {
   try {
     const reviewers = await reviewerOfGroup(groupId);
-    // const usersStatistic = await Promise.all(
-    //   users.map((user) => generateUsersTaskReport(user, dates))
-    // );
     const reviewersReport = await Promise.all(
       reviewers.map((reviewer) => generateReviewerTaskReport(reviewer, dates))
     );
+
     return reviewersReport;
   } catch (error) {
     console.error("Error getting users by group:", error);
@@ -336,23 +334,55 @@ export const generateReviewerReportbyGroup = async (groupId, dates) => {
 export const generateReviewerTaskReport = async (reviewer, dates) => {
   const { id, name } = reviewer;
 
+  const [reviewerStats, reviewerTasks] = await Promise.all([
+    getReviewerTaskCount(id, dates),
+    getReviewerTaskList(id, dates),
+  ]);
+
   const reviewerObj = {
     id,
     name,
-    noReviewed: 0,
-    noAccepted: 0,
-    noFinalised: 0,
-    reviewedSecs: 0,
+    noReviewed: reviewerStats.noReviewed,
+    noAccepted: reviewerStats.noAccepted,
+    noFinalised: reviewerStats.noFinalised,
+    reviewedSecs: reviewerStats.reviewedSecs,
+    noReviewedTranscriptCorrected: 0,
+    cer: 0,
+    totalCer: 0,
+    characterCount: 0,
   };
 
-  const updatedReviwerObj = await getReviewerTaskCount(id, dates, reviewerObj);
+  // const updatedReviwerObj = await getReviewerTaskCount(id, dates, reviewerObj);
+  const updatedReviewerObj = await moreReviewerStats(
+    reviewerObj,
+    reviewerTasks
+  );
 
-  return updatedReviwerObj;
+  return updatedReviewerObj;
+};
+
+export const moreReviewerStats = (reviewerObj, reviewerTasks) => {
+  const reviewerTaskSummary = reviewerTasks.reduce((acc, task) => {
+    if (task.reviewed_transcript && task.final_transcript) {
+      if (task.reviewed_transcript !== task.final_transcript) {
+        acc.noReviewedTranscriptCorrected++;
+      }
+      acc.characterCount += task.reviewed_transcript
+        ? task.reviewed_transcript.length
+        : 0;
+      const cer = levenshtein.get(
+        task.reviewed_transcript,
+        task.final_transcript
+      );
+      acc.totalCer += cer; // Add CER for each task to total
+    }
+    return acc;
+  }, reviewerObj);
+  return reviewerTaskSummary;
 };
 
 // for all the final reviewers of a group retun the task statistics - task finalised, finalised mintues
 export const generateFinalReviewerReportbyGroup = async (groupId, dates) => {
-  //console.log("generateFinalReviewerReportbyGroup called with group id and dates", groupId, dates);
   try {
     const finalReviewers = await finalReviewerOfGroup(groupId);
     const usersReport = generateFinalReviewerTaskReport(finalReviewers, dates);
@@ -397,7 +427,6 @@ export const generateFinalReviewerTaskReport = async (
     // get the list of tasks by the user with selected fields
     const finalReviewerTasks = await getFinalReviewerTaskList(id, dates);
     const finalisedInSec = getFinalisedInSec(finalReviewerTasks);
-    //console.log("finalisedInSec", finalisedInSec);
     finalReviewerObj.finalisedSecs = finalisedInSec;
 
     const updatedFinalReviwerObj = await getFinalReviewerTaskCount(
@@ -407,7 +436,6 @@ export const generateFinalReviewerTaskReport = async (
     );
     finalReviewerList.push(updatedFinalReviwerObj);
   }
-  //console.log("Generated Final Reviewer Task Statistics Report:", finalReviewerList);
   return finalReviewerList;
 };
 

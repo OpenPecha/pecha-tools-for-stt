@@ -242,10 +242,10 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
         audio_duration: true,
       },
     });
-    reviewerObj.noReviewed = reviewedStats._count || 0;
-    reviewerObj.reviewedSecs = reviewedStats._sum.audio_duration || 0;
+    const noReviewed = reviewedStats._count || 0;
+    const reviewedSecs = reviewedStats._sum.audio_duration || 0;
     // Count tasks in accepted state
-    reviewerObj.noAccepted = await prisma.task.count({
+    const noAccepted = await prisma.task.count({
       where: {
         ...baseWhere,
         state: "accepted",
@@ -253,14 +253,19 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
     });
 
     // Count tasks in finalised state
-    reviewerObj.noFinalised = await prisma.task.count({
+    const noFinalised = await prisma.task.count({
       where: {
         ...baseWhere,
         state: "finalised",
       },
     });
 
-    return reviewerObj;
+    return {
+      noReviewed,
+      noAccepted,
+      noFinalised,
+      reviewedSecs,
+    };
   } catch (error) {
     console.error(`Error fetching reviewer task counts:`, error);
     throw new Error(`Failed to fetch reviewer task counts. ${error.message}`);
@@ -355,8 +360,9 @@ export const getReviewerTaskList = async (id, dates) => {
           },
         },
         select: {
-          audio_duration: true,
           state: true,
+          reviewed_transcript: true,
+          final_transcript: true,
         },
       });
       return filteredTasks;
@@ -366,8 +372,9 @@ export const getReviewerTaskList = async (id, dates) => {
           reviewer_id: id,
         },
         select: {
-          audio_duration: true,
           state: true,
+          reviewed_transcript: true,
+          final_transcript: true,
         },
       });
       return filteredTasks;

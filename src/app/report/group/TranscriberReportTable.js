@@ -113,11 +113,11 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               </td>
               <td
                 className={`${glideGreentoRed(
-                  user.noReviewedCorrected,
+                  user.noTranscriptCorrected,
                   user.noReviewed
                 )}`}
               >
-                {calculatePercent(user.noReviewedCorrected, user.noReviewed)}
+                {calculatePercent(user.noTranscriptCorrected, user.noReviewed)}
               </td>
               <td
                 className={`${glideGreentoRed(
@@ -185,7 +185,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <b>
                 {calculatePercent(
                   usersStatistic?.reduce(
-                    (a, b) => a + b.noReviewedCorrected,
+                    (a, b) => a + b.noTranscriptCorrected,
                     0
                   ),
                   usersStatistic?.reduce((a, b) => a + b.noReviewed, 0)

@@ -77,7 +77,7 @@ const DepartmentTotal = ({ usersStatistic }) => {
               <b>
                 {calculatePercent(
                   allUsersStatistic?.reduce(
-                    (a, b) => a + b.noReviewedCorrected,
+                    (a, b) => a + b.noTranscriptCorrected,
                     0
                   ),
                   allUsersStatistic?.reduce((a, b) => a + b.noReviewed, 0)
