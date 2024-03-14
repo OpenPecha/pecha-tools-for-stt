@@ -64,6 +64,7 @@ model Task {
   duration               String?
   audio_duration         Float     @default(0)
   transcriber_is_correct Boolean?
+  reviewer_is_correct    Boolean?
 }
 
 model User {

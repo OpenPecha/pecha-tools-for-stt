@@ -363,6 +363,7 @@ export const getReviewerTaskList = async (id, dates) => {
           state: true,
           reviewed_transcript: true,
           final_transcript: true,
+          reviewer_is_correct: true,
         },
       });
       return filteredTasks;
@@ -375,6 +376,7 @@ export const getReviewerTaskList = async (id, dates) => {
           state: true,
           reviewed_transcript: true,
           final_transcript: true,
+          reviewer_is_correct: true,
         },
       });
       return filteredTasks;

@@ -364,7 +364,7 @@ export const generateReviewerTaskReport = async (reviewer, dates) => {
 export const moreReviewerStats = (reviewerObj, reviewerTasks) => {
   const reviewerTaskSummary = reviewerTasks.reduce((acc, task) => {
     if (task.reviewed_transcript && task.final_transcript) {
-      if (task.reviewed_transcript !== task.final_transcript) {
+      if (task.reviewer_is_correct === false) {
         acc.noReviewedTranscriptCorrected++;
       }
       acc.characterCount += task.reviewed_transcript
