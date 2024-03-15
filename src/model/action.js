@@ -56,7 +56,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
               transcriber_id: userId,
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
           });
           if (assingedTasks === null) {
@@ -83,7 +83,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
               transcriber: true,
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
           });
           if (assingedTasks === null) {
@@ -111,7 +111,7 @@ export const getAssignedTasks = async (groupId, userId, role) => {
               reviewer: true,
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
           });
           if (assingedTasks === null) {
@@ -148,7 +148,7 @@ export const assignTasks = async (groupId, userId, role) => {
               state: "imported",
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
             take: ASSIGN_TASKS,
           });
@@ -193,7 +193,7 @@ export const assignTasks = async (groupId, userId, role) => {
               transcriber: true,
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
             take: ASSIGN_TASKS,
           });
@@ -238,7 +238,7 @@ export const assignTasks = async (groupId, userId, role) => {
               reviewer: true,
             },
             orderBy: {
-              id: "asc",
+              file_name: "asc",
             },
             take: ASSIGN_TASKS,
           });
@@ -524,7 +524,7 @@ export const getUserHistory = async (userId, groupId) => {
         ],
       },
       orderBy: {
-        id: "desc",
+        file_name: "desc",
       },
       take: 20,
     });
