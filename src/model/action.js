@@ -523,9 +523,17 @@ export const getUserHistory = async (userId, groupId) => {
           },
         ],
       },
-      orderBy: {
-        file_name: "desc",
-      },
+      orderBy: [
+        {
+          finalised_reviewed_at: 'desc',
+        },
+        {
+          reviewed_at: 'desc',
+        },
+        {
+          submitted_at: 'desc',
+        }
+     ],
       take: 20,
     });
     return userHistory;
