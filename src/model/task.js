@@ -275,7 +275,8 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
 export const getFinalReviewerTaskCount = async (
   id,
   dates,
-  finalReviewerObj
+  finalReviewerObj,
+  groupId
 ) => {
   const { from: fromDate, to: toDate } = dates;
   try {
@@ -284,6 +285,7 @@ export const getFinalReviewerTaskCount = async (
         where: {
           final_reviewer_id: parseInt(id),
           state: "finalised",
+          group_id: parseInt(groupId),
           finalised_reviewed_at: {
             gte: new Date(fromDate).toISOString(),
             lte: new Date(toDate).toISOString(),
@@ -294,6 +296,7 @@ export const getFinalReviewerTaskCount = async (
       finalReviewerObj.noFinalised = await prisma.task.count({
         where: {
           final_reviewer_id: parseInt(id),
+          group_id: parseInt(groupId),
           state: "finalised",
         },
       });

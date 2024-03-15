@@ -385,7 +385,7 @@ export const moreReviewerStats = (reviewerObj, reviewerTasks) => {
 export const generateFinalReviewerReportbyGroup = async (groupId, dates) => {
   try {
     const finalReviewers = await finalReviewerOfGroup(groupId);
-    const usersReport = generateFinalReviewerTaskReport(finalReviewers, dates);
+    const usersReport = generateFinalReviewerTaskReport(finalReviewers, dates, groupId);
     return usersReport;
   } catch (error) {
     console.error("Error getting users by group:", error);
@@ -410,7 +410,8 @@ export const finalReviewerOfGroup = async (groupId) => {
 
 export const generateFinalReviewerTaskReport = async (
   finalReviewers,
-  dates
+  dates,
+  groupId
 ) => {
   const finalReviewerList = [];
 
@@ -432,7 +433,8 @@ export const generateFinalReviewerTaskReport = async (
     const updatedFinalReviwerObj = await getFinalReviewerTaskCount(
       id,
       dates,
-      finalReviewerObj
+      finalReviewerObj,
+      groupId
     );
     finalReviewerList.push(updatedFinalReviwerObj);
   }
