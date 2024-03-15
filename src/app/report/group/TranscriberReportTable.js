@@ -131,7 +131,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <td>
                 {calculatePay(
                   selectGroup,
-                  user.reviewedSecs,
+                  user.reviewedInMin,
                   user.syllableCount,
                   user.noReviewed
                 )}
@@ -207,7 +207,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <b>
                 {calculatePay(
                   selectGroup,
-                  usersStatistic?.reduce((a, b) => a + b.reviewedSecs, 0),
+                  usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0),
                   usersStatistic?.reduce((a, b) => a + b.syllableCount, 0),
                   usersStatistic?.reduce((a, b) => a + b.noReviewed, 0)
                 )}
