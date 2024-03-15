@@ -9,10 +9,10 @@ import {
   getReviewerTaskList,
   getTranscriberTaskList,
   getUserSpecificTasksCount,
-  getUserSubmittedSecs,
+  getUserSubmittedAndReviewedSecs,
 } from "./task";
 
-var levenshtein = require("fast-levenshtein");
+const levenshtein = require("fast-levenshtein");
 
 export const getAllUser = async () => {
   try {
@@ -212,13 +212,17 @@ export const generateUserReportByGroup = async (groupId, dates) => {
 
 export const generateUsersTaskReport = async (user, dates) => {
   const { id: userId, name } = user;
-  const [submittedTaskCount, submittedSecs, userTasks, reviewedTaskCount] =
-    await Promise.all([
-      getUserSpecificTasksCount(userId, dates),
-      getUserSubmittedSecs(userId, dates),
-      getTranscriberTaskList(userId, dates),
-      getTaskReviewedBasedOnSubmitted(userId, dates),
-    ]);
+  const [
+    submittedTaskCount,
+    { submittedSecs, reviewedSecs },
+    userTasks,
+    reviewedTaskCount,
+  ] = await Promise.all([
+    getUserSpecificTasksCount(userId, dates),
+    getUserSubmittedAndReviewedSecs(userId, dates),
+    getTranscriberTaskList(userId, dates),
+    getTaskReviewedBasedOnSubmitted(userId, dates),
+  ]);
 
   const transcriberObj = {
     id: userId,
@@ -226,9 +230,8 @@ export const generateUsersTaskReport = async (user, dates) => {
     noSubmitted: submittedTaskCount,
     noReviewedBasedOnSubmitted: reviewedTaskCount?.length || 0,
     noReviewed: 0,
-    reviewedSecs: 0,
     submittedInMin: parseFloat((submittedSecs / 60).toFixed(2)),
-    reviewedInMin: 0,
+    reviewedInMin: parseFloat((reviewedSecs / 60).toFixed(2) || 0),
     syllableCount: 0,
     noTranscriptCorrected: 0,
     characterCount: 0,
@@ -237,9 +240,7 @@ export const generateUsersTaskReport = async (user, dates) => {
   };
 
   const updatedTranscriberObj = await UserTaskReport(transcriberObj, userTasks);
-  updatedTranscriberObj.reviewedInMin = parseFloat(
-    (updatedTranscriberObj.reviewedSecs / 60).toFixed(2)
-  );
+
   return updatedTranscriberObj;
 };
 
@@ -273,7 +274,6 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
   const userTaskSummary = userTasks.reduce((acc, task) => {
     if (["accepted", "finalised"].includes(task.state)) {
       acc.noReviewed++;
-      acc.reviewedSecs += task.audio_duration || 0;
       const syllableCount = task.reviewed_transcript
         ? splitIntoSyllables(task.reviewed_transcript).length
         : 0;
@@ -345,7 +345,7 @@ export const generateReviewerTaskReport = async (reviewer, dates) => {
     noReviewed: reviewerStats.noReviewed,
     noAccepted: reviewerStats.noAccepted,
     noFinalised: reviewerStats.noFinalised,
-    reviewedSecs: reviewerStats.reviewedSecs,
+    reviewedInMin: (reviewerStats.reviewedSecs / 60).toFixed(2),
     noReviewedTranscriptCorrected: 0,
     cer: 0,
     totalCer: 0,
@@ -421,13 +421,13 @@ export const generateFinalReviewerTaskReport = async (
       id,
       name,
       noFinalised: 0,
-      finalisedSecs: 0,
+      finalisedInMin: 0,
     };
 
     // get the list of tasks by the user with selected fields
     const finalReviewerTasks = await getFinalReviewerTaskList(id, dates);
-    const finalisedInSec = getFinalisedInSec(finalReviewerTasks);
-    finalReviewerObj.finalisedSecs = finalisedInSec;
+    const finalisedInMin = getFinalisedInMIn(finalReviewerTasks);
+    finalReviewerObj.finalisedInMin = finalisedInMin;
 
     const updatedFinalReviwerObj = await getFinalReviewerTaskCount(
       id,
@@ -439,12 +439,13 @@ export const generateFinalReviewerTaskReport = async (
   return finalReviewerList;
 };
 
-const getFinalisedInSec = (finalReviewerTasks) => {
+const getFinalisedInMIn = (finalReviewerTasks) => {
   const finalisedInSec = finalReviewerTasks.reduce((acc, task) => {
     if (task.state === "finalised") {
       acc = acc + task.audio_duration;
     }
     return acc;
   }, 0);
-  return finalisedInSec;
+  const finalisedInMin = parseFloat((finalisedInSec / 60).toFixed(2));
+  return finalisedInMin;
 };

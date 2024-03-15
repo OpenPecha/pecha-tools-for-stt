@@ -318,7 +318,6 @@ export const getTranscriberTaskList = async (id, dates) => {
           },
         },
         select: {
-          audio_duration: true,
           transcript: true,
           reviewed_transcript: true,
           state: true,
@@ -332,7 +331,6 @@ export const getTranscriberTaskList = async (id, dates) => {
           transcriber_id: id,
         },
         select: {
-          audio_duration: true,
           transcript: true,
           reviewed_transcript: true,
           state: true,
@@ -524,7 +522,7 @@ export const getTaskWithRevertedState = async (task, role) => {
   }
 };
 
-export const getUserSubmittedSecs = async (id, dates) => {
+export const getUserSubmittedAndReviewedSecs = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
 
   const transcriberId = parseInt(id); // Ensuring ID is treated as an integer
@@ -532,7 +530,6 @@ export const getUserSubmittedSecs = async (id, dates) => {
   // Defining the base query condition outside the conditional statement
   const baseWhereCondition = {
     transcriber_id: transcriberId,
-    state: { in: ["submitted", "accepted", "finalised"] },
     // Conditionally add date filters if both dates are provided
     ...(fromDate &&
       toDate && {
@@ -545,16 +542,30 @@ export const getUserSubmittedSecs = async (id, dates) => {
 
   try {
     // Execute the aggregate function once with the constructed conditions
-    const results = await prisma.task.aggregate({
-      where: baseWhereCondition,
+    const totalSubmittedSecs = await prisma.task.aggregate({
+      where: {
+        ...baseWhereCondition,
+        state: { in: ["submitted", "accepted", "finalised"] },
+      },
+      _sum: {
+        audio_duration: true,
+      },
+    });
+
+    const totolReviewedSecs = await prisma.task.aggregate({
+      where: {
+        ...baseWhereCondition,
+        state: { in: ["accepted", "finalised"] },
+      },
       _sum: {
         audio_duration: true,
       },
     });
 
     // Extract and return the sum of audio_duration
-    const submittedSecs = results._sum.audio_duration || 0; // Default to 0 if null
-    return submittedSecs;
+    const submittedSecs = totalSubmittedSecs._sum.audio_duration || 0; // Default to 0 if null
+    const reviewedSecs = totolReviewedSecs._sum.audio_duration || 0; // Default to 0 if null
+    return { submittedSecs, reviewedSecs };
   } catch (error) {
     console.error(`Error aggregating user submitted seconds:`, error);
     throw new Error(

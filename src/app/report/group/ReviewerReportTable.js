@@ -84,7 +84,7 @@ const ReviewerReportTable = ({ reviewersStatistic }) => {
               <td>{reviewer.noReviewed}</td>
               <td>{reviewer.noAccepted}</td>
               <td>{reviewer.noFinalised}</td>
-              <td>{(reviewer.reviewedSecs / 60).toFixed(2)}</td>
+              <td>{reviewer.reviewedInMin}</td>
               <td
                 className={`${glideRedtoGreen(
                   reviewer.noFinalised,

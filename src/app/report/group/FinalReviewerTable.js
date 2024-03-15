@@ -22,7 +22,7 @@ const FinalReviewerTable = ({ finalReviewersStatistic }) => {
                 </Link>
               </td>
               <td>{finalReviewer.noFinalised}</td>
-              <td>{(finalReviewer.finalisedSecs / 60).toFixed(2)}</td>
+              <td>{finalReviewer.finalisedInMin}</td>
             </tr>
           ))}
         </tbody>
