@@ -279,32 +279,39 @@ export const getFinalReviewerTaskCount = async (
   groupId
 ) => {
   const { from: fromDate, to: toDate } = dates;
-  try {
-    if (fromDate && toDate) {
-      finalReviewerObj.noFinalised = await prisma.task.count({
-        where: {
-          final_reviewer_id: parseInt(id),
-          state: "finalised",
-          group_id: parseInt(groupId),
-          finalised_reviewed_at: {
+  const finalReviewerId = parseInt(id);
+
+  const baseWhereCondition = {
+    final_reviewer_id: finalReviewerId,
+    group_id: parseInt(groupId),
+    finalised_reviewed_at:
+      fromDate && toDate
+        ? {
             gte: new Date(fromDate).toISOString(),
             lte: new Date(toDate).toISOString(),
-          },
-        },
-      });
-    } else {
-      finalReviewerObj.noFinalised = await prisma.task.count({
-        where: {
-          final_reviewer_id: parseInt(id),
-          group_id: parseInt(groupId),
-          state: "finalised",
-        },
-      });
-    }
+          }
+        : undefined,
+  };
+
+  try {
+    const finalReviedStats = await prisma.task.aggregate({
+      where: {
+        ...baseWhereCondition,
+        state: "finalised",
+      },
+      _count: true,
+      _sum: {
+        audio_duration: true,
+      },
+    });
+    const noFinalised = finalReviedStats._count || 0;
+    const finalisedSecs = finalReviedStats._sum.audio_duration || 0;
+    finalReviewerObj.noFinalised = noFinalised;
+    finalReviewerObj.finalisedInMin = (finalisedSecs / 60).toFixed(2);
     return finalReviewerObj;
   } catch (error) {
-    console.error(`Error fetching final reviewer task counts:`, error);
-    throw new Error("Failed to fetch final reviewer task counts.");
+    console.error(`Error fetching final reviewer stats:`, error);
+    throw new Error("Failed to fetch final reviewer stats.");
   }
 };
 
@@ -382,55 +389,6 @@ export const getReviewerTaskList = async (id, dates) => {
       });
       return filteredTasks;
     }
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-export const getFinalReviewerTaskList = async (id, dates) => {
-  const { from: fromDate, to: toDate } = dates;
-  try {
-    if (fromDate && toDate) {
-      const filteredTasks = await prisma.task.findMany({
-        where: {
-          final_reviewer_id: id,
-          finalised_reviewed_at: {
-            gte: new Date(fromDate),
-            lte: new Date(toDate),
-          },
-        },
-        select: {
-          audio_duration: true,
-          state: true,
-        },
-      });
-      return filteredTasks;
-    } else {
-      const filteredTasks = await prisma.task.findMany({
-        where: {
-          final_reviewer_id: id,
-        },
-        select: {
-          audio_duration: true,
-          state: true,
-        },
-      });
-      return filteredTasks;
-    }
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-// get total count of tasks assigned to a group based on group id
-const getGroupTaskCount = async (id) => {
-  try {
-    const groupTaskCount = await prisma.task.count({
-      where: {
-        group_id: parseInt(id),
-      },
-    });
-    return groupTaskCount;
   } catch (error) {
     throw new Error(error);
   }

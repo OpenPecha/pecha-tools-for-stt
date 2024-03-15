@@ -4,7 +4,6 @@ import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import {
   getFinalReviewerTaskCount,
-  getFinalReviewerTaskList,
   getReviewerTaskCount,
   getReviewerTaskList,
   getTranscriberTaskList,
@@ -385,7 +384,11 @@ export const moreReviewerStats = (reviewerObj, reviewerTasks) => {
 export const generateFinalReviewerReportbyGroup = async (groupId, dates) => {
   try {
     const finalReviewers = await finalReviewerOfGroup(groupId);
-    const usersReport = generateFinalReviewerTaskReport(finalReviewers, dates, groupId);
+    const usersReport = generateFinalReviewerTaskReport(
+      finalReviewers,
+      dates,
+      groupId
+    );
     return usersReport;
   } catch (error) {
     console.error("Error getting users by group:", error);
@@ -425,11 +428,6 @@ export const generateFinalReviewerTaskReport = async (
       finalisedInMin: 0,
     };
 
-    // get the list of tasks by the user with selected fields
-    const finalReviewerTasks = await getFinalReviewerTaskList(id, dates);
-    const finalisedInMin = getFinalisedInMIn(finalReviewerTasks);
-    finalReviewerObj.finalisedInMin = finalisedInMin;
-
     const updatedFinalReviwerObj = await getFinalReviewerTaskCount(
       id,
       dates,
@@ -439,15 +437,4 @@ export const generateFinalReviewerTaskReport = async (
     finalReviewerList.push(updatedFinalReviwerObj);
   }
   return finalReviewerList;
-};
-
-const getFinalisedInMIn = (finalReviewerTasks) => {
-  const finalisedInSec = finalReviewerTasks.reduce((acc, task) => {
-    if (task.state === "finalised") {
-      acc = acc + task.audio_duration;
-    }
-    return acc;
-  }, 0);
-  const finalisedInMin = parseFloat((finalisedInSec / 60).toFixed(2));
-  return finalisedInMin;
 };
