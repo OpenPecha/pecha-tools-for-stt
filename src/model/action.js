@@ -50,19 +50,14 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
     REVIEWER: {
       state: "submitted",
       taskField: "reviewer_id",
-      include: { transcriber: { select: { name: true } } },
     },
     FINAL_REVIEWER: {
       state: "accepted",
       taskField: "final_reviewer_id",
-      include: {
-        transcriber: { select: { name: true } },
-        reviewer: { select: { name: true } },
-      },
     },
   };
 
-  const { state, taskField, include } = roleParams[role];
+  const { state, taskField } = roleParams[role];
 
   if (!state || !taskField) {
     throw new Error(`Invalid role provided: ${role}`);
@@ -71,7 +66,19 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
   try {
     let tasks = await prisma.task.findMany({
       where: { group_id: groupId, state, [taskField]: userId },
-      include,
+      select: {
+        id: true,
+        group_id: true,
+        state: true,
+        inference_transcript: true,
+        transcript: true,
+        reviewed_transcript: true,
+        final_transcript: true,
+        file_name: true,
+        url: true,
+        transcriber: { select: { name: true } },
+        reviewer: { select: { name: true } },
+      },
       orderBy: {
         file_name: "asc",
       },
@@ -113,6 +120,19 @@ export const assignUnassignedTasks = async (
     },
     orderBy: {
       file_name: "asc",
+    },
+    select: {
+      id: true,
+      group_id: true,
+      state: true,
+      inference_transcript: true,
+      transcript: true,
+      reviewed_transcript: true,
+      final_transcript: true,
+      file_name: true,
+      url: true,
+      transcriber: { select: { name: true } },
+      reviewer: { select: { name: true } },
     },
     take: ASSIGN_TASKS,
   });
@@ -346,7 +366,8 @@ export const revertTaskState = async (id, state) => {
       };
     }
   } catch (error) {
-    //console.log("Error updating task", error);
+    console.error("Error reverting task state", error);
+    throw new Error("Error reverting task state");
   }
 };
 
@@ -384,6 +405,15 @@ export const getUserHistory = async (userId, groupId) => {
           submitted_at: "desc",
         },
       ],
+      select: {
+        id: true,
+        group_id: true,
+        state: true,
+        inference_transcript: true,
+        transcript: true,
+        reviewed_transcript: true,
+        final_transcript: true,
+      },
       take: MAX_HISTORY,
     });
     return userHistory;
