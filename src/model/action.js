@@ -115,7 +115,7 @@ export const assignUnassignedTasks = async (
   const unassignedTasks = await prisma.task.findMany({
     where: {
       group_id: groupId,
-      state: role === "TRANSCRIBER" ? "imported" : state,
+      state,
       [taskField]: null,
     },
     orderBy: {
