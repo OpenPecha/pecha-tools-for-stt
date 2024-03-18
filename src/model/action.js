@@ -4,7 +4,7 @@ import { formatTime } from "@/lib/formatTime";
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 
-const ASSIGN_TASKS = 10;
+const ASSIGN_TASKS = 20;
 const MAX_HISTORY = 20;
 //get user detail if exist
 export const getUserDetails = async (username) => {
