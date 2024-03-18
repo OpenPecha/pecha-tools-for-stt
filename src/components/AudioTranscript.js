@@ -1,6 +1,6 @@
 "use client";
 
-import { assignTasks, getUserHistory, updateTask } from "@/model/action";
+import { getTasksOrAssignMore, updateTask } from "@/model/action";
 import React, { useState, useRef, useEffect } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
@@ -78,31 +78,38 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
         role,
         currentTimeRef.current
       );
+
       if (msg?.error) {
         toast.error(msg.error);
-      } else {
-        toast.success(msg.success);
+        return;
       }
-      if (action === "submit") {
-        getUserProgress();
-      }
-      // if (action === "submit" || action === "trash") {
-      //   getUserHistory(userId);
-      // }
-      if (getLastTaskIndex() != 0) {
-        // remove the task updated from the task list
-        setTaskList((prev) => prev.filter((task) => task.id !== id));
-        if (action === "submit") {
-          currentTimeRef.current = new Date().toISOString();
-        }
-      } else {
-        // when it is the last task in the task list
-        const moreTask = await assignTasks(groupId, userId, role);
-        setIsLoading(true);
-        setTaskList(moreTask);
-      }
+      toast.success(msg.success);
+
+      // Update task list optimally based on action
+      handleTaskListUpdate(action, id);
     } catch (error) {
-      throw new Error(error);
+      console.error("Failed to update task:", error);
+      throw new Error("Failed to update task");
+    }
+  };
+
+  const handleTaskListUpdate = async (action, id) => {
+    const lastTaskIndex = getLastTaskIndex();
+    if (lastTaskIndex !== 0) {
+      if (action === "submit") {
+        currentTimeRef.current = new Date().toISOString();
+      }
+      setTaskList((prev) => prev.filter((task) => task.id !== id));
+    } else {
+      try {
+        const moreTask = await getTasksOrAssignMore(groupId, userId, role);
+        setTaskList(moreTask);
+      } catch (error) {
+        console.error("Failed to fetch more tasks:", error);
+        toast.error("Failed to load more tasks.");
+      } finally {
+        setIsLoading(false); // Ensure loading is always stopped after the operation
+      }
     }
   };
 

@@ -471,8 +471,12 @@ export const getTaskWithRevertedState = async (task, role) => {
         state: newState,
       },
       include: {
-        transcriber: true,
-        reviewer: true,
+        transcriber: {
+          select: { name: true },
+        },
+        reviewer: {
+          select: { name: true },
+        },
       },
     });
     revalidatePath("/");
