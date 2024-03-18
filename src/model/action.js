@@ -5,7 +5,7 @@ import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 
 const ASSIGN_TASKS = 20;
-const MAX_HISTORY = 20;
+const MAX_HISTORY = 10;
 //get user detail if exist
 export const getUserDetails = async (username) => {
   try {
