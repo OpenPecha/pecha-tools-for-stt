@@ -57,10 +57,7 @@ const Sidebar = ({
         <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <div className="flex flex-col w-80 min-h-full h-full bg-[#54606e] text-white">
-            <header className="bg-[#384451] p-4 mb-5">
-              <div className="text-lg">{lang.title}</div>
-            </header>
-            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
+            <section className="px-5 pt-5 pb-2 mb-2 border-b border-b-[#384451]">
               <h3 className="uppercase font-bold mb-2">{lang.project}</h3>
               <div className="flex text-right justify-between">
                 <label className="text-sm font-bold mb-2">{lang.user}</label>
@@ -75,10 +72,10 @@ const Sidebar = ({
                 <span className=" text-right">{taskList[0]?.id}</span>
               </div>
             </section>
-            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">{lang.target}</h3>
+            <section className="px-5 pb-2 mb-2 border-b border-b-[#384451]">
+              <h3 className="uppercase font-bold">{lang.target}</h3>
               <div
-                className="tooltip tooltip-bottom w-full mt-2 mb-6"
+                className="tooltip tooltip-bottom w-full my-2"
                 data-tip={`${completedTaskCount}/${totalTaskCount}`}
               >
                 <progress
@@ -141,8 +138,8 @@ const Sidebar = ({
                 <span className=" text-right">{totalTaskCount}</span>
               </div>
             </section>
-            <section className="px-5 pb-5 mb-5 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold mb-2">{lang.language}</h3>
+            <section className="flex gap-4 align-middle px-5 pb-2 mb-2 border-b border-b-[#384451]">
+              <h3 className="uppercase font-bold">{lang.language}</h3>
               <LanguageToggle />
             </section>
             <section className="px-5 pb-5 mb-5 border-b border-b-[#384451] overflow-y-auto flex-1">
