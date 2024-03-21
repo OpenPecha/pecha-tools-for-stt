@@ -73,8 +73,8 @@ const Sidebar = ({
               </div>
             </section>
             <section className="px-5 pb-2 mb-2 border-b border-b-[#384451]">
-              <h3 className="uppercase font-bold">{lang.target}</h3>
-              <div
+              <h3 className="uppercase font-bold mb-2">{lang.target}</h3>
+              {/*   <div
                 className="tooltip tooltip-bottom w-full my-2"
                 data-tip={`${completedTaskCount}/${totalTaskCount}`}
               >
@@ -84,6 +84,7 @@ const Sidebar = ({
                   max={totalTaskCount}
                 ></progress>
               </div>
+              */}
               <div
                 className="tooltip tooltip-top flex text-right justify-between"
                 data-tip={

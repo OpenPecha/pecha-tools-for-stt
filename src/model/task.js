@@ -186,7 +186,7 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
   }
 };
 
-export const getCompletedTaskCount = async (id, role) => {
+export const getCompletedTaskCount = async (id, role, groupId) => {
   let completedTaskCount = 0;
   let whereCondition = {
     [`${role.toLowerCase()}_id`]: parseInt(id),
@@ -195,7 +195,8 @@ export const getCompletedTaskCount = async (id, role) => {
         ? { in: ["submitted", "accepted", "finalised"] }
         : role === "REVIEWER"
         ? { in: ["accepted", "finalised"] }
-        : { in: ["finalised"] },
+        : "finalised",
+    group_id: parseInt(groupId),
   };
 
   try {
@@ -400,23 +401,11 @@ export const UserProgressStats = async (id, role, groupId) => {
   let totalTaskCount = 0;
   let totalTaskPassed = 0;
   try {
-    completedTaskCount = await getCompletedTaskCount(id, role);
+    completedTaskCount = await getCompletedTaskCount(id, role, groupId);
     totalTaskCount = await prisma.task.count({
       where: {
-        OR: [
-          {
-            group_id: parseInt(groupId),
-            transcriber_id: parseInt(id),
-          },
-          {
-            group_id: parseInt(groupId),
-            reviewer_id: parseInt(id),
-          },
-          {
-            group_id: parseInt(groupId),
-            final_reviewer_id: parseInt(id),
-          },
-        ],
+        group_id: parseInt(groupId),
+        [`${role.toLowerCase()}_id`]: parseInt(id),
       },
     });
     totalTaskPassed = await prisma.task.count({
