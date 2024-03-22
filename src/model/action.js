@@ -80,7 +80,7 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
         reviewer: { select: { name: true } },
       },
       orderBy: {
-        file_name: "asc",
+        id: "asc",
       },
       take: ASSIGN_TASKS
     });
