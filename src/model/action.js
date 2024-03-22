@@ -82,6 +82,7 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
       orderBy: {
         file_name: "asc",
       },
+      take: ASSIGN_TASKS
     });
 
     if (tasks.length === 0) {
