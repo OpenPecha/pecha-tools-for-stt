@@ -482,25 +482,20 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
   const transcriberId = parseInt(id); // Ensuring ID is treated as an integer
   const group_id = parseInt(groupId);
 
-  // Defining the base query condition outside the conditional statement
-  const baseWhereCondition = {
-    transcriber_id: transcriberId,
-    group_id,
-    // Conditionally add date filters if both dates are provided
-    ...(fromDate &&
-      toDate && {
-        reviewed_at: {
-          gte: new Date(fromDate),
-          lte: new Date(toDate),
-        },
-      }),
-  };
-
   try {
     // Execute the aggregate function once with the constructed conditions
     const totalSubmittedSecs = await prisma.task.aggregate({
       where: {
-        ...baseWhereCondition,
+        transcriber_id: transcriberId,
+        group_id,
+        // Conditionally add date filters if both dates are provided
+        ...(fromDate &&
+          toDate && {
+            submitted_at: {
+              gte: new Date(fromDate),
+              lte: new Date(toDate),
+            },
+          }),
         state: { in: ["submitted", "accepted", "finalised"] },
       },
       _sum: {
@@ -510,7 +505,16 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
 
     const totolReviewedSecs = await prisma.task.aggregate({
       where: {
-        ...baseWhereCondition,
+        transcriber_id: transcriberId,
+        group_id,
+        // Conditionally add date filters if both dates are provided
+        ...(fromDate &&
+          toDate && {
+            reviewed_at: {
+              gte: new Date(fromDate),
+              lte: new Date(toDate),
+            },
+          }),
         state: { in: ["accepted", "finalised"] },
       },
       _sum: {
