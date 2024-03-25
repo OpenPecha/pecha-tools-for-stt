@@ -476,14 +476,16 @@ export const getTaskWithRevertedState = async (task, role) => {
   }
 };
 
-export const getUserSubmittedAndReviewedSecs = async (id, dates) => {
+export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
   const { from: fromDate, to: toDate } = dates;
 
   const transcriberId = parseInt(id); // Ensuring ID is treated as an integer
+  const group_id = parseInt(groupId);
 
   // Defining the base query condition outside the conditional statement
   const baseWhereCondition = {
     transcriber_id: transcriberId,
+    group_id,
     // Conditionally add date filters if both dates are provided
     ...(fromDate &&
       toDate && {

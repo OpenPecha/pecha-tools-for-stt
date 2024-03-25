@@ -200,7 +200,7 @@ export const generateUserReportByGroup = async (groupId, dates) => {
       return [];
     }
     const usersStatistic = await Promise.all(
-      users.map((user) => generateUsersTaskReport(user, dates))
+      users.map((user) => generateUsersTaskReport(user, dates, groupId))
     );
     return usersStatistic;
   } catch (error) {
@@ -209,7 +209,7 @@ export const generateUserReportByGroup = async (groupId, dates) => {
   }
 };
 
-export const generateUsersTaskReport = async (user, dates) => {
+export const generateUsersTaskReport = async (user, dates, groupId) => {
   const { id: userId, name } = user;
   const [
     submittedTaskCount,
@@ -218,7 +218,7 @@ export const generateUsersTaskReport = async (user, dates) => {
     reviewedTaskCount,
   ] = await Promise.all([
     getUserSpecificTasksCount(userId, dates),
-    getUserSubmittedAndReviewedSecs(userId, dates),
+    getUserSubmittedAndReviewedSecs(userId, dates, groupId),
     getTranscriberTaskList(userId, dates),
     getTaskReviewedBasedOnSubmitted(userId, dates),
   ]);
