@@ -82,6 +82,11 @@ export const getAllGroupTaskStats = async (groupList) => {
   const groupStatsList = [];
   const taskStatsMain = await prisma.task.groupBy({
     by: ["state", "group_id"],
+    where: {
+      NOT: {
+        state: "transcribing", 
+      }
+    },
     _count: {
       _all: true,
     },
@@ -96,12 +101,36 @@ export const getAllGroupTaskStats = async (groupList) => {
       _all: true,
     },
   });
+
+  const taskTranscribingCount = await prisma.task.groupBy({
+    by: ["group_id"],
+    where: {
+      state: "transcribing", 
+      NOT:{
+        transcriber_id: null
+      }
+    },
+    _count: {
+      _all: true,
+    }
+  });
+
   taskImportedCount.map((task) => {
     taskStatsMain.push({
       _count: {
         _all: task._count._all,
       },
       state: "imported",
+      group_id: task.group_id,
+    });
+  });
+
+  taskTranscribingCount.map((task) => {
+    taskStatsMain.push({
+      _count: {
+        _all: task._count._all,
+      },
+      state: "transcribing",
       group_id: task.group_id,
     });
   });
