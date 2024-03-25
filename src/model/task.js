@@ -489,7 +489,7 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
     // Conditionally add date filters if both dates are provided
     ...(fromDate &&
       toDate && {
-        submitted_at: {
+        reviewed_at: {
           gte: new Date(fromDate),
           lte: new Date(toDate),
         },
