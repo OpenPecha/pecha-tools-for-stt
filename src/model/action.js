@@ -1,6 +1,7 @@
 "use server";
 
 import { formatTime } from "@/lib/formatTime";
+import { istCurrentTime } from "@/lib/istCurrentTime";
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 
@@ -230,7 +231,7 @@ export const updateTask = async (
             transcript: changeState.state === "trashed" ? null : transcript,
             reviewed_transcript: null,
             final_transcript: null,
-            submitted_at: new Date().toISOString(),
+            submitted_at: istCurrentTime(),
             duration: duration,
           },
         });
@@ -266,7 +267,7 @@ export const updateTask = async (
               changeState.state === "transcribing"
                 ? null
                 : transcript,
-            reviewed_at: new Date().toISOString(),
+            reviewed_at: istCurrentTime(),
           },
         });
         if (updatedTask) {
@@ -301,7 +302,7 @@ export const updateTask = async (
               changeState.state === "submitted"
                 ? null
                 : transcript,
-            finalised_reviewed_at: new Date().toISOString(),
+            finalised_reviewed_at: istCurrentTime(),
           },
         });
         if (updatedTask) {
