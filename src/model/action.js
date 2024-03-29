@@ -40,7 +40,7 @@ export const getUserTask = async (username) => {
   // if user is found, get the task based on user role
   const { id: userId, group_id: groupId, role } = userData;
   userTasks = await getTasksOrAssignMore(groupId, userId, role);
-  const userHistory = await getUserHistory(userId, groupId);
+  const userHistory = await getUserHistory(userId, groupId, role);
   return { userTasks, userData, userHistory };
 };
 
@@ -82,7 +82,7 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
       orderBy: {
         id: "asc",
       },
-      take: ASSIGN_TASKS
+      take: ASSIGN_TASKS,
     });
 
     if (tasks.length === 0) {
@@ -113,41 +113,52 @@ export const assignUnassignedTasks = async (
   userId,
   role
 ) => {
-  const unassignedTasks = await prisma.task.findMany({
-    where: {
-      group_id: groupId,
-      state,
-      [taskField]: null,
-    },
-    orderBy: {
-      file_name: "asc",
-    },
-    select: {
-      id: true,
-      group_id: true,
-      state: true,
-      inference_transcript: true,
-      transcript: true,
-      reviewed_transcript: true,
-      final_transcript: true,
-      file_name: true,
-      url: true,
-      transcriber: { select: { name: true } },
-      reviewer: { select: { name: true } },
-    },
-    take: ASSIGN_TASKS,
-  });
+  try {
+    const unassignedTasks = await prisma.$transaction(async (prisma) => {
+      let unassignedTasks = await prisma.task.findMany({
+        where: {
+          group_id: groupId,
+          state,
+          [taskField]: null,
+        },
+        orderBy: {
+          file_name: "asc",
+        },
+        select: {
+          id: true,
+          group_id: true,
+          state: true,
+          inference_transcript: true,
+          transcript: true,
+          reviewed_transcript: true,
+          final_transcript: true,
+          file_name: true,
+          url: true,
+          transcriber: { select: { name: true } },
+          reviewer: { select: { name: true } },
+        },
+        take: ASSIGN_TASKS,
+      });
 
-  if (unassignedTasks.length > 0) {
-    await prisma.task.updateMany({
-      where: {
-        id: { in: unassignedTasks.map((task) => task.id) },
-      },
-      data: { [taskField]: userId },
+      if (unassignedTasks.length > 0) {
+        await prisma.task.updateMany({
+          where: {
+            id: { in: unassignedTasks.map((task) => task.id) },
+          },
+          data: { [taskField]: userId },
+        });
+      }
+      return unassignedTasks;
     });
+    return unassignedTasks;
+  } catch (error) {
+    console.error(
+      `Failed to retrieve or assign tasks for role ${role}: ${error.message}`
+    );
+    throw new Error(
+      `Failed to retrieve or assign tasks for role ${role}: ${error.message}`
+    );
   }
-
-  return unassignedTasks;
 };
 
 // to change the state of task based on user action (state machine)
@@ -373,28 +384,21 @@ export const revertTaskState = async (id, state) => {
 };
 
 // get all the history of a user based on userId
-export const getUserHistory = async (userId, groupId) => {
+export const getUserHistory = async (userId, groupId, role) => {
   try {
+    let whereCondition = {
+      [`${role.toLowerCase()}_id`]: parseInt(userId),
+      state:
+        role === "TRANSCRIBER"
+          ? { in: ["submitted", "trashed"] }
+          : role === "REVIEWER"
+          ? { in: ["accepted", "trashed"] }
+          : "finalised",
+      group_id: parseInt(groupId),
+    };
+
     const userHistory = await prisma.Task.findMany({
-      where: {
-        OR: [
-          {
-            transcriber_id: userId,
-            state: { in: ["submitted", "trashed"] },
-            group_id: groupId,
-          },
-          {
-            reviewer_id: userId,
-            state: { in: ["accepted", "trashed"] },
-            group_id: groupId,
-          },
-          {
-            final_reviewer_id: userId,
-            state: "finalised",
-            group_id: groupId,
-          },
-        ],
-      },
+      where: whereCondition,
       orderBy: [
         {
           finalised_reviewed_at: "desc",
