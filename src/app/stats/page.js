@@ -2,40 +2,12 @@ import { getAllGroup, getAllGroupTaskStats } from "@/model/group";
 import React from "react";
 import GroupImportStats from "./GroupImportStats";
 import TaskStats from "./TaskStats";
+export const dynamic = "force-dynamic";
 
 const Stats = async () => {
-
-/*
-Prisma is getting too slow for this task, so let's do it in SQL instead:
-
-select count(*),
-    t.state,
-    g.name as group_name,
-    d.name as department_name
-from "Task" t
-    join "Group" g on t.group_id = g.id
-    join "Department" d on g.department_id = d.id
-group by d.id,
-    g.id,
-    t.state
-order by d.name,
-    g.name;
-
-SELECT count(*),
-         d.name AS department_name ,
-         g.name AS group_name
-FROM "Task" t
-JOIN "Group" g
-    ON g.id = t.group_id
-JOIN "Department" d
-    ON d.id = g.department_id
-WHERE t."state" = 'imported'
-GROUP BY  d.id, g.id;
-*/
   const allGroup = await getAllGroup();
   const groupStatByDept = await getAllGroupTaskStats(allGroup);
 
-  // make a grid of groupStat of 4 columns
   return (
     <>
       {groupStatByDept && groupStatByDept.length > 0 && (
