@@ -167,6 +167,17 @@ export const getUserSpecificTasks = async (id, limit, skip, dates) => {
         reviewer: { select: { name: true } },
         final_reviewer: { select: { name: true } },
       },
+      orderBy: [
+        {
+          finalised_reviewed_at: "desc",
+        },
+        {
+          reviewed_at: "desc",
+        },
+        {
+          submitted_at: "desc",
+        },
+      ],
     });
 
     // Compute syllable counts without mutating original task objects
