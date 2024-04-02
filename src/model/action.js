@@ -115,42 +115,39 @@ export const assignUnassignedTasks = async (
   role
 ) => {
   try {
-    const unassignedTasks = await prisma.$transaction(async (prisma) => {
-      let unassignedTasks = await prisma.task.findMany({
-        where: {
-          group_id: groupId,
-          state,
-          [taskField]: null,
-        },
-        orderBy: {
-          file_name: "asc",
-        },
-        select: {
-          id: true,
-          group_id: true,
-          state: true,
-          inference_transcript: true,
-          transcript: true,
-          reviewed_transcript: true,
-          final_transcript: true,
-          file_name: true,
-          url: true,
-          transcriber: { select: { name: true } },
-          reviewer: { select: { name: true } },
-        },
-        take: ASSIGN_TASKS,
-      });
-
-      if (unassignedTasks.length > 0) {
-        await prisma.task.updateMany({
-          where: {
-            id: { in: unassignedTasks.map((task) => task.id) },
-          },
-          data: { [taskField]: userId },
-        });
-      }
-      return unassignedTasks;
+    let unassignedTasks = await prisma.task.findMany({
+      where: {
+        group_id: groupId,
+        state,
+        [taskField]: null,
+      },
+      orderBy: {
+        file_name: "asc",
+      },
+      select: {
+        id: true,
+        group_id: true,
+        state: true,
+        inference_transcript: true,
+        transcript: true,
+        reviewed_transcript: true,
+        final_transcript: true,
+        file_name: true,
+        url: true,
+        transcriber: { select: { name: true } },
+        reviewer: { select: { name: true } },
+      },
+      take: ASSIGN_TASKS,
     });
+
+    if (unassignedTasks.length > 0) {
+      await prisma.task.updateMany({
+        where: {
+          id: { in: unassignedTasks.map((task) => task.id) },
+        },
+        data: { [taskField]: userId },
+      });
+    }
     return unassignedTasks;
   } catch (error) {
     console.error(
