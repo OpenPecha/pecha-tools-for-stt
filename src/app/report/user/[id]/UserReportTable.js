@@ -8,17 +8,6 @@ const UserReportTable = ({
   secretAccess,
   setUserTaskRecord,
 }) => {
-  function formattedDate(date) {
-    return date.toLocaleString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  }
-
   const [disabledButtons, setDisabledButtons] = useState({});
   const countRef = useRef(0);
 
@@ -139,12 +128,12 @@ const UserReportTable = ({
                 <td>{task.final_reviewer?.name || ""}</td>
                 <td>
                   {task.submitted_at !== null
-                    ? formattedDate(task?.submitted_at)
+                    ? task?.submitted_at
                     : ""}
                 </td>
                 <td>
                   {task.reviewed_at !== null
-                    ? formattedDate(task?.reviewed_at)
+                    ? task?.reviewed_at
                     : ""}
                 </td>
                 <td>{task.file_name}</td>
