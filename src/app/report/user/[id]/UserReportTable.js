@@ -8,6 +8,9 @@ const UserReportTable = ({
   secretAccess,
   setUserTaskRecord,
 }) => {
+  function formattedDate(date) {
+    return date.toISOString();
+  }
   const [disabledButtons, setDisabledButtons] = useState({});
   const countRef = useRef(0);
 
@@ -128,12 +131,12 @@ const UserReportTable = ({
                 <td>{task.final_reviewer?.name || ""}</td>
                 <td>
                   {task.submitted_at !== null
-                    ? task?.submitted_at
+                    ? formattedDate(task?.submitted_at)
                     : ""}
                 </td>
                 <td>
                   {task.reviewed_at !== null
-                    ? task?.reviewed_at
+                    ? formattedDate(task?.reviewed_at)
                     : ""}
                 </td>
                 <td>{task.file_name}</td>
