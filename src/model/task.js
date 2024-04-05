@@ -421,18 +421,12 @@ export const UserProgressStats = async (id, role, groupId) => {
     });
     totalTaskPassed = await prisma.task.count({
       where: {
-        OR: [
-          {
-            group_id: parseInt(groupId),
-            transcriber_id: parseInt(id),
-            state: { in: ["accepted", "finalised"] },
-          },
-          {
-            group_id: parseInt(groupId),
-            reviewer_id: parseInt(id),
-            state: "finalised",
-          },
-        ],
+        [`${role.toLowerCase()}_id`]: parseInt(id),
+        group_id: parseInt(groupId),
+        state:
+          role === "TRANSCRIBER"
+            ? { in: ["accepted", "finalised"] }
+            : "finalised",
       },
     });
     return { completedTaskCount, totalTaskCount, totalTaskPassed };
