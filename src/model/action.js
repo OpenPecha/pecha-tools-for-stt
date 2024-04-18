@@ -255,7 +255,10 @@ export const updateTask = async (
           data: {
             state: changeState.state,
             // when reviewer reject the task, set transcript as incoming transcript and other action keep it same
-            transcript: transcript,
+            transcript:
+              changeState.state === "transcribing"
+                ? transcript
+                : task.transcript,
             reviewed_transcript:
               changeState.state === "trashed" ||
               changeState.state === "transcribing"
@@ -287,7 +290,10 @@ export const updateTask = async (
           data: {
             state: changeState.state,
             // when final reviewer reject the task, set reviewed transcript as incoming transcript and other action keep it same
-            reviewed_transcript: transcript,
+            reviewed_transcript:
+              changeState.state === "submitted"
+                ? transcript
+                : task.reviewed_transcript,
             final_transcript:
               changeState.state === "trashed" ||
               changeState.state === "submitted"
