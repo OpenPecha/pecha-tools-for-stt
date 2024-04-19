@@ -122,7 +122,8 @@ export const assignUnassignedTasks = async (
         [taskField]: null,
       },
       orderBy: {
-        file_name: "asc",
+        id: "asc",
+        // file_name: "asc", order  by file_name when segment order is important otherwise, sort by id is faster. When uploading new task I am sorting by file_name so it should be fine.
       },
       select: {
         id: true,
