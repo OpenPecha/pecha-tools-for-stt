@@ -1,6 +1,12 @@
 "use client";
 
-import { getTasksOrAssignMore, updateTask } from "@/model/action";
+import {
+  assignMoreTasks,
+  getNumberOfAssignedTask,
+  getTasks,
+  getTasksOrAssignMore,
+  updateTask,
+} from "@/model/action";
 import React, { useState, useRef, useEffect } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import ActionButtons from "./ActionButtons";
@@ -93,16 +99,23 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
     }
   };
 
+  const ASSIGN_BUFFER = 6;
+  const TASK_LEFT_LIMIT = 10;
+
   const handleTaskListUpdate = async (action, id) => {
+    if (action === "submit") {
+      currentTimeRef.current = new Date().toISOString();
+    }
     const lastTaskIndex = getLastTaskIndex();
+    if (lastTaskIndex < TASK_LEFT_LIMIT) {
+      const assignCount = await getNumberOfAssignedTask(userId, role, groupId);
+      if (assignCount < ASSIGN_BUFFER) assignMoreTasks(groupId, userId, role);
+    }
     if (lastTaskIndex !== 0) {
-      if (action === "submit") {
-        currentTimeRef.current = new Date().toISOString();
-      }
       setTaskList((prev) => prev.filter((task) => task.id !== id));
     } else {
       try {
-        const moreTask = await getTasksOrAssignMore(groupId, userId, role);
+        const moreTask = await getTasks(groupId, userId, role);
         setTaskList(moreTask);
       } catch (error) {
         console.error("Failed to fetch more tasks:", error);
