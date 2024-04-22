@@ -40,12 +40,40 @@ export const getUserTask = async (username) => {
   }
   // if user is found, get the task based on user role
   const { id: userId, group_id: groupId, role } = userData;
-  userTasks = await getTasksOrAssignMore(groupId, userId, role);
+  userTasks = await getTasks(groupId, userId, role);
   const userHistory = await getUserHistory(userId, groupId, role);
   return { userTasks, userData, userHistory };
 };
 
-export const getTasksOrAssignMore = async (groupId, userId, role) => {
+export const getNumberOfAssignedTask = async (userId, role, groupId) => {
+  const roleParams = {
+    TRANSCRIBER: {
+      state: "transcribing",
+      taskField: "transcript",
+    },
+    REVIEWER: {
+      state: "submitted",
+      taskField: "reviewed_transcript",
+    },
+    FINAL_REVIEWER: {
+      state: "accepted",
+      taskField: "final_transcript",
+    },
+  };
+
+  const { state, taskField } = roleParams[role];
+  const count = await prisma.task.count({
+    where: {
+      group_id: groupId,
+      state,
+      [`${role.toLowerCase()}_id`]: parseInt(userId),
+      [taskField]: null,
+    },
+  });
+  return count;
+};
+
+export const getTasks = async (groupId, userId, role) => {
   const roleParams = {
     TRANSCRIBER: { state: "transcribing", taskField: "transcriber_id" },
     REVIEWER: {
@@ -86,16 +114,6 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
       take: ASSIGN_TASKS,
     });
 
-    if (tasks.length === 0) {
-      tasks = await assignUnassignedTasks(
-        groupId,
-        state,
-        taskField,
-        userId,
-        role
-      );
-    }
-
     return tasks;
   } catch (error) {
     console.error(
@@ -107,13 +125,24 @@ export const getTasksOrAssignMore = async (groupId, userId, role) => {
   }
 };
 
-export const assignUnassignedTasks = async (
-  groupId,
-  state,
-  taskField,
-  userId,
-  role
-) => {
+export const assignMoreTasks = async (groupId, userId, role) => {
+  const roleParams = {
+    TRANSCRIBER: { state: "transcribing", taskField: "transcriber_id" },
+    REVIEWER: {
+      state: "submitted",
+      taskField: "reviewer_id",
+    },
+    FINAL_REVIEWER: {
+      state: "accepted",
+      taskField: "final_reviewer_id",
+    },
+  };
+
+  const { state, taskField } = roleParams[role];
+
+  if (!state || !taskField) {
+    throw new Error(`Invalid role provided: ${role}`);
+  }
   try {
     let unassignedTasks = await prisma.task.findMany({
       where: {
