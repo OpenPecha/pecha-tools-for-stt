@@ -40,7 +40,7 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
   };
 
   const changePlaybackRate = () => {
-    const rates = [1, 1.25, 1.5, 2, 0.5];
+    const rates = [1, 1.25, 1.5, 2, 0.5, 0.75];
     const currentIndex = rates.indexOf(playbackRate);
     const nextIndex = (currentIndex + 1) % rates.length;
     const newRate = rates[nextIndex];
