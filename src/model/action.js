@@ -14,8 +14,16 @@ export const getUserDetails = async (username) => {
       where: {
         name: username,
       },
-      include: {
-        group: true,
+      select: {
+        id: true,
+        name: true,
+        group_id: true,
+        role: true,
+        group: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     if (userData === null) {
