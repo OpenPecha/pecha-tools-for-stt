@@ -220,14 +220,14 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     getUserSpecificTasksCount(userId, dates),
     getUserSubmittedAndReviewedSecs(userId, dates, groupId),
     getTranscriberTaskList(userId, dates),
-    getTaskReviewedBasedOnSubmitted(userId, dates),
+    getReviewedCountBasedOnSubmittedAt(userId, dates, groupId),
   ]);
 
   const transcriberObj = {
     id: userId,
     name,
     noSubmitted: submittedTaskCount,
-    noReviewedBasedOnSubmitted: reviewedTaskCount?.length || 0,
+    noReviewedBasedOnSubmitted: reviewedTaskCount || 0,
     noReviewed: 0,
     submittedInMin: parseFloat((submittedSecs / 60).toFixed(2)),
     reviewedInMin: parseFloat((reviewedSecs / 60).toFixed(2) || 0),
@@ -243,29 +243,45 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
   return updatedTranscriberObj;
 };
 
-export const getTaskReviewedBasedOnSubmitted = async (id, dates) => {
-  const { from: fromDate, to: toDate } = dates;
-  let taskReviewedBasedOnSubmitted;
+const buildDateFilter = (fromDate, toDate) => {
   if (fromDate && toDate) {
-    taskReviewedBasedOnSubmitted = await prisma.task.findMany({
-      where: {
-        transcriber_id: parseInt(id),
-        state: { in: ["accepted", "finalised"] },
-        submitted_at: {
-          gte: new Date(fromDate).toISOString(),
-          lte: new Date(toDate).toISOString(),
-        },
+    return {
+      submitted_at: {
+        gte: new Date(fromDate).toISOString(),
+        lte: new Date(toDate).toISOString(),
       },
-    });
-  } else {
-    taskReviewedBasedOnSubmitted = await prisma.task.findMany({
-      where: {
-        transcriber_id: parseInt(id),
-        state: { in: ["accepted", "finalised"] },
-      },
-    });
+    };
   }
-  return taskReviewedBasedOnSubmitted;
+  return {};
+};
+
+export const getReviewedCountBasedOnSubmittedAt = async (
+  id,
+  dates,
+  groupId
+) => {
+  const { from: fromDate, to: toDate } = dates;
+
+  const transcriberId = parseInt(id); // Ensure id is an integer
+  const group_id = parseInt(groupId); // Ensure groupId is an integer
+
+  const dateFilter = buildDateFilter(fromDate, toDate);
+
+  try {
+    const reviewedTaskCount = await prisma.task.count({
+      where: {
+        transcriber_id: transcriberId,
+        state: { in: ["accepted", "finalised"] },
+        group_id,
+        ...dateFilter,
+      },
+    });
+
+    return reviewedTaskCount;
+  } catch (error) {
+    console.error("Error getting reviewed and finalised task count:", error);
+    throw new Error("Error fetching task counts.");
+  }
 };
 
 // get the task statistics - task reviewed, reviewed secs, syllable count
