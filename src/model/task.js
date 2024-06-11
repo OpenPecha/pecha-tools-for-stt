@@ -527,10 +527,30 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
       },
     });
 
+    const totalTrashedSecs = await prisma.task.aggregate({
+      where: {
+        transcriber_id: transcriberId,
+        group_id,
+        // Conditionally add date filters if both dates are provided
+        ...(fromDate &&
+          toDate && {
+            submitted_at: {
+              gte: new Date(fromDate),
+              lte: new Date(toDate),
+            },
+          }),
+        state: "trashed",
+      },
+      _sum: {
+        audio_duration: true,
+      },
+    });
+
     // Extract and return the sum of audio_duration
     const submittedSecs = totalSubmittedSecs._sum.audio_duration || 0; // Default to 0 if null
     const reviewedSecs = totolReviewedSecs._sum.audio_duration || 0; // Default to 0 if null
-    return { submittedSecs, reviewedSecs };
+    const trashedSecs = totalTrashedSecs._sum.audio_duration || 0; // Default to 0 if null
+    return { submittedSecs, reviewedSecs, trashedSecs };
   } catch (error) {
     console.error(`Error aggregating user submitted seconds:`, error);
     throw new Error(

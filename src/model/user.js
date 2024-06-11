@@ -213,7 +213,7 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
   const { id: userId, name } = user;
   const [
     submittedTaskCount,
-    { submittedSecs, reviewedSecs },
+    { submittedSecs, reviewedSecs, trashedSecs },
     userTasks,
     reviewedTaskCount,
   ] = await Promise.all([
@@ -229,8 +229,9 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     noSubmitted: submittedTaskCount,
     noReviewedBasedOnSubmitted: reviewedTaskCount || 0,
     noReviewed: 0,
-    submittedInMin: parseFloat((submittedSecs / 60).toFixed(2)),
+    submittedInMin: parseFloat((submittedSecs / 60).toFixed(2) || 0),
     reviewedInMin: parseFloat((reviewedSecs / 60).toFixed(2) || 0),
+    trashedInMin: parseFloat((trashedSecs / 60).toFixed(2) || 0),
     syllableCount: 0,
     noTranscriptCorrected: 0,
     characterCount: 0,

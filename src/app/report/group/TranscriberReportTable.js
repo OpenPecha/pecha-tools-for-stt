@@ -74,6 +74,8 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             <th>Submitted Min.</th>
             <th>Reviewed Min.</th>
             <th>Reviewed min %</th>
+            <th>Trashed Min</th>
+            <th>Total Audio Min</th>
             <th>Task Corrected %</th>
             <th>Character Error %</th>
             <th>
@@ -110,6 +112,12 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                 )}`}
               >
                 {calculatePercent(user.reviewedInMin, user.submittedInMin)}
+              </td>
+              <td>{user.trashedInMin}</td>
+              <td>
+                {parseFloat(
+                  (user.submittedInMin + user.trashedInMin).toFixed(2)
+                )}
               </td>
               <td
                 className={`${glideGreentoRed(
@@ -180,6 +188,19 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                   usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0)
                 )}
               </b>
+            </td>
+            <td>
+              {usersStatistic
+                ?.reduce((a, b) => a + b.trashedInMin, 0)
+                .toFixed(2)}
+            </td>
+            <td>
+              {parseFloat(
+                (
+                  usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0) +
+                  usersStatistic?.reduce((a, b) => a + b.trashedInMin, 0)
+                ).toFixed(2)
+              ) || 0}
             </td>
             <td>
               <b>
