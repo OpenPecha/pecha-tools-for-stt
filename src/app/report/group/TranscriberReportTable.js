@@ -116,7 +116,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               <td>{user.trashedInMin}</td>
               <td>
                 {parseFloat(
-                  (user.submittedInMin + user.trashedInMin).toFixed(2)
+                  (user.reviewedInMin + user.trashedInMin).toFixed(2)
                 )}
               </td>
               <td
@@ -197,7 +197,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             <td>
               {parseFloat(
                 (
-                  usersStatistic?.reduce((a, b) => a + b.submittedInMin, 0) +
+                  usersStatistic?.reduce((a, b) => a + b.reviewedInMin, 0) +
                   usersStatistic?.reduce((a, b) => a + b.trashedInMin, 0)
                 ).toFixed(2)
               ) || 0}
