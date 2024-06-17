@@ -273,7 +273,6 @@ export const getReviewedCountBasedOnSubmittedAt = async (
       where: {
         transcriber_id: transcriberId,
         state: { in: ["accepted", "finalised"] },
-        group_id,
         ...dateFilter,
       },
     });

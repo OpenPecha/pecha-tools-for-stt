@@ -492,7 +492,6 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
     const totalSubmittedSecs = await prisma.task.aggregate({
       where: {
         transcriber_id: transcriberId,
-        group_id,
         // Conditionally add date filters if both dates are provided
         ...(fromDate &&
           toDate && {
@@ -511,7 +510,6 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
     const totolReviewedSecs = await prisma.task.aggregate({
       where: {
         transcriber_id: transcriberId,
-        group_id,
         // Conditionally add date filters if both dates are provided
         ...(fromDate &&
           toDate && {
@@ -530,7 +528,6 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
     const totalTrashedSecs = await prisma.task.aggregate({
       where: {
         transcriber_id: transcriberId,
-        group_id,
         // Conditionally add date filters if both dates are provided
         ...(fromDate &&
           toDate && {
