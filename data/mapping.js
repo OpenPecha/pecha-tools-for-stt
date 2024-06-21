@@ -20,8 +20,8 @@ const mappingObj = {
     url: "https://work.pecha.tools/glyph_annotation_ga/?session=tenzinkalden@esukhia.org",
     department: "ocr",
   },
-  "wpema76@gmail.com": {
-    url: "https://work.pecha.tools/glyph_annotation_ga/?session=wpema76@gmail.com",
+  "lhakpawangyal@monlam.ai": {
+    url: "https://work.pecha.tools/glyph_annotation_ga/?session=lhakpawangyal@monlam.ai",
     department: "ocr",
   },
   "tenzinkals11@gmail.com": {
