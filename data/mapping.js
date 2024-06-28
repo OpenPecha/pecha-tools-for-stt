@@ -24,11 +24,14 @@ const mappingObj = {
     url: "https://work.pecha.tools/glyph_annotation_ga/?session=lhakpawangyal@monlam.ai",
     department: "ocr",
   },
-  "tenzinkals11@gmail.com": {
-    url: "https://work.pecha.tools/glyph_annotation_ga/?session=tenzinkals11@gmail.com",
+  "nordhentsering57@gmail.com": {
+    url: "https://work.pecha.tools/glyph_annotation_ga/?session=nordhentsering57@gmail.com",
     department: "ocr",
   },
-
+  "dhekharwork123@gmail.com": {
+    url: "https://work.pecha.tools/glyph_annotation_ga/?session=dhekharwork123@gmail.com",
+    department: "ocr",
+  },
   "choezom2015@gmail.com": {
     url: "https://work.pecha.tools/glyph_annotation_gb/?session=choezom2015@gmail.com",
     department: "ocr",
