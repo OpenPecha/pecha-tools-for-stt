@@ -29,7 +29,7 @@ const mappingObj = {
     department: "ocr",
   },
   "dhekharwork123@gmail.com": {
-    url: "https://work.pecha.tools/glyph_annotation_ga/?session=dhekharwork123@gmail.com",
+    url: "https://work.pecha.tools/glyph_annotation_gb/?session=dhekharwork123@gmail.com",
     department: "ocr",
   },
   "choezom2015@gmail.com": {
