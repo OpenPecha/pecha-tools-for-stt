@@ -49,12 +49,12 @@ const mappingObj = {
     department: "ocr",
   },
 
-  "breezynyibum@gmail.com": {
-    url: "https://work.pecha.tools/glyph_ann_review_ga/?session=breezynyibum@gmail.com",
+  "lhakpawangyal@monlam.ai": {
+    url: "https://work.pecha.tools/glyph_ann_review_ga/?session=lhakpawangyal@monlam.ai",
     department: "ocr",
   },
-  "jamperthupten@gmail.com": {
-    url: "https://work.pecha.tools/glyph_ann_review_gb/?session=jamperthupten@gmail.com",
+  "nordhentsering57@gmail.com": {
+    url: "https://work.pecha.tools/glyph_ann_review_gb/?session=nordhentsering57@gmail.com",
     department: "ocr",
   },
 };
