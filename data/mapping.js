@@ -53,8 +53,8 @@ const mappingObj = {
     url: "https://work.pecha.tools/glyph_ann_review_ga/?session=lhakpawangyal@monlam.ai",
     department: "ocr",
   },
-  "nordhentsering57@gmail.com": {
-    url: "https://work.pecha.tools/glyph_ann_review_gb/?session=nordhentsering57@gmail.com",
+  "breezynyibhum@gmail.com": {
+    url: "https://work.pecha.tools/glyph_ann_review_ga/?session=breezynyibhum@gmail.com",
     department: "ocr",
   },
 };
