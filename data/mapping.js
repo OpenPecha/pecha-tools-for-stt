@@ -61,6 +61,14 @@ const mappingObj = {
     url: "https://work.pecha.tools/glyph_ann_review_gb/?session=breezynyibhum@gmail.com",
     department: "ocr",
   },
+  "nordhentsering57@gmail.com": {
+    url: "https://work.pecha.tools/glyph-cropping-ga/?session=nordhentsering57@gmail.com",
+    department: "ocr",
+  },
+  "dhekharwork123@gmail.com": {
+    url: "https://work.pecha.tools/glyph-cropping-ga/?session=dhekharwork123@gmail.com",
+    department: "ocr",
+  },
 };
 
 export const mapping = new Map(Object.entries(mappingObj));
