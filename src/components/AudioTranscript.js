@@ -144,20 +144,24 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
           </div>
         ) : taskList?.length ? (
           <>
-            {(role === "REVIEWER" || role === "FINAL_REVIEWER") && (
-              <div>
-                <p className="mt-4 md:mt-10">
-                  <strong>{lang.transcriber} : </strong>
-                  <span>{taskList[0]?.transcriber?.name}</span>
-                </p>
-                {role === "FINAL_REVIEWER" && (
-                  <p className="mt-2">
-                    <strong>{lang.reviewer} : </strong>
-                    <span>{taskList[0]?.reviewer?.name}</span>
-                  </p>
+            <div>
+              <p className="mt-4 md:mt-10">
+                <strong>{lang.transcriber} : </strong>
+                <span>{taskList[0]?.transcriber?.name}</span>
+              </p>
+              <p className="mt-2">
+                <strong>{lang.reviewer} : </strong>
+                <span>{taskList[0]?.reviewer?.name}</span>
+                {role === "TRANSCRIBER" && taskList[0]?.reviewer?.name ? (
+                  <span className="text-red-500">
+                    {" "}
+                    (Rejected by {taskList[0]?.reviewer?.name})
+                  </span>
+                ) : (
+                  ""
                 )}
-              </div>
-            )}
+              </p>
+            </div>
             <div className="border rounded-md shadow-sm shadow-gray-400 w-11/12 md:w-3/4 p-6 md:p-8 mt-4 md:mt-10">
               <div className="flex flex-col gap-5 justify-center items-center">
                 <AudioPlayer tasks={taskList} audioRef={audioRef} />
