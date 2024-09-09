@@ -39,8 +39,9 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
     }
   };
 
+  const rates = [0.5, 0.75, 1, 1.25, 1.5];
+
   const changePlaybackRate = () => {
-    const rates = [1, 1.25, 1.5, 2, 0.5, 0.75];
     const currentIndex = rates.indexOf(playbackRate);
     const nextIndex = (currentIndex + 1) % rates.length;
     const newRate = rates[nextIndex];
@@ -81,10 +82,11 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
         className="w-full"
         key={tasks[0]?.id}
         onEnded={handleAudioEnded}
+        autoPlay
       >
         <source src={tasks[0]?.url} type="audio/mp3" />
       </audio>
-      <div className="flex gap-10 my-2">
+      <div className="flex flex-wrap gap-10 my-2 items-center">
         <div
           className="md:tooltip tooltip-bottom"
           data-tip={`${
@@ -110,13 +112,25 @@ export const AudioPlayer = ({ tasks, audioRef }) => {
             <ImLoop />
           </button>
         </div>
-        <button
-          className="flex item-center btn btn-ghost text-lg p-2 font-semibold"
-          onClick={changePlaybackRate}
-        >
-          <span className="text-xs">{lang.speed}</span>
-          <span>{playbackRate}X</span>
-        </button>
+        <div className="flex flex-wrap item-center font-semibold gap-2 items-center">
+          <label className="text-sm pr-4">{lang.speed}</label>
+          {rates.map((rate) => (
+            <button
+              key={rate}
+              className={
+                playbackRate === rate
+                  ? "btn btn-ghost bg-yellow-400"
+                  : "btn btn-ghost"
+              }
+              onClick={() => {
+                audioRef.current.playbackRate = rate;
+                setPlaybackRate(rate);
+              }}
+            >
+              {rate}X
+            </button>
+          ))}
+        </div>
       </div>
     </>
   );
