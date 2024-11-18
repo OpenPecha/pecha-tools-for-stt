@@ -79,6 +79,9 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             <th>Task Corrected %</th>
             <th>Character Error %</th>
             <th>
+              Transcriber <br /> Syllable count
+            </th>
+            <th>
               Reviewed <br /> Syllable count
             </th>
             <th>Rs.</th>
@@ -135,6 +138,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               >
                 {calculatePercent(user.totalCer, user.characterCount)}
               </td>
+              <td>{user.transcriberSyllableCount}</td>
               <td>{user.syllableCount}</td>
               <td>
                 {calculatePay(

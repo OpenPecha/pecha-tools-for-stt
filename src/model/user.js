@@ -216,11 +216,13 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     { submittedSecs, reviewedSecs, trashedSecs },
     userTasks,
     reviewedTaskCount,
+    transcriberSyllableCount,
   ] = await Promise.all([
     getUserSpecificTasksCount(userId, dates),
     getUserSubmittedAndReviewedSecs(userId, dates, groupId),
     getTranscriberTaskList(userId, dates),
     getReviewedCountBasedOnSubmittedAt(userId, dates, groupId),
+    getTranscriberSyllableCount(userId, dates),
   ]);
 
   const transcriberObj = {
@@ -233,6 +235,7 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     reviewedInMin: parseFloat((reviewedSecs / 60).toFixed(2) || 0),
     trashedInMin: parseFloat((trashedSecs / 60).toFixed(2) || 0),
     syllableCount: 0,
+    transcriberSyllableCount: transcriberSyllableCount || 0,
     noTranscriptCorrected: 0,
     characterCount: 0,
     cer: 0,
@@ -242,6 +245,36 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
   const updatedTranscriberObj = await UserTaskReport(transcriberObj, userTasks);
 
   return updatedTranscriberObj;
+};
+
+const getTranscriberSyllableCount = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+
+  const transcriberId = parseInt(id); // Ensure id is an integer
+
+  const dateFilter = buildDateFilter(fromDate, toDate);
+
+  try {
+    const transcriberTasks = await prisma.task.findMany({
+      where: {
+        transcriber_id: transcriberId,
+        state: { in: ["submitted", "accepted", "finalised"] },
+        ...dateFilter,
+      },
+    });
+    let syllableCount = 0;
+
+    // get the sum of syllable count of all the tasks
+    transcriberTasks.map((task) => {
+      const syllables = task.transcript
+        ? splitIntoSyllables(task.transcript).length
+        : 0;
+      syllableCount += syllables;
+    });
+    return syllableCount;
+  } catch (error) {
+    console.log("Error getting transcriber syllable count:", error);
+  }
 };
 
 const buildDateFilter = (fromDate, toDate) => {
