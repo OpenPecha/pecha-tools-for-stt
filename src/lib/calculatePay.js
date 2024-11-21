@@ -15,7 +15,7 @@ export const calculatePay = (
       2
     );
   } else {
-    return ((reviewedInMin + trashedInMin) * 5 + syllableCount * 0.3).toFixed(
+    return ((reviewedInMin + trashedInMin) * 5 + syllableCount * 0.35).toFixed(
       2
     );
   }
