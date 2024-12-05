@@ -13,7 +13,7 @@ type UploadCsvProps = {
 type UploadStatus = "idle" | "loading" | "success" | "error";
 
 export default function UploadCsv({ groups }: UploadCsvProps) {
-  const [selectedGroup, setSelectedGroup] = useState<number>(0);
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -83,7 +83,7 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
 
         // Reset form
         setSelectedFile(null);
-        setSelectedGroup(0);
+        setSelectedGroup("");
         const fileInput = document.getElementById(
           "csvFile"
         ) as HTMLInputElement;
@@ -189,6 +189,7 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
           )}
         </button>
       </form>
+      <span className="text-xs"><span className="text-red-500">*</span>Max size 10MB</span>
     </div>
   );
 }

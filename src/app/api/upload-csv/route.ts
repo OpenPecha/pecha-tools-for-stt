@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
         return trimmedValue || null;
       },
     });
-    console.log("parsedResult", parsedResult);
     if (parsedResult.errors.length > 0) {
       console.error("CSV Parsing Errors:", parsedResult.errors);
       return new Response(
