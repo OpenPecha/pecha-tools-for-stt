@@ -27,7 +27,7 @@ const Select = ({
         onChange={handleOptionChange}
         value={selectedOption}
       >
-        <option value="" disabled>
+        <option value={0} disabled>
           Select {label}
         </option>
         {options?.map((option) => (
