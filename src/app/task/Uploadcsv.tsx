@@ -38,7 +38,7 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
         return;
       }
 
-      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      const MAX_FILE_SIZE = 15 * 1024 * 1024;
       if (file.size > MAX_FILE_SIZE) {
         toast.error("File Size Exceeded", {
           description: "Maximum file size is 10MB.",
@@ -189,7 +189,7 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
           )}
         </button>
       </form>
-      <span className="text-xs"><span className="text-red-500">*</span>Max size 10MB</span>
+      <span className="text-xs"><span className="text-red-500">*</span>Max size 15MB</span>
     </div>
   );
 }
