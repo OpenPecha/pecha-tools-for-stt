@@ -21,7 +21,7 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
 
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const groupValue = Number(e.target.value);
-    setSelectedGroup(groupValue);
+    setSelectedGroup(groupValue?.toString());
     setUploadStatus("idle");
     setErrorMessage("");
   };
@@ -189,7 +189,9 @@ export default function UploadCsv({ groups }: UploadCsvProps) {
           )}
         </button>
       </form>
-      <span className="text-xs"><span className="text-red-500">*</span>Max size 15MB</span>
+      <span className="text-xs">
+        <span className="text-red-500">*</span>Max size 15MB
+      </span>
     </div>
   );
 }
