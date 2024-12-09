@@ -52,27 +52,26 @@ export async function POST(req: NextRequest) {
     }
 
     const tasks: Prisma.TaskCreateManyInput[] = parsedResult.data
-      .map((row) => 
-        ({
-          id: row.id,
-          group_id: groupId,
-          state: row.state,
-          inference_transcript: row.inference_transcript
-            ? row.inference_transcript.slice(0, 500)
-            : null,
-          transcript: row.transcript ? row.transcript.slice(0, 500) : null,
-          reviewed_transcript: row.reviewed_transcript
-            ? row.reviewed_transcript.slice(0, 500)
-            : null,
-          final_transcript: row.final_transcript
-            ? row.final_transcript.slice(0, 500)
-            : null,
-          file_name: row.file_name?.slice(0, 255) || "", 
-          url: row.url || "",
-          duration: row.duration || null,
-          audio_duration: row.audio_duration || 0,
-          created_at: new Date(), 
-        }))
+      .map((row) => ({
+        id: row.id,
+        group_id: groupId,
+        state: row.state,
+        inference_transcript: row.inference_transcript
+          ? row.inference_transcript.slice(0, 500)
+          : null,
+        transcript: row.transcript ? row.transcript.slice(0, 500) : null,
+        reviewed_transcript: row.reviewed_transcript
+          ? row.reviewed_transcript.slice(0, 500)
+          : null,
+        final_transcript: row.final_transcript
+          ? row.final_transcript.slice(0, 500)
+          : null,
+        file_name: row.file_name?.slice(0, 255) || "",
+        url: row.url || "",
+        duration: row.duration || null,
+        audio_duration: row.audio_duration || 0,
+        created_at: new Date(),
+      }))
       .filter((task) => task.file_name && task.url);
 
     if (tasks.length === 0) {
@@ -85,7 +84,7 @@ export async function POST(req: NextRequest) {
     try {
       const result = await prisma.task.createMany({
         data: tasks,
-        skipDuplicates: true, 
+        skipDuplicates: true,
       });
 
       return new Response(
@@ -124,8 +123,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const runtime = "nodejs";
