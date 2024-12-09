@@ -1,4 +1,6 @@
 import { Toaster } from "react-hot-toast";
+import { Toaster as TaskToaster } from "sonner";
+
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -17,6 +19,7 @@ export default function RootLayout({
       <body>
         {children}
         <Toaster position="top-center" reverseOrder={false} />
+        <TaskToaster position="top-right" richColors closeButton />
       </body>
     </html>
   );
