@@ -26,7 +26,7 @@ export default async function Home({ searchParams }: { searchParams: any }) {
     { name: "Dashboard", path: "/dashboard" },
     { name: "Report", path: "/report" },
     { name: "Stats", path: "/stats" },
-    // { name: "Upload", path: "/task" },
+    { name: "Upload", path: "/task" },
   ];
 
   return (
