@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       transform: (value, header) => {
         const trimmedValue = typeof value === "string" ? value.trim() : value;
 
-        if (header === "audio_duration" || header === "id") {
+        if (header === "audio_duration") {
           const numValue = parseFloat(trimmedValue);
           return isNaN(numValue) ? 0 : numValue;
         }
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         return trimmedValue || null;
       },
     });
+
     if (parsedResult.errors.length > 0) {
       console.error("CSV Parsing Errors:", parsedResult.errors);
       return new Response(
@@ -53,7 +54,6 @@ export async function POST(req: NextRequest) {
 
     const tasks: Prisma.TaskCreateManyInput[] = parsedResult.data
       .map((row) => ({
-        id: row.id,
         group_id: groupId,
         state: row.state,
         inference_transcript: row.inference_transcript
@@ -95,7 +95,6 @@ export async function POST(req: NextRequest) {
         { status: 200 }
       );
     } catch (dbError) {
-      // Handle potential unique constraint violations
       console.error("Database insertion error:", dbError);
 
       const errorMessage =
@@ -108,7 +107,7 @@ export async function POST(req: NextRequest) {
           message: "Error inserting tasks",
           error: errorMessage,
         }),
-        { status: 409 } // Conflict status for unique constraint issues
+        { status: 409 }
       );
     }
   } catch (error) {
