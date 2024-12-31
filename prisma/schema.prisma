@@ -44,7 +44,7 @@ model Task {
   id                     Int       @id @default(autoincrement())
   group_id               Int
   group                  Group     @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  state                  State     @default(imported)
+  state                  State     @default(transcribing)
   inference_transcript   String?   @db.VarChar(500)
   transcript             String?   @db.VarChar(500)
   reviewed_transcript    String?   @db.VarChar(500)
