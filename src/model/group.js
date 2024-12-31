@@ -2,6 +2,35 @@
 
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
+export const getTranscribingcount=async(group_id)=>{
+  try {
+   const taskCount = await prisma.group.findUnique({
+           where: {
+             id: group_id
+           },
+           select: {
+             name: true, 
+             _count: {
+               select: {
+                 tasks: {
+                   where: {
+                     state: "transcribing",
+                     NOT: {
+                       transcriber_id: null
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         });
+        //  console.log('Debug - Task Count Result:', JSON.stringify(taskCount, null, 2));
+         return taskCount
+  } catch (error) {
+    console.error("Error fetching transcribing count:", error);
+    throw error; 
+  }
+}
 
 export const getAllGroup = async () => {
   try {

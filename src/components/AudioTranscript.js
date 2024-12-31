@@ -1,5 +1,4 @@
 "use client";
-
 import {
   assignMoreTasks,
   getNumberOfAssignedTask,
@@ -13,6 +12,8 @@ import { UserProgressStats } from "@/model/task";
 import Sidebar from "@/components/Sidebar";
 import toast from "react-hot-toast";
 import AppContext from "../components/AppContext";
+import { sendDiscordAlert } from "@/lib/webhookutils";
+import { getTranscribingcount } from "@/model/group";
 
 const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
   const [languageSelected, setLanguageSelected] = useState("bo");
@@ -28,7 +29,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { id: userId, group_id: groupId, role } = userDetail;
   const currentTimeRef = useRef(null);
-
+  const THRESHOLD = 3000;
   function getLastTaskIndex() {
     return taskList.length != 0 ? taskList?.length - 1 : 0;
   }
@@ -73,7 +74,20 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
 
   const updateTaskAndIndex = async (action, transcript, task) => {
     try {
-      const { id } = task;
+      const { id, group_id } = task;
+      // console.log('Debug - Processing task update for group:', group_id);
+      const taskCounts = await getTranscribingcount(group_id);
+      const count = taskCounts?._count?.tasks ?? 0;
+      const groupName = taskCounts?.name ?? "Unknown Group";
+      if (count < THRESHOLD) {
+        try {
+          // console.log("Debug - Preparing to send alert:", { groupName, count });
+          await sendDiscordAlert(groupName, count , THRESHOLD);
+          // console.log(`Alert sent successfully for group ${groupName}`);
+        } catch (error) {
+          console.error(`Failed to send alert for ${groupName}:`, error);
+        }
+      }
       // update the task in the database
       const { msg, updatedTask } = await updateTask(
         action,
