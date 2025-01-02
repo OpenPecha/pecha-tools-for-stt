@@ -7,7 +7,7 @@ export async function sendDiscordAlert(groupName, taskCount, THRESHOLD) {
     throw new Error('Discord webhook URL not configured');
   }
   const message = {
-    content: `⚠️ Group "${groupName}" has only ${taskCount} tasks in transcribing , which is below the threshold of ${THRESHOLD}. time to add new data`
+    content: `⚠️The group "${groupName}" currently has only ${taskCount} tasks in progress for transcription, which falls below the defined threshold of ${THRESHOLD}. It's time to add more data to maintain the workflow.`
   };
 
   // console.log('Debug - Sending Discord message:', JSON.stringify(message, null, 2));

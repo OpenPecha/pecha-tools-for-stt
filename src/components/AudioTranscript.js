@@ -79,7 +79,7 @@ const AudioTranscript = ({ tasks, userDetail, language, userHistory }) => {
       const taskCounts = await getTranscribingcount(group_id);
       const count = taskCounts?._count?.tasks ?? 0;
       const groupName = taskCounts?.name ?? "Unknown Group";
-      if (count < THRESHOLD) {
+      if (count == THRESHOLD) {
         try {
           // console.log("Debug - Preparing to send alert:", { groupName, count });
           await sendDiscordAlert(groupName, count , THRESHOLD);
