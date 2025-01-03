@@ -41,6 +41,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    console.log("CSV Parsing Result:", parsedResult.data?.slice(0, 5));
+
     if (parsedResult.errors.length > 0) {
       console.error("CSV Parsing Errors:", parsedResult.errors);
       return new Response(
@@ -55,24 +57,16 @@ export async function POST(req: NextRequest) {
     const tasks: Prisma.TaskCreateManyInput[] = parsedResult.data
       .map((row) => ({
         group_id: groupId,
-        state: row.state,
         inference_transcript: row.inference_transcript
           ? row.inference_transcript.slice(0, 500)
           : null,
-        transcript: row.transcript ? row.transcript.slice(0, 500) : null,
-        reviewed_transcript: row.reviewed_transcript
-          ? row.reviewed_transcript.slice(0, 500)
-          : null,
-        final_transcript: row.final_transcript
-          ? row.final_transcript.slice(0, 500)
-          : null,
         file_name: row.file_name?.slice(0, 255) || "",
         url: row.url || "",
-        duration: row.duration || null,
         audio_duration: row.audio_duration || 0,
-        created_at: new Date(),
       }))
       .filter((task) => task.file_name && task.url);
+
+    console.log("Tasks to be upload:", tasks?.slice(0, 5));
 
     if (tasks.length === 0) {
       return new Response(
@@ -84,8 +78,10 @@ export async function POST(req: NextRequest) {
     try {
       const result = await prisma.task.createMany({
         data: tasks,
-        skipDuplicates: true,
+        // skipDuplicates: true,
       });
+
+      console.log("Tasks imported successfully:", result.count);
 
       return new Response(
         JSON.stringify({
@@ -95,7 +91,7 @@ export async function POST(req: NextRequest) {
         { status: 200 }
       );
     } catch (dbError) {
-      console.error("Database insertion error:", dbError);
+      console.log("Database insertion error:", dbError);
 
       const errorMessage =
         dbError instanceof Error
