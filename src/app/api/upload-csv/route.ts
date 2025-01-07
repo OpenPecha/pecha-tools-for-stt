@@ -5,8 +5,14 @@ import { Prisma } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
+    // Reset sequence before processing
+    const result = await prisma.$queryRaw`
+        SELECT setval('"Task_id_seq"', (SELECT MAX(id) FROM "Task"), true)
+      `;
 
+    console.log("Sequence reset result:", result);
+
+    const formData = await req.formData();
     const groupIdString = formData.get("groupId") as string;
     const file = formData.get("file") as File;
     if (!groupIdString || !file) {
@@ -24,7 +30,6 @@ export async function POST(req: NextRequest) {
     }
 
     const fileContent = await file.text();
-
     const parsedResult = parse<any>(fileContent, {
       header: true,
       skipEmptyLines: true,
@@ -41,7 +46,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("CSV Parsing Result:", parsedResult.data?.slice(0, 5));
+    console.log("CSV Parsing Result:", parsedResult.data?.slice(0, 3));
 
     if (parsedResult.errors.length > 0) {
       console.error("CSV Parsing Errors:", parsedResult.errors);
@@ -66,7 +71,7 @@ export async function POST(req: NextRequest) {
       }))
       .filter((task) => task.file_name && task.url);
 
-    console.log("Tasks to be upload:", tasks?.slice(0, 5));
+    console.log("Tasks to be upload:", tasks?.slice(0, 3));
 
     if (tasks.length === 0) {
       return new Response(
@@ -76,23 +81,30 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      const result = await prisma.task.createMany({
-        data: tasks,
-        // skipDuplicates: true,
-      });
+      // Process in batches to handle large datasets
+      const BATCH_SIZE = 1000;
+      let totalImported = 0;
 
-      console.log("Tasks imported successfully:", result.count);
+      for (let i = 0; i < tasks.length; i += BATCH_SIZE) {
+        const batch = tasks.slice(i, i + BATCH_SIZE);
+        const result = await prisma.task.createMany({
+          data: batch,
+          skipDuplicates: true,
+        });
+        totalImported += result.count;
+      }
+
+      console.log("Tasks imported successfully:", totalImported);
 
       return new Response(
         JSON.stringify({
           message: "Tasks imported successfully!",
-          importedCount: result.count,
+          importedCount: totalImported,
         }),
         { status: 200 }
       );
     } catch (dbError) {
       console.log("Database insertion error:", dbError);
-
       const errorMessage =
         dbError instanceof Error
           ? dbError.message
