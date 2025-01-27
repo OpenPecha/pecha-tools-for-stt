@@ -17,3 +17,20 @@
 body {
     font-family: "Monlam", "Lato", "Trebuchet MS", Roboto, Helvetica, Arial, sans-serif;
 }
+
+@layer base {
+
+    [data-theme="light"] textarea,
+    [data-theme="light"] select,
+    [data-theme="light"] input {
+        background-color: white;
+        color: black;
+    }
+
+    [data-theme="dark"] textarea,
+    [data-theme="dark"] select,
+    [data-theme="dark"] input {
+        background-color: #374151;
+        color: white;
+    }
+}
