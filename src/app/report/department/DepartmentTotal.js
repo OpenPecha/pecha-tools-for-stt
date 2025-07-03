@@ -1,5 +1,4 @@
 import React from "react";
-import { calculatePay } from "@/lib/calculatePay";
 import { calculatePercent } from "@/lib/calculatePercent";
 const DepartmentTotal = ({ usersStatistic }) => {
   const allUsersStatistic = [];

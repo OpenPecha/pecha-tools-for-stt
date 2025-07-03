@@ -146,7 +146,8 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                   user.reviewedInMin,
                   user.trashedInMin,
                   user.syllableCount,
-                  user.noReviewed
+                  user.noReviewed,
+                  user.transcriberSyllableCount
                 )}
               </td>
             </tr>
