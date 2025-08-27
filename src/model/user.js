@@ -236,6 +236,7 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     trashedInMin: parseFloat((trashedSecs / 60).toFixed(2) || 0),
     syllableCount: 0,
     transcriberSyllableCount: transcriberSyllableCount || 0,
+    transcriberCer: 0,
     noTranscriptCorrected: 0,
     characterCount: 0,
     cer: 0,
@@ -332,6 +333,10 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
         const cer = levenshtein.get(task.transcript, task.reviewed_transcript);
         acc.totalCer += cer; // Add CER for each task to total
       }
+    }
+    if (["submitted", "accepted", "finalised"].includes(task.state)) {
+      const cer = levenshtein.get(task.transcript, task.inference_transcript);
+      acc.transcriberCer += cer;
     }
     if (task.transcriber_is_correct === false) {
       acc.noTranscriptCorrected++;

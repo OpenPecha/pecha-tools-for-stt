@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import PropTypes from "prop-types";
 import { calculatePay } from "@/lib/calculatePay";
 import { calculatePercent } from "@/lib/calculatePercent";
 const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
@@ -81,6 +82,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
             <th>
               Transcriber <br /> Syllable count
             </th>
+            <th>Transcriber CER</th>
             <th>
               Reviewed <br /> Syllable count
             </th>
@@ -139,6 +141,7 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
                 {calculatePercent(user.totalCer, user.characterCount)}
               </td>
               <td>{user.transcriberSyllableCount}</td>
+              <td>{user.transcriberCer}</td>
               <td>{user.syllableCount}</td>
               <td>
                 {calculatePay(
@@ -228,6 +231,17 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
               </b>
             </td>
             <td>
+              <b>
+                {usersStatistic?.reduce(
+                  (a, b) => a + b.transcriberSyllableCount,
+                  0
+                )}
+              </b>
+            </td>
+            <td>
+              <b>{usersStatistic?.reduce((a, b) => a + b.transcriberCer, 0)}</b>
+            </td>
+            <td>
               <b>{usersStatistic?.reduce((a, b) => a + b.syllableCount, 0)}</b>
             </td>
             <td>
@@ -246,6 +260,11 @@ const TranscriberReportTable = ({ usersStatistic, selectGroup }) => {
       </table>
     </div>
   );
+};
+
+TranscriberReportTable.propTypes = {
+  usersStatistic: PropTypes.arrayOf(PropTypes.object),
+  selectGroup: PropTypes.any,
 };
 
 export default TranscriberReportTable;
