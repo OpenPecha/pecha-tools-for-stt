@@ -335,8 +335,10 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       }
     }
     if (["submitted", "accepted", "finalised"].includes(task.state)) {
-      const cer = levenshtein.get(task.transcript, task.inference_transcript);
-      acc.transcriberCer += cer;
+      if (task.transcript && task.inference_transcript) {
+        const cer = levenshtein.get(task.transcript, task.inference_transcript);
+        acc.transcriberCer += cer;
+      }
     }
     if (task.transcriber_is_correct === false) {
       acc.noTranscriptCorrected++;

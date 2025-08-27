@@ -340,6 +340,7 @@ export const getTranscriberTaskList = async (id, dates) => {
           },
         },
         select: {
+          inference_transcript: true,
           transcript: true,
           reviewed_transcript: true,
           state: true,
@@ -353,6 +354,7 @@ export const getTranscriberTaskList = async (id, dates) => {
           transcriber_id: id,
         },
         select: {
+          inference_transcript: true,
           transcript: true,
           reviewed_transcript: true,
           state: true,
