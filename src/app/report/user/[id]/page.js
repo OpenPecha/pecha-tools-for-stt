@@ -6,11 +6,7 @@ const User = async ({ searchParams, params }) => {
   const { id } = params;
   const users = await getAllUser();
 
-  return (
-    <>
-      <UserReport id={id} users={users} searchParams={searchParams} />
-    </>
-  );
+  return <UserReport id={id} users={users} searchParams={searchParams} />;
 };
 
 export default User;
