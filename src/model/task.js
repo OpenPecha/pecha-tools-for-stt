@@ -3,6 +3,7 @@
 import prisma from "@/service/db";
 import { revalidatePath } from "next/cache";
 import { splitIntoSyllables } from "./user";
+import { utcToIst } from "@/lib/istCurrentTime";
 
 // get all tasks basd on the search params
 export const getAllTask = async (limit, skip) => {
@@ -83,28 +84,36 @@ export const getUserSpecificTasksCount = async (id, dates) => {
 
   if (!user) throw new Error(`User with ID ${id} not found.`);
 
+  // Define the state based on user role
+  let stateFilter;
+  if (user.role === "TRANSCRIBER") {
+    stateFilter = { in: ["submitted", "accepted", "finalised"] };
+  } else if (user.role === "REVIEWER") {
+    stateFilter = { in: ["accepted", "finalised"] };
+  } else {
+    stateFilter = { in: ["finalised"] }; // FINAL_REVIEWER case
+  }
+
   // Define the base condition for task counting based on the user's role
   let baseWhereCondition = {
     [`${user.role.toLowerCase()}_id`]: parseInt(id),
-    state:
-      user.role === "TRANSCRIBER"
-        ? { in: ["submitted", "accepted", "finalised"] }
-        : user.role === "REVIEWER"
-        ? { in: ["accepted", "finalised"] }
-        : { in: ["finalised"] }, // Defaults to FINAL_REVIEWER case
+    state: stateFilter,
   };
 
+  let dateFieldName;
+  if (user.role === "TRANSCRIBER") {
+    dateFieldName = "submitted_at";
+  } else if (user.role === "REVIEWER") {
+    dateFieldName = "reviewed_at";
+  } else {
+    dateFieldName = "finalised_reviewed_at";
+  }
   // Extend the base condition with date filters if both fromDate and toDate are provided
   if (fromDate && toDate) {
-    const dateFieldName =
-      user.role === "TRANSCRIBER"
-        ? "submitted_at"
-        : user.role === "REVIEWER"
-        ? "reviewed_at"
-        : "finalised_reviewed_at"; // Applies to REVIEWER and FINAL_REVIEWER
+    // Applies to REVIEWER and FINAL_REVIEWER
     baseWhereCondition[dateFieldName] = {
-      gte: new Date(fromDate),
-      lte: new Date(toDate),
+      gte: utcToIst(new Date(fromDate)),
+      lte: utcToIst(new Date(toDate)),
     };
   }
 
@@ -112,7 +121,6 @@ export const getUserSpecificTasksCount = async (id, dates) => {
     const userTaskCount = await prisma.task.count({
       where: baseWhereCondition,
     });
-
     return userTaskCount;
   } catch (error) {
     console.error(`Error fetching tasks count for user with ID ${id}:`, error);
