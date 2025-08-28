@@ -10,6 +10,7 @@ import {
   getUserSpecificTasksCount,
   getUserSubmittedAndReviewedSecs,
 } from "./task";
+import { utcToIst } from "@/lib/istCurrentTime";
 
 const levenshtein = require("fast-levenshtein");
 
@@ -217,12 +218,14 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     userTasks,
     reviewedTaskCount,
     transcriberSyllableCount,
+    transcriberCer,
   ] = await Promise.all([
     getUserSpecificTasksCount(userId, dates),
     getUserSubmittedAndReviewedSecs(userId, dates, groupId),
     getTranscriberTaskList(userId, dates),
     getReviewedCountBasedOnSubmittedAt(userId, dates, groupId),
     getTranscriberSyllableCount(userId, dates),
+    getTranscriberCer(userId, dates),
   ]);
 
   const transcriberObj = {
@@ -236,7 +239,7 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
     trashedInMin: parseFloat((trashedSecs / 60).toFixed(2) || 0),
     syllableCount: 0,
     transcriberSyllableCount: transcriberSyllableCount || 0,
-    transcriberCer: 0,
+    transcriberCer: transcriberCer || 0,
     noTranscriptCorrected: 0,
     characterCount: 0,
     cer: 0,
@@ -246,6 +249,34 @@ export const generateUsersTaskReport = async (user, dates, groupId) => {
   const updatedTranscriberObj = await UserTaskReport(transcriberObj, userTasks);
 
   return updatedTranscriberObj;
+};
+
+const getTranscriberCer = async (id, dates) => {
+  const { from: fromDate, to: toDate } = dates;
+  const transcriberId = parseInt(id); // Ensure id is an integer
+  const dateFilter = buildDateFilter(fromDate, toDate);
+  try {
+    const tasks = await prisma.task.findMany({
+      where: {
+        transcriber_id: transcriberId,
+        ...dateFilter,
+      },
+      select: {
+        inference_transcript: true,
+        transcript: true,
+      },
+    });
+    const transcriberCer = tasks.reduce((acc, task) => {
+      if (task.transcript && task.inference_transcript) {
+        const cer = levenshtein.get(task.inference_transcript, task.transcript);
+        acc += cer;
+      }
+      return acc;
+    }, 0);
+    return transcriberCer;
+  } catch (error) {
+    console.log("Error getting transcriber cer:", error);
+  }
 };
 
 const getTranscriberSyllableCount = async (id, dates) => {
@@ -282,8 +313,8 @@ const buildDateFilter = (fromDate, toDate) => {
   if (fromDate && toDate) {
     return {
       submitted_at: {
-        gte: new Date(fromDate).toISOString(),
-        lte: new Date(toDate).toISOString(),
+        gte: utcToIst(new Date(fromDate)),
+        lte: utcToIst(new Date(toDate)),
       },
     };
   }
@@ -332,12 +363,6 @@ export const UserTaskReport = (transcriberObj, userTasks) => {
       if (task.transcript && task.reviewed_transcript) {
         const cer = levenshtein.get(task.transcript, task.reviewed_transcript);
         acc.totalCer += cer; // Add CER for each task to total
-      }
-    }
-    if (["submitted", "accepted", "finalised"].includes(task.state)) {
-      if (task.transcript && task.inference_transcript) {
-        const cer = levenshtein.get(task.transcript, task.inference_transcript);
-        acc.transcriberCer += cer;
       }
     }
     if (task.transcriber_is_correct === false) {
