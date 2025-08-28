@@ -234,7 +234,7 @@ export const getCompletedTaskCount = async (id, role, groupId) => {
   }
 };
 
-export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
+export const getReviewerTaskCount = async (id, dates) => {
   const { from: fromDate, to: toDate } = dates;
   const reviewerId = parseInt(id);
 
@@ -244,8 +244,8 @@ export const getReviewerTaskCount = async (id, dates, reviewerObj) => {
     reviewed_at:
       fromDate && toDate
         ? {
-            gte: new Date(fromDate).toISOString(),
-            lte: new Date(toDate).toISOString(),
+            gte: utcToIst(new Date(fromDate)),
+            lte: utcToIst(new Date(toDate)),
           }
         : undefined,
   };
@@ -307,8 +307,8 @@ export const getFinalReviewerTaskCount = async (
     finalised_reviewed_at:
       fromDate && toDate
         ? {
-            gte: new Date(fromDate).toISOString(),
-            lte: new Date(toDate).toISOString(),
+            gte: utcToIst(new Date(fromDate)),
+            lte: utcToIst(new Date(toDate)),
           }
         : undefined,
   };
@@ -343,8 +343,8 @@ export const getTranscriberTaskList = async (id, dates) => {
         where: {
           transcriber_id: id,
           reviewed_at: {
-            gte: new Date(fromDate),
-            lte: new Date(toDate),
+            gte: utcToIst(new Date(fromDate)),
+            lte: utcToIst(new Date(toDate)),
           },
         },
         select: {
@@ -385,8 +385,8 @@ export const getReviewerTaskList = async (id, dates) => {
         where: {
           reviewer_id: id,
           reviewed_at: {
-            gte: new Date(fromDate),
-            lte: new Date(toDate),
+            gte: utcToIst(new Date(fromDate)),
+            lte: utcToIst(new Date(toDate)),
           },
         },
         select: {
@@ -506,8 +506,8 @@ export const getUserSubmittedAndReviewedSecs = async (id, dates, groupId) => {
         ...(fromDate &&
           toDate && {
             submitted_at: {
-              gte: new Date(fromDate),
-              lte: new Date(toDate),
+              gte: utcToIst(new Date(fromDate)),
+              lte: utcToIst(new Date(toDate)),
             },
           }),
         state: { in: ["submitted", "accepted", "finalised"] },
